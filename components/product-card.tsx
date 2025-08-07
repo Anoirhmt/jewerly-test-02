@@ -17,7 +17,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { addItem } = useCart()
+  const { addItem, isLoading } = useCart()
   const { toast } = useToast()
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -96,7 +96,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <Button
             onClick={handleAddToCart}
             className="w-full premium-button text-white border-0 py-4 text-sm tracking-[0.2em] font-medium rounded-none uppercase"
-            disabled={!product.inStock}
+            disabled={!product.inStock || isLoading}
           >
             <ShoppingCart className="h-4 w-4 mr-3" />
             {product.inStock ? "Add to Collection" : "Out of Stock"}

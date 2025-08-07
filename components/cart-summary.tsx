@@ -8,7 +8,11 @@ import { formatPrice } from "@/utils/format-price"
 import Link from "next/link"
 
 export function CartSummary() {
-  const { items } = useCart()
+  const { items, isLoading } = useCart()
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const deliveryFee = subtotal > 100 ? 0 : 15.99

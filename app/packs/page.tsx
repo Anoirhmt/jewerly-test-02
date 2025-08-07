@@ -6,22 +6,22 @@ export default function PacksPage() {
   const packs = products.filter((product) => product.isPack)
 
   return (
-    <div className="container mx-auto px-6 py-16">
-      <div className="mb-16 text-center">
+    <main className="container mx-auto px-6 py-16">
+      <header className="mb-16 text-center">
         <h1 className="text-5xl font-serif font-light mb-6 text-black">Jewelry Packs</h1>
         <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto leading-relaxed">
           Curated collections of luxury bracelets inspired by the world's most prestigious jewelry houses. Complete your
           stack with these exclusive pack deals.
         </p>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {packs.map((pack) => (
           <PackCard key={pack.id} product={pack} />
         ))}
-      </div>
+      </section>
 
-      <div className="mt-16 bg-gray-50 p-8 border border-gray-200 rounded-none">
+      <section className="mt-16 bg-gray-50 p-8 border border-gray-200 rounded-none">
         <div className="text-center">
           <h3 className="text-2xl font-serif font-medium mb-4 text-black">Why Choose Our Packs?</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
@@ -48,7 +48,7 @@ export default function PacksPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }

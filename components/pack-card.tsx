@@ -16,7 +16,7 @@ interface PackCardProps {
 }
 
 export function PackCard({ product }: PackCardProps) {
-  const { addItem } = useCart()
+  const { addItem, isLoading } = useCart()
   const { toast } = useToast()
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -99,7 +99,7 @@ export function PackCard({ product }: PackCardProps) {
           <Button
             onClick={handleAddToCart}
             className="w-full bg-black hover:bg-gray-900 text-white border-0 py-3 text-sm tracking-wider font-medium rounded-none"
-            disabled={!product.inStock}
+            disabled={!product.inStock || isLoading}
           >
             <ShoppingCart className="h-4 w-4 mr-2" />
             {product.inStock ? "ADD PACK TO CART" : "OUT OF STOCK"}

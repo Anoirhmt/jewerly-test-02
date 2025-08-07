@@ -8,7 +8,11 @@ import { formatPrice } from "@/utils/format-price"
 import Link from "next/link"
 
 export function CartItems() {
-  const { items, updateQuantity, removeItem } = useCart()
+  const { items, updateQuantity, removeItem, isLoading } = useCart()
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   if (items.length === 0) {
     return (

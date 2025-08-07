@@ -9,6 +9,7 @@ interface CartItem extends Product {
 
 interface CartState {
   items: CartItem[]
+  isLoading: boolean
 }
 
 interface CartContextType extends CartState {
@@ -26,13 +27,20 @@ type CartAction =
   | { type: "UPDATE_QUANTITY"; payload: { id: number; quantity: number } }
   | { type: "CLEAR_CART" }
   | { type: "LOAD_CART"; payload: CartItem[] }
+  | { type: "SET_LOADING"; payload: boolean }
 
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
+    case "SET_LOADING":
+      return {
+        ...state,
+        isLoading: action.payload,
+      }
     case "LOAD_CART":
       return {
         ...state,
         items: action.payload,
+        isLoading: false,
       }
 
     case "ADD_ITEM": {
@@ -106,7 +114,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       if (typeof window !== "undefined") {
         localStorage.removeItem("cart")
       }
-      return { items: [] }
+      return { ...state, items: [] }
     }
 
     default:
@@ -115,7 +123,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(cartReducer, { items: [] })
+  const [state, dispatch] = useReducer(cartReducer, { items: [], isLoading: true })
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -127,7 +135,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
           dispatch({ type: "LOAD_CART", payload: parsedCart })
         } catch (error) {
           console.error("Error loading cart from localStorage:", error)
+          dispatch({ type: "SET_LOADING", payload: false })
         }
+      } else {
+        dispatch({ type: "SET_LOADING", payload: false })
       }
     }
   }, [])

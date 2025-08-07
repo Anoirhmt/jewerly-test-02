@@ -3,14 +3,14 @@ import { ProductFilters } from "@/components/product-filters"
 
 export default function ProductsPage() {
   return (
-    <div className="container mx-auto px-6 py-16">
-      <div className="mb-16 text-center">
+    <section className="container mx-auto px-6 py-16">
+      <header className="mb-16 text-center">
         <h1 className="text-5xl font-serif font-light mb-6 text-black">Our Collection</h1>
         <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto leading-relaxed">
           Discover our carefully curated selection of premium products, each chosen for its exceptional quality and
           timeless appeal.
         </p>
-      </div>
+      </header>
 
       <div className="flex flex-col lg:flex-row gap-12">
         <aside className="lg:w-80">
@@ -31,6 +31,6 @@ export default function ProductsPage() {
           <ProductGrid />
         </main>
       </div>
-    </div>
+    </section>
   )
 }
