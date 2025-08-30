@@ -6,6 +6,8 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { CartProvider } from "@/context/cart-context"
 import { Toaster } from "@/components/ui/toaster"
+import Link from "next/link"
+import Image from "next/image"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,9 +22,17 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: "LUXE - Your Premium Ecommerce Store",
+  title: "ELARAIN JEWELRY",
   description: "Discover amazing products at unbeatable prices",
-    generator: 'v0.dev'
+  generator: "v0.dev",
+  icons: {
+    icon: [
+      {
+        url: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Whisk_10ef3247e2%20-%20Copy-modified-gLXRu1tXPExbkNdyd4KaSz6Sd1TkhC.png",
+        type: "image/png",
+      },
+    ],
+  },
 }
 
 export default function RootLayout({
@@ -37,6 +47,10 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer />
+          {/* WhatsApp floating button */}
+          <Link href="https://wa.me/212693011454" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="fixed bottom-4 right-4 z-50 inline-flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg">
+            <Image src="/whatsapp.png" alt="WhatsApp" width={48} height={48} priority />
+          </Link>
           <Toaster />
         </CartProvider>
       </body>

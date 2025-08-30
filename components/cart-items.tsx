@@ -29,40 +29,41 @@ export function CartItems() {
   }
 
   return (
-    <div className="space-y-4">
+    <ul className="space-y-4">
       {items.map((item) => (
         <Card key={item.id}>
           <CardContent className="p-6">
-            <div className="flex items-center space-x-4">
+            <article className="flex items-center space-x-4">
               <img
                 src={item.image || "/placeholder.svg"}
                 alt={item.name}
                 className="w-20 h-20 object-cover rounded-lg"
               />
 
-              <div className="flex-1">
+              <header className="flex-1">
                 <Link href={`/products/${item.id}`}>
                   <h3 className="font-semibold text-lg hover:text-primary transition-colors">{item.name}</h3>
                 </Link>
                 <p className="text-gray-600">{formatPrice(item.price)}</p>
-              </div>
+              </header>
 
-              <div className="flex items-center space-x-2">
+              <section className="flex items-center space-x-2" aria-label="Quantity controls">
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
                   disabled={item.quantity <= 1}
+                  aria-label="Decrease quantity"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
-                <span className="w-12 text-center font-medium">{item.quantity}</span>
-                <Button variant="outline" size="icon" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                <span className="w-12 text-center font-medium" aria-label={`Quantity: ${item.quantity}`}>{item.quantity}</span>
+                <Button variant="outline" size="icon" onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label="Increase quantity">
                   <Plus className="h-4 w-4" />
                 </Button>
-              </div>
+              </section>
 
-              <div className="text-right">
+              <footer className="text-right">
                 <p className="font-semibold text-lg">{formatPrice(item.price * item.quantity)}</p>
                 <Button
                   variant="ghost"
@@ -73,11 +74,11 @@ export function CartItems() {
                   <Trash2 className="h-4 w-4 mr-1" />
                   Remove
                 </Button>
-              </div>
-            </div>
+              </footer>
+            </article>
           </CardContent>
         </Card>
       ))}
-    </div>
+    </ul>
   )
 }

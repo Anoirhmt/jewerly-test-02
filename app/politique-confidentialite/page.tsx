@@ -1,54 +1,47 @@
-import { PackCard } from "@/components/pack-card"
-import { products } from "@/data/products"
-import { Package, Heart } from "lucide-react" // Importing Package and Heart icons
+import React from "react";
 
-export default function PacksPage() {
-  const packs = products.filter((product) => product.isPack)
-
+export default function PolitiqueConfidentialitePage() {
   return (
-    <div className="container mx-auto px-6 py-16">
-      <div className="mb-16 text-center">
-        <h1 className="text-5xl font-serif font-light mb-6 text-black">Jewelry Packs</h1>
-        <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto leading-relaxed">
-          Curated collections of luxury bracelets inspired by the world's most prestigious jewelry houses. Complete your
-          stack with these exclusive pack deals.
+    <main className="container mx-auto px-4 py-16 max-w-3xl">
+      <h1 className="text-3xl font-semibold mb-6">Politique de confidentialité</h1>
+      <div className="text-sm leading-relaxed text-black space-y-4">
+        <p>
+          Cette politique de confidentialité explique comment ELARAIN collecte, utilise et protège vos informations personnelles lorsque vous visitez notre site ou effectuez un achat.
         </p>
-      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {packs.map((pack) => (
-          <PackCard key={pack.id} product={pack} />
-        ))}
-      </div>
+        <p className="font-medium">1. Données collectées</p>
+        <ul className="list-none pl-5 space-y-1">
+          <li>Informations d'identification : nom, adresse, email, numéro de téléphone.</li>
+          <li>Données de paiement : uniquement les informations nécessaires pour traiter votre transaction, transmises via une connexion chiffrée.</li>
+          <li>Données de navigation : pages consultées, durée de visite, adresse IP et type d'appareil.</li>
+        </ul>
 
-      <div className="mt-16 bg-gray-50 p-8 border border-gray-200 rounded-none">
-        <div className="text-center">
-          <h3 className="text-2xl font-serif font-medium mb-4 text-black">Why Choose Our Packs?</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-black text-white flex items-center justify-center mx-auto mb-4">
-                <Package className="h-6 w-6" />
-              </div>
-              <h4 className="font-medium mb-2">Curated Selection</h4>
-              <p className="text-gray-600 text-sm">Expertly chosen combinations that complement each other perfectly</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-black text-white flex items-center justify-center mx-auto mb-4">
-                <span className="text-lg font-bold">%</span>
-              </div>
-              <h4 className="font-medium mb-2">Better Value</h4>
-              <p className="text-gray-600 text-sm">Save up to 40% compared to buying individual pieces</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-black text-white flex items-center justify-center mx-auto mb-4">
-                <Heart className="h-6 w-6" />
-              </div>
-              <h4 className="font-medium mb-2">Perfect Stack</h4>
-              <p className="text-gray-600 text-sm">Ready-to-wear combinations for the perfect layered look</p>
-            </div>
-          </div>
-        </div>
+        <p className="font-medium">2. Utilisation des informations</p>
+        <ul className="list-none pl-5 space-y-1">
+          <li>Traitement et livraison de vos commandes.</li>
+          <li>Service client et réponses à vos demandes.</li>
+          <li>Amélioration continue de notre site et de nos offres.</li>
+          <li>Envoi d'actualités et d'offres, uniquement avec votre consentement explicite.</li>
+        </ul>
+
+        <p className="font-medium">3. Partage des données</p>
+        <p>
+          Vos informations ne sont jamais vendues. Elles ne sont partagées qu'avec des prestataires de confiance (paiement, logistique) dans la stricte mesure nécessaire à l'exécution de vos commandes.
+        </p>
+
+        <p className="font-medium">4. Vos droits</p>
+        <ul className="list-none pl-5 space-y-1">
+          <li>Droit d'accès, de rectification et de suppression de vos données.</li>
+          <li>Droit de vous opposer au traitement ou de demander une limitation.</li>
+          <li>Droit à la portabilité de vos informations.</li>
+        </ul>
+
+        <p>
+          Pour exercer l'un de ces droits, contactez-nous à : 0693-011454.
+        </p>
+
+        <p className="mt-4">Dernière mise à jour : 01/06/2024.</p>
       </div>
-    </div>
-  )
+    </main>
+  );
 }

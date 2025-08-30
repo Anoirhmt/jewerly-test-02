@@ -1,12 +1,14 @@
 import { ProductCard } from "./product-card"
-import { products } from "@/data/products"
 
 interface RelatedProductsProps {
-  currentProductId: number
+  currentProductId: string | number
+  products: any[]
 }
 
-export function RelatedProducts({ currentProductId }: RelatedProductsProps) {
-  const relatedProducts = products.filter((product) => product.id !== currentProductId).slice(0, 4)
+export function RelatedProducts({ currentProductId, products }: RelatedProductsProps) {
+  const relatedProducts = products
+    .filter((product) => product.id.toString() !== currentProductId.toString())
+    .slice(0, 4)
 
   return (
     <section className="mt-16">

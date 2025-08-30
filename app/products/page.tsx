@@ -1,36 +1,77 @@
 import { ProductGrid } from "@/components/product-grid"
-import { ProductFilters } from "@/components/product-filters"
 
-export default function ProductsPage() {
+import { getProductsFromFirestore } from "@/lib/firestore-products"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+
+const ITEMS_PER_PAGE = 9
+
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams?: { search?: string; page?: string }
+}) {
+  const products = await getProductsFromFirestore()
+  const query = searchParams?.search?.toLowerCase() || ""
+  const filtered = query ? products.filter((p) => p.name.toLowerCase().includes(query)) : products
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
+  let currentPage = Number(searchParams?.page) || 1
+  if (currentPage < 1 || currentPage > totalPages) currentPage = 1
+  const start = (currentPage - 1) * ITEMS_PER_PAGE
+  const paginated = filtered.slice(start, start + ITEMS_PER_PAGE)
   return (
     <section className="container mx-auto px-6 py-16">
       <header className="mb-16 text-center">
-        <h1 className="text-5xl font-serif font-light mb-6 text-black">Our Collection</h1>
-        <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto leading-relaxed">
-          Discover our carefully curated selection of premium products, each chosen for its exceptional quality and
-          timeless appeal.
-        </p>
+        <h1 className="text-5xl font-serif font-semibold uppercase tracking-wide mb-6 text-black">Our Collection</h1>
+
       </header>
 
-      <div className="flex flex-col lg:flex-row gap-12">
-        <aside className="lg:w-80">
-          <ProductFilters />
-        </aside>
-
+      <div className="gap-12">
         <main className="flex-1">
-          <div className="mb-8 flex items-center justify-between border-b border-gray-200 pb-6">
-            <p className="text-gray-600 font-light">Showing 1-12 of 156 products</p>
-            <select className="border border-gray-200 rounded-none px-6 py-3 focus:outline-none focus:ring-1 focus:ring-black focus:border-black bg-white text-gray-900 font-light">
-              <option>Sort by: Featured</option>
-              <option>Price: Low to High</option>
-              <option>Price: High to Low</option>
-              <option>Customer Rating</option>
-              <option>Newest First</option>
-            </select>
-          </div>
-          <ProductGrid />
+          <ProductGrid products={paginated} />
         </main>
       </div>
+
+      {totalPages > 1 && (
+        <Pagination className="mt-12">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={`?${query ? `search=${encodeURIComponent(query)}&` : ""}page=${currentPage - 1}`}
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+
+            {Array.from({ length: totalPages }).map((_, i) => {
+              const pageNum = i + 1
+              return (
+                <PaginationItem key={pageNum}>
+                  <PaginationLink
+                    href={`?${query ? `search=${encodeURIComponent(query)}&` : ""}page=${pageNum}`}
+                    isActive={pageNum === currentPage}
+                  >
+                    {pageNum}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            })}
+
+            <PaginationItem>
+              <PaginationNext
+                href={`?${query ? `search=${encodeURIComponent(query)}&` : ""}page=${currentPage + 1}`}
+                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </section>
   )
 }

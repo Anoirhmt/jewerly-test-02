@@ -20,45 +20,45 @@ export function CheckoutSummary() {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Order Items */}
-        <div className="space-y-3">
+        <section className="space-y-3">
           {items.map((item) => (
-            <div key={item.id} className="flex items-center space-x-3">
+            <article key={item.id} className="flex items-center space-x-3">
               <img src={item.image || "/placeholder.svg"} alt={item.name} className="w-12 h-12 object-cover rounded" />
-              <div className="flex-1">
-                <p className="font-medium text-sm">{item.name}</p>
+              <section className="flex-1">
+                <h3 className="font-medium text-sm">{item.name}</h3>
                 <p className="text-gray-600 text-sm">Qty: {item.quantity}</p>
-              </div>
+              </section>
               <p className="font-medium">{formatPrice(item.price * item.quantity)}</p>
-            </div>
+            </article>
           ))}
-        </div>
+        </section>
 
         <Separator />
 
         {/* Pricing Breakdown */}
-        <div className="space-y-2">
-          <div className="flex justify-between">
+        <section className="space-y-2">
+          <p className="flex justify-between">
             <span>Subtotal</span>
             <span>{formatPrice(subtotal)}</span>
-          </div>
+          </p>
 
-          <div className="flex justify-between">
+          <p className="flex justify-between">
             <span>Shipping</span>
             <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
-          </div>
+          </p>
 
-          <div className="flex justify-between">
+          <p className="flex justify-between">
             <span>Tax</span>
             <span>{formatPrice(tax)}</span>
-          </div>
-        </div>
+          </p>
+        </section>
 
         <Separator />
 
-        <div className="flex justify-between text-lg font-semibold">
+        <p className="flex justify-between text-lg font-semibold">
           <span>Total</span>
           <span>{formatPrice(total)}</span>
-        </div>
+        </p>
 
         {subtotal < 50 && (
           <p className="text-sm text-gray-600">Add {formatPrice(50 - subtotal)} more for free shipping!</p>

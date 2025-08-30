@@ -1,9 +1,14 @@
+'use client';
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Gem, Heart, Star, Crown } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 import { formatPrice } from "@/utils/format-price"
+import { useEffect, useState } from "react"
+import { ProductCard } from "@/components/product-card"
+import type { Product } from "@/data/products"
+import { getPromoFromFirestore } from "@/lib/firestore-products"
 
 export function FeaturedCategories() {
   const categories = [
@@ -37,46 +42,25 @@ export function FeaturedCategories() {
     },
   ]
 
+  const [promos, setPromos] = useState<Product[]>([])
+  useEffect(() => {
+    getPromoFromFirestore().then(setPromos)
+  }, [])
+
   return (
     <section className="py-20 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-serif font-light mb-6 text-black">Explore Our Collections</h2>
-          <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto">
-            Discover carefully curated jewelry collections that embody elegance and sophistication
-          </p>
-        </div>
+      <section className="container mx-auto px-6">
+        <header className="text-center mb-16">
+          <h2 className="text-4xl font-serif font-light mb-6 text-black">Promo of the Week</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {categories.map((category) => {
-            const IconComponent = category.icon
-            return (
-              <Card
-                key={category.name}
-                className="group hover:premium-shadow transition-all duration-500 border-0 bg-white"
-              >
-                <CardContent className="p-8 text-center">
-                  <div
-                    className={`w-16 h-16 ${category.color} text-white rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <IconComponent className="h-8 w-8" />
-                  </div>
-                  <h3 className="text-xl font-serif font-medium mb-3 text-black">{category.name}</h3>
-                  <p className="text-gray-600 font-light mb-6 leading-relaxed">{category.description}</p>
-                  <Link href={category.href}>
-                    <Button
-                      variant="outline"
-                      className="border-gray-300 hover:bg-black hover:text-white hover:border-black transition-all duration-300 rounded-none bg-transparent"
-                    >
-                      Explore Collection
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )
-          })}
-        </div>
-      </div>
+        </header>
+
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {promos.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </section>
+      </section>
     </section>
   )
 }
@@ -135,3 +119,5 @@ export function CheckoutSummary() {
     </Card>
   )
 }
+
+// Remove misplaced global promos state
