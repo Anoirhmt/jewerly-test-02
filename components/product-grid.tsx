@@ -49,7 +49,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
         </>
       )}
 
-      {products && (showNavCards ? products.filter(product => product.isPack).slice(0, 12) : products)
+      {products && (showNavCards ? products.filter(product => product.isPack).sort((a, b) => a.id - b.id) : products)
         .map((product) =>
           product.isPack ? (
             <PackCard key={product.id} product={product} />
