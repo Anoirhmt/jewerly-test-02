@@ -51,7 +51,7 @@ export function FeaturedCategories() {
     <section className="py-20 bg-gray-50">
       <section className="container mx-auto px-6">
         <header className="text-center mb-16">
-          <h2 className="text-4xl font-serif font-light mb-6 text-black">Promo of the Week</h2>
+          <h2 className="text-4xl font-serif font-light mb-6 text-black">PROMO DE LA SEMAINE</h2>
 
         </header>
 
