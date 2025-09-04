@@ -245,13 +245,18 @@ const total = subtotal + delivery
                 <button
                   type="button"
                   onClick={() => setCityDialogOpen(true)}
-                  className="flex h-12 w-full items-center justify-between rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  className={`flex h-12 w-full items-center justify-between rounded-lg bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer transition-all ${formData.city ? 'border border-gray-300 hover:border-black hover:ring-1 hover:ring-black' : 'border-2 border-dashed border-blue-500 animate-bounce'}`}
                 >
-                  <span className="line-clamp-1 text-left">
+                  <span
+                    className={`line-clamp-1 text-left ${formData.city ? 'text-black' : 'text-gray-400 animate-pulse'}`}
+                  >
                     {formData.city ? formData.city.charAt(0).toUpperCase() + formData.city.slice(1) : "Sélectionnez votre ville"}
                   </span>
                   <svg xmlns="http://www.w3.org/2000/svg" className="lucide lucide-search h-4 w-4 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
+                   {!formData.city && (
+                     <p className="text-xs text-blue-600 mt-1 animate-pulse">Cliquez pour sélectionner votre ville</p>
+                   )}
 
                 <CommandDialog open={cityDialogOpen} onOpenChange={setCityDialogOpen}>
                   <CommandInput placeholder="Rechercher une ville..." />
