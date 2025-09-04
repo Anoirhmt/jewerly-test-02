@@ -9,13 +9,13 @@ export function Hero() {
   
   
   return (
-    <section className="relative h-screen overflow-hidden">
+    <section className="relative h-[50vh] sm:h-[100dvh] min-h-[300px] sm:min-h-[600px] overflow-hidden">
       {/* Background Image */}
       <Image
         src="https://drive.google.com/uc?export=view&id=1KIcQj46EItlsooVyvdQYaZ9hl5_kZP1U"
         alt="Elarain Luxury Jewelry Collection"
         fill
-        className="object-cover"
+        className="object-cover object-center"
         priority
         quality={70}
         sizes="100vw"
