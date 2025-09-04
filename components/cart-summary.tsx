@@ -36,10 +36,7 @@ export function CartSummary() {
 
           <Separator className="bg-gray-200" />
 
-          <p className="flex justify-between text-xl font-serif font-medium">
-            <span className="text-black">Total</span>
-            <span className="text-black">{formatPrice(total)}</span>
-          </p>
+{/* removed total price paragraph */}
         </section>
 
 
