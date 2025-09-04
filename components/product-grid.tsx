@@ -37,8 +37,8 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
     <CardContent className="p-0">
       <Link href="/products" className="block relative w-full aspect-video overflow-hidden">
         <Image
-          src="https://drive.google.com/uc?id=1PqfHQHgNgb569kvwjSZEDcpOrCZzfY-S"
-          alt="Nos collection"
+          src="https://drive.google.com/uc?id=1_Q2J7loYoicK5N57DfyhYOwWDiObYL3q"
+           alt="Nos collection"
           fill
           className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110" />
       </Link>
