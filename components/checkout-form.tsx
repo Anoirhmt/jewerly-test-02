@@ -64,7 +64,7 @@ export function CheckoutForm() {
 
     try {
       await fetch(
-        "https://script.google.com/macros/s/AKfycbzk2B2OigYnpg9LMGwEWBkUTjEe0NiOP_lv9Bro7-dMuclCe-dX1IN12wBVUiFecuZ2LA/exec",
+        "https://script.google.com/macros/s/AKfycby8cjoqZpv9aOP71a2HfN3-wPWboHf_uTJD7u0hfaKI7E-0kJcFV_HMu6iqU9-6YXfctg/exec",
         {
           method: "POST",
           mode: "no-cors",
