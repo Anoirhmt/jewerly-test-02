@@ -1,17 +1,16 @@
-export interface ManagementProduct {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  imageUrl: string;
-}
+import type { Product } from "./products";
 
-export const managementProducts: ManagementProduct[] = [
+export const managementProducts: Product[] = [
   {
-    id: "1",
+    id: 1,
     name: "Sample Product",
-    price: 0,
+    price: 200,
+    originalPrice: 250,
     description: "Placeholder description",
-    imageUrl: "/path/to/image.jpg",
+    image: "https://raw.githubusercontent.com/omarhmt08/1collection/main/photo_5825869369337562908_y.jpg",
+    category: "watch",
+    rating: 0,
+    reviews: 0,
+    inStock: true,
   },
 ];

@@ -1,5 +1,5 @@
 import { ProductGrid } from "@/components/product-grid";
-import { getProductsFromFirestore } from "@/lib/firestore-products";
+import { managementProducts } from "@/data/management-products";
 import {
   Pagination,
   PaginationContent,
@@ -16,9 +16,8 @@ export default async function WatchesPage({
 }: {
   searchParams?: { search?: string; page?: string };
 }) {
-  const products = await getProductsFromFirestore();
-  // Keep only products whose category includes "watch" (case-insensitive)
-  const watches = products.filter((p: any) =>
+  // Use locally managed products list; filter for those tagged as watches
+  const watches = managementProducts.filter((p: any) =>
     p.category?.toLowerCase().includes("watch")
   );
 
