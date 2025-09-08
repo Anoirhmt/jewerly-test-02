@@ -46,6 +46,22 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
   </Card>
   <Link href="/products" className="mt-2 text-center font-semibold text-gray-800 hover:text-[#D4AF37] transition-colors">NOS COLLECTION →</Link>
 </div>
+
+          {/* Navigation card: Watches */}
+            <div className="col-span-1 lg:col-span-2 xl:col-span-2 flex flex-col">
+  <Card className="group hover:premium-shadow hover:-translate-y-1 transform-gpu transition-all duration-700 border border-[#D4AF37]/40 shadow-[0_0_10px_rgba(212,175,55,0.4)] bg-white luxury-card animate-fade-in overflow-hidden rounded-lg flex-grow">
+    <CardContent className="p-0">
+      <Link href="/watches" className="block relative w-full aspect-video overflow-hidden">
+        <Image
+          src="https://drive.google.com/uc?id=1wU-K1EzW_CBIhs1AN6cqi3d3ybMVgxu9"
+          alt="Nos montres"
+          fill
+          className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110" />
+      </Link>
+    </CardContent>
+  </Card>
+  <Link href="/watches" className="mt-2 text-center font-semibold text-gray-800 hover:text-[#D4AF37] transition-colors">NOS MONTRES →</Link>
+</div>
         </>
       )}
 
