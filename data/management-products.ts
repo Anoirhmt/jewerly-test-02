@@ -63,9 +63,9 @@ export const managementProducts: Product[] = [
     description: "Gold-tone hour and minute hands",
     price: 99,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874106_y.jpg",
-    category: "",
-    rating: 0,
-    reviews: 0,
+    category: "watch",
+    rating: 6,
+    reviews: 7,
     inStock: true,
   },
   {
