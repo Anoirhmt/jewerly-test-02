@@ -7,7 +7,7 @@ export const managementProducts: Product[] = [
     name: "Cartier Women DIAMONDS",
     description: "best quilite gold watche cartier diamond ",
     price: 150,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jp",
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg",
     category: "watch",
     rating: 4.8,
     reviews: 4.8,
