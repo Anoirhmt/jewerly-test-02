@@ -48,14 +48,14 @@ export const managementProducts: Product[] = [
   },
   {
     id: 5,
-    name: "Cartier Watch",
-    description: "Cartier Watch",
+    name: "Cartier Watch femmes",
+    description: "Cartier Watch gold master quilite",
     price: 150,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg",
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5909153140303840928_y.jpg",
     category: "watch",
     rating: 4.8,
     reviews: 4.8,
-    inStock: true,
+    inStock: false,
   },
   {
     id: 6,
