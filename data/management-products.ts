@@ -17,7 +17,7 @@ export const managementProducts: Product[] = [
     id: 4,
     name: "Cartier Watch",
     description: "Cartier Watch",
-    price: 50,
+    price: 150,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg",
     category: "watch",
     rating: 4.8,
@@ -27,7 +27,7 @@ export const managementProducts: Product[] = [
   {
     id: 5,
     name: "yahe Gold  – Pink Dial",
-    description: "- Gold-tone hour and minute hands",
+    description: "Gold-tone hour and minute hands",
     price: 99,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874106_y.jpg",
     category: "",
