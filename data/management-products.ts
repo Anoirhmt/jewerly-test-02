@@ -4,10 +4,10 @@ import type { Product } from "./products";
 export const managementProducts: Product[] = [
   {
     id: 1,
-    name: "Cartier Watch",
-    description: "Cartier Watch",
+    name: "Cartier Women DIAMONDS",
+    description: "best quilite gold watche cartier diamond ",
     price: 150,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg",
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jp",
     category: "watch",
     rating: 4.8,
     reviews: 4.8,
@@ -15,10 +15,10 @@ export const managementProducts: Product[] = [
   },
   {
     id: 2,
-    name: "Cartier Watch",
-    description: "Cartier Watch",
+    name: "MICHAEL KORS femmes",
+    description: "MICHAEL KORS gold",
     price: 150,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg",
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/Pin%20by%20Zsu%20Zsu%20on%20ekszerek%20_%20Mk%20watch%20women%20Womens%20watches%20Classy%20jewelry.jpg",
     category: "watch",
     rating: 4.8,
     reviews: 4.8,
@@ -33,7 +33,7 @@ export const managementProducts: Product[] = [
     category: "watch",
     rating: 4.8,
     reviews: 4.8,
-    inStock: true,
+    inStock: false,
   },
   {
     id: 4,
