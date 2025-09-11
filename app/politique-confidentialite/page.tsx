@@ -37,7 +37,7 @@ export default function PolitiqueConfidentialitePage() {
         </ul>
 
         <p>
-          Pour exercer l'un de ces droits, contactez-nous à : 0693-011454.
+          Pour exercer l'un de ces droits, contactez-nous à : +212 693-011454.
         </p>
 
         <p className="mt-4">Dernière mise à jour : 01/06/2024.</p>
