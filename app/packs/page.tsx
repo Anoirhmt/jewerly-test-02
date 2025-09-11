@@ -1,5 +1,5 @@
 import { PackCard } from "@/components/pack-card"
-import { getPacksFromFirestore } from "@/lib/firestore-products"
+import { packsProducts } from "@/data/packs-products"
 import {
   Pagination,
   PaginationContent,
@@ -16,7 +16,7 @@ export default async function PacksPage({
 }: {
   searchParams: { page?: string }
 }) {
-  const packs = await getPacksFromFirestore()
+  const packs = packsProducts.filter(pack => pack.inStock && pack.name)
   const totalPages = Math.ceil(packs.length / ITEMS_PER_PAGE)
 
   // current page from query string, fallback to 1

@@ -1,0 +1,53 @@
+import type { Product } from "./products";
+
+// Promo products - weekly promotional items
+export const promoProducts: Product[] = [
+  {
+    id: 101,
+    name: "pack summer",
+    description: "Special summer jewelry collection pack",
+    price: 179,
+    originalPrice: 220,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874102_y.jpg",
+    category: "pack",
+    rating: 4.9,
+    reviews: 145,
+    inStock: true,
+    isPack: false,
+  },
+  {
+    id: 102,
+    name: "pack 2",
+    description: "Elegant promotional jewelry pack",
+    price: 179,
+    originalPrice: 210,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874103_y.jpg",
+    category: "pack",
+    rating: 4.8,
+    reviews: 98,
+    inStock: true,
+    isPack: false,
+  },
+  {
+    id: 3,
+    name: "",
+    description: "",
+    price: 0,
+    image: "",
+    category: "",
+    rating: 0,
+    reviews: 0,
+    inStock: false,
+  },
+  {
+    id: 4,
+    name: "",
+    description: "",
+    price: 0,
+    image: "",
+    category: "",
+    rating: 0,
+    reviews: 0,
+    inStock: false,
+  },
+];

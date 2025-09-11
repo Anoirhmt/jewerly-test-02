@@ -2,6 +2,9 @@ import { ProductDetails } from "@/components/product-details"
 import { RelatedProducts } from "@/components/related-products"
 import { products } from "@/data/products"
 import { managementProducts } from "@/data/management-products"
+import { collectionProducts } from "@/data/collection-products"
+import { promoProducts } from "@/data/promo-products"
+import { packsProducts } from "@/data/packs-products"
 import { notFound } from "next/navigation"
 import { getProductsFromFirestore, getPacksFromFirestore, getPromoFromFirestore } from "@/lib/firestore-products"
 import { doc, getDoc } from "firebase/firestore"
@@ -17,9 +20,32 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const idParam = params.id
 
   // Try local static list first (fast)
-  const mergedProducts = [...products, ...managementProducts]
-  let product: any | undefined = mergedProducts.find((p) => p.id.toString() === idParam)
-  let relatedProductsSource: any[] = mergedProducts
+  const mergedProducts = [
+    ...managementProducts,
+    ...packsProducts,
+    ...promoProducts,
+    ...collectionProducts,
+    ...products,
+  ]
+
+  // Ignore placeholder items without a name to avoid duplicate-ID collisions
+  const mergedProductsFiltered = mergedProducts.filter((p) => p.name)
+
+  let product: any | undefined = mergedProductsFiltered.find((p) => p.id.toString() === idParam)
+  let relatedProductsSource: any[] = mergedProductsFiltered
+
+  // Narrow related products source to the dataset where the product was found locally
+  if (product && relatedProductsSource === mergedProductsFiltered) {
+    if (promoProducts.some((p) => p.id.toString() === product.id.toString())) {
+      relatedProductsSource = promoProducts.filter((p) => p.name)
+    } else if (packsProducts.some((p) => p.id.toString() === product.id.toString())) {
+      relatedProductsSource = packsProducts.filter((p) => p.name)
+    } else if (collectionProducts.some((p) => p.id.toString() === product.id.toString())) {
+      relatedProductsSource = collectionProducts.filter((p) => p.name)
+    } else if (managementProducts.some((p) => p.id.toString() === product.id.toString())) {
+      relatedProductsSource = managementProducts.filter((p) => p.name)
+    }
+  }
 
   // If not found locally, fetch the single document from each collection in parallel (lighter than full collection scans)
   if (!product) {

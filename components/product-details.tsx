@@ -124,7 +124,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         <div className="flex flex-col sm:flex-row gap-4">
           <Button
             onClick={handleBuyNow}
-            className="flex-1 bg-white border border-black text-black hover:bg-gray-100 rounded-none transform transition-transform duration-500 ease-in-out hover:scale-105"
+            className="flex-1 relative overflow-hidden bg-gradient-to-r from-amber-400 to-yellow-300 text-black px-4 py-2 font-semibold tracking-wide rounded-none uppercase transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-amber-500/25"
             size="lg"
             disabled={!product.inStock}
           >

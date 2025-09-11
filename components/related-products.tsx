@@ -6,9 +6,22 @@ interface RelatedProductsProps {
 }
 
 export function RelatedProducts({ currentProductId, products }: RelatedProductsProps) {
-  const relatedProducts = products
-    .filter((product) => product.id.toString() !== currentProductId.toString())
-    .slice(0, 4)
+  const currentProduct = products.find((p) => p.id.toString() === currentProductId.toString())
+
+  // Prefer same-category items, fill remaining slots with any other products from the list
+  let relatedProducts = products.filter(
+    (product) => product.id.toString() !== currentProductId.toString() &&
+      (currentProduct ? product.category === currentProduct.category : false)
+  )
+
+  if (relatedProducts.length < 4) {
+    const additional = products.filter(
+      (p) => p.id.toString() !== currentProductId.toString() && !relatedProducts.includes(p)
+    )
+    relatedProducts = [...relatedProducts, ...additional].slice(0, 4)
+  } else {
+    relatedProducts = relatedProducts.slice(0, 4)
+  }
 
   return (
     <section className="mt-16">

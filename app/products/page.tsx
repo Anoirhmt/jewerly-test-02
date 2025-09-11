@@ -1,6 +1,5 @@
 import { ProductGrid } from "@/components/product-grid"
-
-import { getProductsFromFirestore } from "@/lib/firestore-products"
+import { collectionProducts } from "@/data/collection-products"
 import {
   Pagination,
   PaginationContent,
@@ -17,9 +16,10 @@ export default async function ProductsPage({
 }: {
   searchParams?: { search?: string; page?: string }
 }) {
-  const products = await getProductsFromFirestore()
+  // Use collection-specific products list; filter for products that are in stock
+  const products = collectionProducts.filter((p: any) => p.inStock && p.name && p.name.trim() !== "")
   const query = searchParams?.search?.toLowerCase() || ""
-  const filtered = query ? products.filter((p) => p.name.toLowerCase().includes(query)) : products
+  const filtered = query ? products.filter((p: any) => p.name.toLowerCase().includes(query)) : products
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   let currentPage = Number(searchParams?.page) || 1

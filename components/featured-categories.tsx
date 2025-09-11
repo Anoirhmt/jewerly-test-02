@@ -5,10 +5,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Gem, Heart, Star, Crown } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 import { formatPrice } from "@/utils/format-price"
-import { useEffect, useState } from "react"
+import React from "react"
 import { ProductCard } from "@/components/product-card"
 import type { Product } from "@/data/products"
-import { getPromoFromFirestore } from "@/lib/firestore-products"
+import { promoProducts } from "@/data/promo-products"
 
 export function FeaturedCategories() {
   const categories = [
@@ -42,10 +42,7 @@ export function FeaturedCategories() {
     },
   ]
 
-  const [promos, setPromos] = useState<Product[]>([])
-  useEffect(() => {
-    getPromoFromFirestore().then(setPromos)
-  }, [])
+  const promos = promoProducts.filter(promo => promo.inStock && promo.name)
 
   return (
     <section className="py-20 bg-gray-50">

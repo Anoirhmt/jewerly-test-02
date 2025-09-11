@@ -4,7 +4,7 @@ const { getStorage, ref, uploadBytes, getDownloadURL } = require('firebase/stora
 const fs = require('fs');
 const path = require('path');
 
-// Firebase configuration
+// Firebase configuration (analytics measurementId removed)
 const firebaseConfig = {
   apiKey: "AIzaSyCZEHX0W0LHSkwJdDUdz82-n4XwYdJqdY0",
   authDomain: "manage-a0f99.firebaseapp.com",
@@ -12,7 +12,6 @@ const firebaseConfig = {
   storageBucket: "manage-a0f99.appspot.com",
   messagingSenderId: "284206270474",
   appId: "1:284206270474:web:f246ac83064849d45937f3",
-  measurementId: "G-JQM4GY06QE",
 };
 
 // Initialize Firebase

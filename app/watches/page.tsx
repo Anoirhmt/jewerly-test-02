@@ -36,7 +36,7 @@ export default async function WatchesPage({
     <section className="container mx-auto px-6 py-16">
       <header className="mb-16 text-center">
         <h1 className="text-5xl font-serif font-semibold uppercase tracking-wide mb-6 text-black">
-          Our Watches
+          Our Packs
         </h1>
       </header>
 

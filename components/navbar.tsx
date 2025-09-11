@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Menu, X, Search } from "lucide-react"
+import { ShoppingBag, Menu, X, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -40,25 +40,26 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-16">
             <Link
               href="/"
-              className="text-gray-700 hover:text-black transition-all duration-300 font-light text-sm tracking-[0.2em] uppercase relative group"
+              className="text-gray-600 hover:text-black/90 transition-all duration-200 font-medium text-sm tracking-wider uppercase relative group"
             >
               Home
               <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               href="/products"
-              className="text-gray-700 hover:text-black transition-all duration-300 font-light text-sm tracking-[0.2em] uppercase relative group"
+              className="text-gray-600 hover:text-black/90 transition-all duration-200 font-medium text-sm tracking-wider uppercase relative group"
             >
               Collection
               <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               href="/packs"
-              className="text-gray-700 hover:text-black transition-all duration-300 font-light text-sm tracking-[0.2em] uppercase relative group"
+              className="text-gray-600 hover:text-black/90 transition-all duration-200 font-medium text-sm tracking-wider uppercase relative group"
             >
               Luxury Packs
               <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
             </Link>
+
           </div>
 
           {/* Cart & Search */}
@@ -70,26 +71,29 @@ export function Navbar() {
               className="hover:bg-gray-50/50 transition-colors duration-300"
               onClick={() => setSearchOpen(!searchOpen)}
             >
-              <Search className="h-5 w-5 text-gray-800" />
-            </Button>
+              <Search className="h-5 w-5" />
+             </Button>
             {searchOpen && (
-              <div className="absolute right-14 md:right-16 top-1/2 -translate-y-1/2 bg-white shadow-md border rounded flex items-center p-2">
+              <div className="absolute right-14 md:right-16 top-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded-full flex items-center shadow-lg px-4 transition-all duration-300 focus-within:ring-2 focus-within:ring-black">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search..."
-                  className="outline-none text-sm w-40"
-                  autoFocus
-                />
+                  placeholder="Recherche"
+                  className="outline-none text-sm w-52 md:w-64 bg-transparent placeholder-gray-400 flex-1"
+                   autoFocus
+                 />
+                 <button onClick={() => setSearchOpen(false)} className="p-1 text-gray-500 hover:text-gray-800 transition-colors">
+                   <X className="h-4 w-4" />
+                 </button>
               </div>
             )}
 
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative hover:bg-gray-50/50 transition-colors duration-300">
-                <ShoppingCart className="h-5 w-5 text-gray-800" />
+                <ShoppingBag className="h-5 w-5 text-gray-800" />
                 {itemCount > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-black text-white shadow-sm">
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-gradient-to-r from-amber-400 to-yellow-300 text-black shadow-sm">
                     {itemCount}
                   </Badge>
                 )}
@@ -116,6 +120,7 @@ export function Navbar() {
               <Link href="/packs" className="text-gray-700 hover:text-black transition-colors font-light tracking-wider">
                 Luxury Packs
               </Link>
+
             </div>
           </div>
         )}

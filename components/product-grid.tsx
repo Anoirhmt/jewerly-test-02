@@ -66,6 +66,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
       )}
 
       {products && (showNavCards ? products.filter(product => product.isPack).sort((a, b) => a.id - b.id) : products)
+        .filter(product => (product.name ?? "").trim() !== "")
         .map((product) =>
           product.isPack ? (
             <PackCard key={product.id} product={product} />
