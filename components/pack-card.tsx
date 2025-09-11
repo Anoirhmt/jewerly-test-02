@@ -22,7 +22,7 @@ export function PackCard({ product }: PackCardProps) {
       ? product.image
       : "/placeholder.svg?height=320&width=320&text=Jewelry";
   return (
-    <Card className="group hover:premium-shadow hover:-translate-y-1 transform-gpu transition-all duration-500 border border-[#D4AF37]/40 shadow-[0_0_10px_rgba(212,175,55,0.4)] bg-white animate-fade-in rounded-lg">
+    <Card className="group transform-gpu transition-all duration-300 bg-white border border-gray-300 hover:border-gray-400 rounded-lg overflow-hidden">
       <CardContent className="p-0">
         <Link href={`/products/${product.id}`} draggable={false} onContextMenu={(e) => e.preventDefault()} onDragStart={(e) => e.preventDefault()} onCopy={(e) => e.preventDefault()}>
           <figure className="relative overflow-hidden rounded-t-lg select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} onDragStart={(e) => e.preventDefault()} onCopy={(e) => e.preventDefault()}>
@@ -74,7 +74,7 @@ export function PackCard({ product }: PackCardProps) {
 
           <footer className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
-              <span className="text-lg font-semibold text-black">{formatPrice(product.price)} DH</span>
+              <span className="text-lg font-semibold text-black">{formatPrice(product.price)}</span>
               <Badge className="bg-green-100 text-green-800 border-0 text-xs">SAVE 20%</Badge>
             </div>
           </footer>
