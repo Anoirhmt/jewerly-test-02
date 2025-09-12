@@ -52,7 +52,7 @@ export function FeaturedCategories() {
 
         </header>
 
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <section className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-8">
           {promos.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

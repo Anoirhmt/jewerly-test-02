@@ -34,7 +34,7 @@ export default async function PacksPage({
         </h1>
       </header>
 
-      <section className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {paginatedPacks.map((pack) => (
           <PackCard key={pack.id} product={pack} />
         ))}

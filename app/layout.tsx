@@ -47,8 +47,7 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer />
-          {/* WhatsApp floating button */}
-          <Link href="https://wa.me/212690751065" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="fixed bottom-4 right-4 z-50 inline-flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg">
+          <Link href="https://wa.me/212693011454" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="fixed bottom-4 right-4 z-50 inline-flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-lg">
             <Image src="/whatsapp.png" alt="WhatsApp" width={48} height={48} priority />
           </Link>
           <Toaster />

@@ -12,7 +12,7 @@ interface ProductGridProps {
 
 export function ProductGrid({ products, showNavCards = false }: ProductGridProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
       {showNavCards && (
         <>
           {/* Navigation card: Packs */}
@@ -56,7 +56,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
           src="https://drive.google.com/uc?id=1wU-K1EzW_CBIhs1AN6cqi3d3ybMVgxu9"
           alt="Nos montres"
           fill
-          className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110" />
+          className="object-cover object-[center_70%] transition-transform duration-500 ease-in-out group-hover:scale-110" />
       </Link>
     </CardContent>
   </Card>

@@ -49,7 +49,13 @@ export function ProductDetails({ product }: ProductDetailsProps) {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
       {/* Product Image */}
       <div className="space-y-4 max-w-md mx-auto lg:mx-0">
-        <div className="aspect-square overflow-hidden rounded-none border border-gray-200 select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} onDragStart={(e) => e.preventDefault()} onCopy={(e) => e.preventDefault()}>
+        <div
+          className="aspect-square overflow-hidden rounded-lg border border-gray-200 select-none"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
+          onCopy={(e) => e.preventDefault()}
+        >
           <img
             src={product.image || "/placeholder.svg"}
             alt={product.name}
@@ -61,16 +67,23 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             style={{ WebkitUserDrag: "none" }}
           />
         </div>
-      </div>
+
+</div>
 
       {/* Product Info */}
       <div className="space-y-8">
         <div>
           <h1 className="text-5xl font-serif font-semibold uppercase tracking-wide mb-3 text-black">{product.name}</h1>
           <div className="mb-4">
-              <Badge variant={product.inStock ? "default" : "destructive"} className="bg-black text-white border-0">
-                {product.inStock ? "In Stock" : "Out of Stock"}
+              {product.inStock ? (
+              <Badge className="bg-green-100 text-green-800 border-0">
+                In Stock
               </Badge>
+            ) : (
+              <Badge variant="destructive" className="border-0">
+                Out of Stock
+              </Badge>
+            )}
             </div>
         </div>
 
@@ -79,7 +92,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
           {product.originalPrice && (
             <>
               <span className="text-sm text-gray-500 line-through">{formatPrice(product.originalPrice)}</span>
-              <Badge className="bg-black text-white border-0">Save {discountPercentage}%</Badge>
+              <Badge className="bg-green-100 text-green-800 border-0">Save {discountPercentage}%</Badge>
             </>
           )}
         </div>
@@ -124,7 +137,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         <div className="flex flex-col sm:flex-row gap-4">
           <Button
             onClick={handleBuyNow}
-            className="flex-1 relative overflow-hidden bg-gradient-to-r from-amber-400 to-yellow-300 text-black px-4 py-2 font-semibold tracking-wide rounded-none uppercase transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-amber-500/25"
+            className="flex-1 bg-white text-black border border-black px-4 py-2 font-semibold tracking-wide rounded-none uppercase transition-all duration-300 hover:bg-gray-100 hover:scale-105"
             size="lg"
             disabled={!product.inStock}
           >
