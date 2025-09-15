@@ -3,19 +3,6 @@ import type { Product } from "./products";
 // Promo products - weekly promotional items
 export const promoProducts: Product[] = [
   {
-    id: 101,
-    name: "",
-    description: "",
-    price: ,
-    originalPrice: ,
-    image: "",
-    category: "pack",
-    rating: 4.9,
-    reviews: 145,
-    inStock: false,
-    isPack: false,
-  },
-  {
     id: 102,
     name: "",
     description: "",
