@@ -40,7 +40,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 style={{ WebkitUserDrag: "none" }}
               />
               {discountPercentage > 0 && (
-                <Badge className="absolute top-4 left-4 bg-green-100 text-green-800 border-0 px-3 py-1 text-xs tracking-wider">
+                <Badge className="absolute top-4 left-4 bg-green-100 text-green-800 border-0 px-3 py-1 text-xs tracking-wider hover:bg-green-100 hover:text-green-800">
                   -{discountPercentage}%
                 </Badge>
               )}

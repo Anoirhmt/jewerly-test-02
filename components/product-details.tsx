@@ -145,7 +145,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
           </Button>
           <Button
             onClick={handleAddToCart}
-            className="flex-1 bg-black hover:bg-gray-900 text-white rounded-none transform transition-transform duration-500 ease-in-out hover:scale-105"
+            className="flex-1 bg-black hover:bg-gray-900 text-white rounded-none transform transition-transform duration-500 ease-in-out hover:scale-105 text-lg py-4 sm:text-base sm:py-2"
             size="lg"
             disabled={!product.inStock}
           >
