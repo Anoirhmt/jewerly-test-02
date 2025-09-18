@@ -25,7 +25,7 @@ export const promoProducts: Product[] = [
     category: "pack",
     rating: 4.8,
     reviews: 98,
-    inStock: false,
+    inStock: true,
     isPack: false,
   },
   {

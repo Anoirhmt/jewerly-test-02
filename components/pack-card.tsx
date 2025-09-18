@@ -44,8 +44,8 @@ export function PackCard({ product }: PackCardProps) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             style={{ WebkitUserDrag: "none" }}
           />
-          <Badge className="absolute top-4 left-4 bg-black text-white border-0 px-3 py-1 text-xs tracking-wider flex items-center gap-1">
-            <Package className="h-3 w-3" />
+          <Badge className="absolute top-4 left-4 bg-black text-white border-0 px-2 py-0.5 text-[10px] tracking-wider flex items-center gap-1">
+            <Package className="h-2.5 w-2.5" />
             PACK
           </Badge>
         </div>
@@ -60,9 +60,9 @@ export function PackCard({ product }: PackCardProps) {
           <p className="text-gray-500 text-sm font-light">{product.material}</p>
         )}
 
-        <div className="flex items-center space-x-2">
-          <span className="text-lg font-semibold text-black">{formatPrice(product.price)}</span>
-          <Badge className="bg-green-100 text-green-800 border-0 text-xs">SAVE 20%</Badge>
+        <div className="flex items-center justify-between">
+          <span className="text-base font-semibold text-black whitespace-nowrap">{formatPrice(product.price)}</span>
+          <Badge className="bg-green-100 text-green-800 border-0 px-1.5 py-0.5 text-[8px]">SAVE 20%</Badge>
         </div>
       </div>
     </Link>

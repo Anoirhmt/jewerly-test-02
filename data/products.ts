@@ -5,6 +5,7 @@ export interface Product {
   price: number
   originalPrice?: number
   image: string
+  hoverImage?: string
   category: string
   material?: string
   gemstone?: string
