@@ -26,7 +26,7 @@ export const collectionProducts: Product[] = [
   },
   {
     id: 303,
-    name: "Silver Bracelet",
+    name: "cartier clou",
     description: "Modern silver bracelet",
     price: 40,
     image: "https://raw.githubusercontent.com/omarhmt08/1collection/main/photo_5825869369337562908_y.jpg",
@@ -37,8 +37,8 @@ export const collectionProducts: Product[] = [
   },
   {
     id: 304,
-    name: "Pearl Earrings",
-    description: "Classic pearl earrings",
+    name: "cartier love",
+    description: "Classic",
     price: 40,
     image: "https://raw.githubusercontent.com/omarhmt08/1collection/main/photo_5825869369337562908_y.jpg",
     category: "earrings",
