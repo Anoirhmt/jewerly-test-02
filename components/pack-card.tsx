@@ -46,7 +46,7 @@ export function PackCard({ product }: PackCardProps) {
           />
           <Badge className="absolute top-4 left-4 bg-black text-white border-0 px-2 py-0.5 text-[10px] tracking-wider flex items-center gap-1">
             <Package className="h-2.5 w-2.5" />
-            PACK
+            PAQUET
           </Badge>
         </div>
       </div>
@@ -62,7 +62,7 @@ export function PackCard({ product }: PackCardProps) {
 
         <div className="flex items-center justify-between">
           <span className="text-base font-semibold text-black whitespace-nowrap">{formatPrice(product.price)}</span>
-          <Badge className="bg-green-100 text-green-800 border-0 px-1.5 py-0.5 text-[8px]">SAVE 20%</Badge>
+          <Badge className="bg-green-100 text-green-800 border-0 px-1.5 py-0.5 text-[8px]">ÉCONOMISEZ 20%</Badge>
         </div>
       </div>
     </Link>

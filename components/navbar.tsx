@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingBag, Menu, X, Search } from "lucide-react"
+import { ShoppingCart, Menu, X, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -91,7 +91,7 @@ export function Navbar() {
 
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative hover:bg-gray-50/50 transition-colors duration-300">
-                <ShoppingBag className="h-5 w-5 text-gray-800" />
+                <ShoppingCart className="h-5 w-5 text-gray-800" />
                 {itemCount > 0 && (
                   <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-gradient-to-r from-amber-400 to-yellow-300 text-black shadow-sm">
                     {itemCount}

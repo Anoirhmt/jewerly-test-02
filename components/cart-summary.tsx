@@ -11,7 +11,7 @@ export function CartSummary() {
   const { items, isLoading } = useCart()
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div>Chargement...</div>
   }
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -25,12 +25,12 @@ export function CartSummary() {
   return (
     <Card className="border-0 premium-shadow bg-white">
       <CardHeader className="pb-6">
-        <CardTitle className="font-serif text-2xl font-medium text-black">Order Summary</CardTitle>
+        <CardTitle className="font-serif text-2xl font-medium text-black">Récapitulatif de la commande</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <section className="space-y-4">
           <p className="flex justify-between font-light">
-            <span className="text-gray-700">Subtotal</span>
+            <span className="text-gray-700">Sous-total</span>
             <span className="text-black">{formatPrice(subtotal)}</span>
           </p>
 
@@ -43,8 +43,8 @@ export function CartSummary() {
 
         <aside className="bg-gray-50 p-4 border border-gray-200 rounded-none">
           <p className="text-sm text-gray-700 font-light">
-            💰 <strong>Cash on Delivery:</strong> Pay when your jewelry arrives at your doorstep. No advance payment
-            required.
+            💰 <strong>Paiement à la livraison:</strong> Payez lorsque vos bijoux arrivent à votre porte. Aucun paiement
+            anticipé requis.
           </p>
         </aside>
 
@@ -53,7 +53,7 @@ export function CartSummary() {
             className="w-full bg-black hover:bg-gray-900 text-white border-0 py-4 text-sm tracking-wider font-medium rounded-none"
             disabled={total <= 0}
           >
-            {total <= 0 ? "AJOUTER DES ARTICLES" : "PROCEED TO CHECKOUT"}
+            {total <= 0 ? "AJOUTER DES ARTICLES" : "PASSER À LA CAISSE"}
           </Button>
         </Link>
 
@@ -62,7 +62,7 @@ export function CartSummary() {
             variant="outline"
             className="w-full bg-transparent border-gray-300 text-gray-700 hover:bg-gray-50 rounded-none py-4 text-sm tracking-wider font-light"
           >
-            CONTINUE SHOPPING
+            CONTINUER VOS ACHATS
           </Button>
         </Link>
       </CardContent>

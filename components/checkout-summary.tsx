@@ -16,7 +16,7 @@ export function CheckoutSummary() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Order Summary</CardTitle>
+        <CardTitle>Récapitulatif de la commande</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Order Items */}
@@ -26,7 +26,7 @@ export function CheckoutSummary() {
               <img src={item.image || "/placeholder.svg"} alt={item.name} className="w-12 h-12 object-cover rounded" />
               <section className="flex-1">
                 <h3 className="font-medium text-sm">{item.name}</h3>
-                <p className="text-gray-600 text-sm">Qty: {item.quantity}</p>
+                <p className="text-gray-600 text-sm">Qté : {item.quantity}</p>
               </section>
               <p className="font-medium">{formatPrice(item.price * item.quantity)}</p>
             </article>
@@ -38,17 +38,17 @@ export function CheckoutSummary() {
         {/* Pricing Breakdown */}
         <section className="space-y-2">
           <p className="flex justify-between">
-            <span>Subtotal</span>
+            <span>Sous-total</span>
             <span>{formatPrice(subtotal)}</span>
           </p>
 
           <p className="flex justify-between">
-            <span>Shipping</span>
-            <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
+            <span>Livraison</span>
+            <span>{shipping === 0 ? "Gratuit" : formatPrice(shipping)}</span>
           </p>
 
           <p className="flex justify-between">
-            <span>Tax</span>
+            <span>Taxes</span>
             <span>{formatPrice(tax)}</span>
           </p>
         </section>
@@ -61,7 +61,7 @@ export function CheckoutSummary() {
         </p>
 
         {subtotal < 50 && (
-          <p className="text-sm text-gray-600">Add {formatPrice(50 - subtotal)} more for free shipping!</p>
+          <p className="text-sm text-gray-600">Ajoutez {formatPrice(50 - subtotal)} de plus pour la livraison gratuite !</p>
         )}
       </CardContent>
     </Card>
