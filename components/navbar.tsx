@@ -31,10 +31,19 @@ export function Navbar() {
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm backdrop-blur-sm bg-white/90">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-24">
-          {/* Logo */}
-          <Link href="/" className="flex items-center transition-transform duration-300 hover:scale-[1.02]">
-            <Image src="https://drive.google.com/uc?export=view&id=1YE4NKI5d_Jj7-S_8lW4vJQFyLFh6HxI4" alt="Elarain Jewelry" width={240} height={96} className="h-20 w-auto" />
-          </Link>
+          {/* Mobile menu button - will be on the left */}
+          <div className="md:hidden">
+            <Button variant="ghost" size="icon" className="hover:bg-gray-50/50 transition-colors duration-300" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="h-5 w-5 text-gray-800" /> : <Menu className="h-5 w-5 text-gray-800" />}
+            </Button>
+          </div>
+
+          {/* Logo for Desktop - will be on the left */}
+          <div className="hidden md:block">
+            <Link href="/" className="flex items-center transition-transform duration-300 hover:scale-[1.02]">
+              <Image src="https://drive.google.com/uc?export=view&id=1YE4NKI5d_Jj7-S_8lW4vJQFyLFh6HxI4" alt="Elarain Jewelry" width={240} height={96} className="h-20 w-auto" />
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-16">
@@ -59,11 +68,17 @@ export function Navbar() {
               Luxury Packs
               <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-black transition-all duration-300 group-hover:w-full"></span>
             </Link>
-
           </div>
 
-          {/* Cart & Search */}
+          {/* Right side container */}
           <div className="flex items-center space-x-4 relative">
+            {/* Logo for Mobile */}
+            <div className="md:hidden">
+              <Link href="/" className="flex items-center">
+                <Image src="https://drive.google.com/uc?export=view&id=1YE4NKI5d_Jj7-S_8lW4vJQFyLFh6HxI4" alt="Elarain Jewelry" width={240} height={96} className="h-20 w-auto" />
+              </Link>
+            </div>
+
             {/* Search Button */}
             <Button
               variant="ghost"
@@ -99,28 +114,22 @@ export function Navbar() {
                 )}
               </Button>
             </Link>
-
-            {/* Mobile Menu Button */}
-            <Button variant="ghost" size="icon" className="md:hidden hover:bg-gray-50/50 transition-colors duration-300" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X className="h-5 w-5 text-gray-800" /> : <Menu className="h-5 w-5 text-gray-800" />}
-            </Button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-6 border-t border-gray-100 animate-in fade-in duration-200">
-            <div className="flex flex-col space-y-6">
-              <Link href="/" className="text-gray-700 hover:text-black transition-colors font-light tracking-wider">
+          <div className="md:hidden py-4 border-t border-gray-100 animate-in fade-in duration-200">
+            <div className="flex flex-col space-y-2">
+              <Link href="/" className="block py-3 text-center text-lg font-medium text-gray-800 hover:bg-gray-100 rounded-md transition-all duration-200">
                 Home
               </Link>
-              <Link href="/products" className="text-gray-700 hover:text-black transition-colors font-light tracking-wider">
+              <Link href="/products" className="block py-3 text-center text-lg font-medium text-gray-800 hover:bg-gray-100 rounded-md transition-all duration-200">
                 Collection
               </Link>
-              <Link href="/packs" className="text-gray-700 hover:text-black transition-colors font-light tracking-wider">
+              <Link href="/packs" className="block py-3 text-center text-lg font-medium text-gray-800 hover:bg-gray-100 rounded-md transition-all duration-200">
                 Luxury Packs
               </Link>
-
             </div>
           </div>
         )}

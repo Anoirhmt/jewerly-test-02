@@ -46,11 +46,22 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
       
       <div className="relative bg-white pt-3">
-        <h3 className="text-sm text-gray-700">
+        <div className="flex items-center justify-between">
+          <Badge variant="secondary" className="rounded-sm">
+            {product.category}
+          </Badge>
+          {product.discount && (
+            <Badge variant="destructive" className="rounded-sm">
+              -{product.discount}%
+            </Badge>
+          )}
+        </div>
+        <h3 className="text-sm font-medium text-gray-900">
           {product.name}
         </h3>
-        
-        <p className="mt-1.5 tracking-wide text-gray-900">{formatPrice(product.price)}</p>
+        <p className="text-sm text-gray-500">
+          {formatPrice(product.price)}
+        </p>
       </div>
     </Link>
   )

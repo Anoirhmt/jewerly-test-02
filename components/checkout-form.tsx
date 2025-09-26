@@ -18,7 +18,14 @@ import { useCart } from "@/context/cart-context"
 import { formatPrice } from "@/utils/format-price"
 
 export function CheckoutForm() {
-  const { items, clearCart } = useCart()
+  const { items, clearCart, totalItems, totalPrice } = useCart()
+  const [promoCode, setPromoCode] = useState("")
+  const [discount, setDiscount] = useState(0)
+  const [flatDiscount, setFlatDiscount] = useState(0)
+  const [freeShipping, setFreeShipping] = useState(false)
+  const [promoCodeFeedback, setPromoCodeFeedback] = useState<{ message: string; type: "success" | "error" } | null>(
+    null,
+  )
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -44,6 +51,57 @@ export function CheckoutForm() {
     });
   }
 
+  const applyPromoCode = async () => {
+    const code = promoCode.trim().toUpperCase()
+    if (!code) return
+
+    // Reset previous states
+    setPromoCodeFeedback(null)
+    setDiscount(0)
+    setFlatDiscount(0)
+    setFreeShipping(false)
+
+    try {
+      const res = await fetch("/api/promo/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code,
+          phone: formData.phone,
+          subtotal,
+          city: formData.city,
+          items: items.map((i) => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
+        }),
+      })
+
+      const data = await res.json()
+      if (data.valid) {
+        if (data.discountType === "percent") {
+          setDiscount(Number(data.value) || 0)
+        } else if (data.discountType === "fixed") {
+          setFlatDiscount(Number(data.value) || 0)
+        } else if (data.discountType === "free_shipping") {
+          setFreeShipping(true)
+        }
+        setPromoCodeFeedback({ message: data.message || "Code promo appliqué !", type: "success" })
+      } else {
+        setPromoCodeFeedback({
+          message: data.reason === "MAX_USES_REACHED" ? "Limite d'utilisation atteinte" :
+                   data.reason === "PER_USER_LIMIT_REACHED" ? "Vous avez déjà utilisé ce code" :
+                   data.reason === "MIN_SUBTOTAL_NOT_MET" ? `Montant minimum non atteint` :
+                   data.reason === "EXPIRED" ? "Code expiré" :
+                   data.reason === "NOT_STARTED" ? "Code non encore actif" :
+                   data.reason === "CITY_NOT_ELIGIBLE" ? "Ville non éligible" :
+                   "Code promo invalide",
+          type: "error",
+        })
+      }
+    } catch (e) {
+      console.error(e)
+      setPromoCodeFeedback({ message: "Erreur lors de la vérification du code", type: "error" })
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -59,7 +117,8 @@ export function CheckoutForm() {
       address: `${formData.address}, ${formData.city}`,
       orderDetails,
       total: formatPrice(total),
-      delivery: formatPrice(delivery),
+      delivery: formatPrice(effectiveDelivery),
+      promoCode: promoCode.trim().toUpperCase() || null,
     }
 
     try {
@@ -77,6 +136,15 @@ export function CheckoutForm() {
 
       // Show success state instead of alert
       setOrderSuccess(true)
+      // Increment promo usage only now (after successful order)
+      if (promoCode.trim()) {
+        fetch("/api/promo/redeem", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: promoCode.trim().toUpperCase(), phone: formData.phone }),
+        }).catch(console.error);
+      }
+
       clearCart()
 
       // Reset form
@@ -130,7 +198,10 @@ useEffect(() => {
   }
 }, [formData.city, shippingRates])
 
-const total = subtotal + delivery
+const effectiveDelivery = freeShipping ? 0 : delivery
+const percentOff = subtotal * discount
+const fixedOff = flatDiscount
+const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
 
 
   // Prevent checkout with empty cart or zero total
@@ -210,7 +281,7 @@ const total = subtotal + delivery
                 <Input
                   name="fullName"
                   type="text"
-                  placeholder="Nom & Prénom"
+                  placeholder="Nom & Prénom | الاسم الكامل"
                   value={formData.fullName}
                   onChange={handleInputChange}
                   maxLength={23}
@@ -228,8 +299,8 @@ const total = subtotal + delivery
                   name="phone"
                   type="tel"
                   inputMode="tel"
-                  pattern="[0-9]{1,10}" maxLength={10}
-                  placeholder="Téléphone"
+                  pattern="[0-9]{10}" minLength={10} maxLength={10}
+                  placeholder="Téléphone | الهاتف"
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
@@ -250,7 +321,7 @@ const total = subtotal + delivery
                   <span
                     className={`line-clamp-1 text-left ${formData.city ? 'text-black' : 'text-gray-400 animate-pulse'}`}
                   >
-                    {formData.city ? formData.city.charAt(0).toUpperCase() + formData.city.slice(1) : "Sélectionnez votre ville"}
+                    {formData.city ? formData.city.charAt(0).toUpperCase() + formData.city.slice(1) : "Sélectionnez votre ville | اختر مدينتك"}
                   </span>
                   <svg xmlns="http://www.w3.org/2000/svg" className="lucide lucide-search h-4 w-4 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
@@ -285,7 +356,7 @@ const total = subtotal + delivery
                 <Input
                   name="address"
                   type="text"
-                  placeholder="Adresse"
+                  placeholder="Adresse | العنوان"
                   value={formData.address}
                   onChange={handleInputChange}
                   required
@@ -319,6 +390,31 @@ const total = subtotal + delivery
               ))}
             </aside>
 
+            {/* Promo Code Input */}
+            <section className="space-y-4 pt-6 border-t border-gray-100">
+              <div className="flex items-center space-x-2">
+                <Input
+                  type="text"
+                  placeholder="Code promo"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  className="flex-1 h-12 border-gray-200 rounded-lg focus:border-black focus:ring-black text-gray-700 placeholder-gray-500"
+                />
+                <Button
+                  type="button"
+                  onClick={applyPromoCode}
+                  className="premium-button text-white px-8 py-3 text-sm tracking-[0.1em] rounded-none uppercase"
+                >
+                  Appliquer
+                </Button>
+              </div>
+              {promoCodeFeedback && (
+                <p className={promoCodeFeedback.type === "success" ? "text-green-600" : "text-red-600"}>
+                  {promoCodeFeedback.message}
+                </p>
+              )}
+            </section>
+
             {/* Pricing Summary */}
             <section className="space-y-3 pt-6 border-t border-gray-100">
               <div className="flex justify-between text-gray-700">
@@ -327,7 +423,10 @@ const total = subtotal + delivery
               </div>
               <div className="flex justify-between text-gray-700">
                 <span>Livraison</span>
-                <span className="font-medium">{formatPrice(delivery)}</span>
+                <span className="font-medium">
+                  {formatPrice(effectiveDelivery)}
+                  {freeShipping && <span className="ml-2 text-green-600 text-sm">Gratuite</span>}
+                </span>
               </div>
               <div className="flex justify-between text-lg font-medium text-black pt-3 border-t border-gray-100">
                 <span>Total</span>
@@ -338,7 +437,13 @@ const total = subtotal + delivery
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={isSubmitting || !formData.city}
+              disabled={
+                isSubmitting ||
+                !formData.city ||
+                formData.phone.length !== 10 ||
+                !formData.fullName.trim() ||
+                !formData.address.trim()
+              }
               className="w-full premium-button text-white h-16 text-lg font-medium tracking-[0.1em] rounded-none mt-8 uppercase"
             >
               {isSubmitting ? "Envoi en cours..." : "Acheter Maintenant"}
