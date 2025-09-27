@@ -75,7 +75,7 @@ export function Navbar() {
             {/* Logo for Mobile */}
             <div className="md:hidden">
               <Link href="/" className="flex items-center">
-                <Image src="https://drive.google.com/uc?export=view&id=1YE4NKI5d_Jj7-S_8lW4vJQFyLFh6HxI4" alt="Elarain Jewelry" width={240} height={96} className="h-20 w-auto" />
+                <Image src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/erasebg-transformed%20(1)%20(1).png" alt="Elarain Jewelry" width={240} height={96} className="h-20 w-auto" />
               </Link>
             </div>
 
