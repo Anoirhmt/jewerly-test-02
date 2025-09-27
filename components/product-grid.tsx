@@ -20,7 +20,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
               <CardContent className="p-0">
                 <Link href="/packs" className="block relative w-full aspect-video overflow-hidden">
                   <Image
-                    src="https://drive.google.com/uc?id=1k5HPHHU-wj1aqn9aF9UH9ZPJzU5rt-xJ"
+                    src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/PinDown.io_%40777mbalenhle_1758181598%20(1).jpg"
                     alt="Voir les packs"
                     fill
                     className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
@@ -39,7 +39,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
               <CardContent className="p-0">
                 <Link href="/products" className="block relative w-full aspect-video overflow-hidden">
                   <Image
-                    src="https://drive.google.com/uc?id=1_Q2J7loYoicK5N57DfyhYOwWDiObYL3q"
+                    src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/PinDown.io_%40jussttagiirl_1758252111%20(1).jpg"
                     alt="Nos collection"
                     fill
                     className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
@@ -58,7 +58,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
               <CardContent className="p-0">
                 <Link href="/watches" className="block relative w-full aspect-video overflow-hidden">
                   <Image
-                    src="https://drive.google.com/uc?id=1wU-K1EzW_CBIhs1AN6cqi3d3ybMVgxu9"
+                    src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/PinDown.io_%40maddyy_r_1757043506%20(1)%20(1).jpg"
                     alt="Nos montres"
                     fill
                     className="object-cover object-[center_70%] transition-transform duration-500 ease-in-out group-hover:scale-110"

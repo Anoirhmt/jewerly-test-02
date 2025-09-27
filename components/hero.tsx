@@ -14,7 +14,7 @@ export function Hero() {
     <section className="relative h-[50vh] sm:h-[100dvh] min-h-[300px] sm:min-h-[600px] overflow-hidden">
       {/* Background Image */}
       <Image
-        src="https://drive.google.com/uc?export=view&id=1KIcQj46EItlsooVyvdQYaZ9hl5_kZP1U"
+        src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/Image_fx%20(5)%20(1).jpg"
         alt="Elarain Luxury Jewelry Collection"
         fill
         className="object-cover object-center"
@@ -31,7 +31,7 @@ export function Hero() {
       <article className="relative z-10 container mx-auto px-6 h-full flex items-center">
         <header className="max-w-4xl flex flex-col items-start gap-4">
           <Image
-            src="https://drive.google.com/uc?export=view&id=1PLkL-khSK6jEvcQuUZnbRycrf7zV0C4H"
+            src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/elarain_jewelry_text_only.png"
             alt="Elarain Jewelry Logo"
             width={700}
             height={300}
