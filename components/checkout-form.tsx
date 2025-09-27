@@ -104,6 +104,18 @@ export function CheckoutForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Client-side guard to avoid accidental submission when required fields are missing (e.g. hitting the Enter key in an input field).
+    if (
+      !formData.fullName.trim() ||
+      formData.phone.length !== 10 ||
+      !formData.address.trim() ||
+      !formData.city
+    ) {
+      // Show a helpful error toast / message (reuse promoCodeFeedback so we don't create new state)
+      setPromoCodeFeedback({ message: "Veuillez remplir toutes les informations requises avant de continuer", type: "error" })
+      return
+    }
     setIsSubmitting(true)
 
     // Prepare order details from cart items
