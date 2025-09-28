@@ -4,7 +4,7 @@ export interface Product {
   description: string
   price: number
   originalPrice?: number
-  image: string
+  image?: string
   hoverImage?: string
   category: string
   material?: string
@@ -14,6 +14,11 @@ export interface Product {
   inStock: boolean
   isPack?: boolean
   packContents?: string[]
+  // New: optional color/image variants for the same product
+  variants?: {
+    color: string
+    image: string
+  }[]
 }
 
 export const products: Product[] = []

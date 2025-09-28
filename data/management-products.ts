@@ -7,55 +7,82 @@ export const managementProducts: Product[] = [
     name: "Cartier Watch",
     description: "Cartier Watch",
     price: 120,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg",
     category: "watch",
     rating: 4.8,
     reviews: 124,
     inStock: true,
+    variants: [
+      {
+        color: "doré",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg"
+      },
+      {
+        color: "argenté",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg"
+      }
+    ]
   },
   {
     id: 402,
     name: "rolexe",
     description: "watch",
     price: 788,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg",
     category: "watch",
     rating: 4.8,
     reviews: 124,
     inStock: false,
+    variants: [
+      {
+        color: "doré",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568918_y.jpg"
+      },
+      {
+        color: "argenté",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568918_y.jpg"
+      }
+    ]
   },
   {
     id: 403,
     name: "philiphe patek",
     description: "jsjds",
     price: 599,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg",
     category: "watch",
     rating: 4.8,
     reviews: 124,
     inStock: false,
+    variants: [
+      {
+        color: "or rose",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568919_y.jpg"
+      },
+      {
+        color: "argenté",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568919_y.jpg"
+      }
+    ]
   },
   {
-    id: 6,
-    name: "",
-    description: "",
-    price: 0,
-    image: "",
-    category: "",
+    id: 404,
+    name: "BVLGARI SEDUTTORI DIAMONDS",
+    description: "BVLGARI SEDUTTORI DIAMONDS",
+    price: 99,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568916_y.jpg",
+    category: "watch",
     rating: 0,
     reviews: 0,
-    inStock: false,
+    inStock: true,
   },
   {
-    id: 7,
-    name: "",
-    description: "",
-    price: 0,
-    image: "",
-    category: "",
+    id: 405,
+    name: "ROLEX FEMMES",
+    description: "ROLEX  FEMMES diamonds",
+    price: 99,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568917_y.jpg",
+    category: "watch",
     rating: 0,
     reviews: 0,
-    inStock: false,
+    inStock: true,
   },
   {
     id: 8,

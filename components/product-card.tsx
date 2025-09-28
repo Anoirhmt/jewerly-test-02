@@ -16,6 +16,10 @@ export function ProductCard({ product }: ProductCardProps) {
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0
 
+  // If explicit images are not provided, derive them from variant list
+  const mainImage = product.image ?? product.variants?.[0]?.image ?? "/placeholder.svg"
+  const hoverImg = product.hoverImage ?? product.variants?.[1]?.image
+
   return (
     <Link
       href={`/products/${product.id}`}
@@ -23,28 +27,29 @@ export function ProductCard({ product }: ProductCardProps) {
     >
       <div className="relative h-[220px] sm:h-[280px]">
         <Image
-          src={product.image || "/placeholder.svg?height=450&width=350&text=Jewelry"}
+          src={mainImage}
           alt={product.name}
           fill
-          className="absolute inset-0 h-full w-full object-cover opacity-100 group-hover:opacity-0 transition-opacity duration-300"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${hoverImg ? "opacity-100 group-hover:opacity-0" : "opacity-100"}`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
         />
-        
-        <Image
-          src={product.hoverImage || product.image || "/placeholder.svg?height=450&width=350&text=Jewelry"}
-          alt={product.name}
-          fill
-          className="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-        />
-        
+        {hoverImg && (
+          <Image
+            src={hoverImg}
+            alt={product.name}
+            fill
+            className="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          />
+        )}
+
         {discountPercentage > 0 && (
           <Badge className="absolute top-4 left-4 bg-green-100 text-green-800 border-0 px-2 py-0.5 text-[10px] tracking-wider hover:bg-green-100 hover:text-green-800 z-10">
             -{discountPercentage}%
           </Badge>
         )}
       </div>
-      
+
       <div className="relative bg-white pt-3">
         <div className="flex items-center justify-between">
           <Badge variant="secondary" className="rounded-sm">

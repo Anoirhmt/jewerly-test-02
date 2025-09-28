@@ -18,6 +18,10 @@ interface ProductDetailsProps {
 
 export function ProductDetails({ product }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState(1)
+  const [activeImage, setActiveImage] = useState<string>(
+    product.image ?? product.variants?.[0]?.image ?? "/placeholder.svg"
+  )
+
   const { addItem, items } = useCart()
   const router = useRouter()
 
@@ -56,14 +60,14 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             onCopy={(e) => e.preventDefault()}
           >
             <img
-              src={product.image || "/placeholder.svg"}
-              alt={product.name}
+              src={activeImage || "/placeholder.svg"}
+               alt={product.name}
               className="w-full h-full object-cover pointer-events-none"
               draggable={false}
               onContextMenu={(e) => e.preventDefault()}
               onDragStart={(e) => e.preventDefault()}
               onCopy={(e) => e.preventDefault()}
-              style={{ WebkitUserDrag: "none" }}
+              style={{ WebkitUserDrag: "none" } as React.CSSProperties}
             />
           </div>
         </div>
@@ -94,6 +98,25 @@ export function ProductDetails({ product }: ProductDetailsProps) {
               </>
             )}
           </div>
+
+          {/* Variant selector */}
+          {product.variants && product.variants.length > 0 && (
+          <div className="space-y-1">
+            <p className="text-gray-700 font-medium">Couleur</p>
+            <div className="flex space-x-2">
+              {product.variants.map((variant) => (
+                <button
+                  key={variant.color}
+                  type="button"
+                  aria-label={variant.color}
+                  onClick={() => setActiveImage(variant.image)}
+                  className={`h-8 w-8 rounded-full border border-gray-300 transition-transform duration-200 ease-out hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black ${activeImage === variant.image ? "ring-2 ring-offset-2 ring-black" : ""}`}
+                  style={{ backgroundColor: getColorHex(variant.color) }}
+                />
+              ))}
+            </div>
+          </div>
+          )}
 
           {product.material && (
             <div className="space-y-1">
@@ -201,3 +224,69 @@ export function ProductDetails({ product }: ProductDetailsProps) {
     </>
   )
 }
+
+// Helper mapping common color names to hex codes for swatch backgrounds
+// Helper mapping: normalize color name (remove spaces/accents, lowercase) then translate to valid CSS color / hex.
+const getColorHex = (name: string): string => {
+// Utility to strip accents (é, è, ê, etc.) for matching
+const stripAccents = (str: string) => str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+
+const normalized = stripAccents(name).toLowerCase().replace(/\s+/g, "");
+
+// Comprehensive mapping of French ⇄ English color names or hex codes
+const map: Record<string, string> = {
+// Primary colors
+rouge: "#FF0000",
+red: "#800000",
+bleu: "#0000FF",
+blue: "#0000FF",
+vert: "#008000",
+green: "#008000",
+jaune: "#FFFF00",
+yellow: "#FFFF00",
+noir: "#000000",
+black: "#000000",
+blanc: "#FFFFFF",
+white: "#FFFFFF",
+
+// Secondary / extended colors
+orange: "#FFA500",
+violet: "#800080",
+purple: "#800080",
+rose: "#FFC0CB",
+pink: "#FFC0CB",
+marron: "#A52A2A",
+brown: "#A52A2A",
+gris: "#808080",
+grey: "#808080",
+gray: "#808080",
+turquoise: "#40E0D0",
+cyan: "#00FFFF",
+magenta: "#FF00FF",
+indigo: "#4B0082",
+turquoiseclair: "#AFEEEE", // light turquoise
+saumon: "#FA8072", // salmon
+corail: "#FF7F50", // coral
+coral: "#FF7F50",
+lilas: "#C8A2C8", // lilac
+ivoire: "#FFFFF0", // ivory
+beige: "#F5F5DC",
+olive: "#808000",
+lime: "#00FF00",
+teal: "#008080",
+bordeaux: "#800000",
+navy: "#000080",
+
+// Metals / jewellery specifics
+gold: "#FFD366",
+yellowgold: "#D4AF37",
+or: "#D4AF37",
+rosegold: "#B76E79",
+orrose: "#B76E79",
+silver: "#C0C0C0",
+argent: "#C0C0C0",
+whitegold: "#C0C0C0",
+};
+
+return map[normalized] ?? name; // fallback: assume provided value is valid CSS color / hex
+};

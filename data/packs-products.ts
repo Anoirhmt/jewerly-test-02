@@ -84,14 +84,30 @@ export const packsProducts: Product[] = [
     name: "pack8",
     description: "Elegant jewelry pack collection",
     price: 99,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5873068869487282090_y.jpg",
     category: "pack",
     rating: 4.8,
     reviews: 67,
     inStock: true,
+    variants: [
+      // principal image + main colour
+      {
+        color: "gold",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg",
+      },
+      // hover image + second colour
+      {
+        color: "white",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1558.jpeg",
+      },
+      // other option
+      {
+        color: "black",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1549.jpeg",
+      }
+    ],
   },
-  {
-    id: 209,
+   {
+     id: 209,
     name: "",
     description: "",
     price: 0,

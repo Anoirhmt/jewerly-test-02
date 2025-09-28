@@ -19,7 +19,7 @@ export function PackCard({ product }: PackCardProps) {
       product.image.startsWith("https://") ||
       product.image.startsWith("/"))
       ? product.image
-      : "/placeholder.svg?height=320&width=320&text=Jewelry"
+      : "/placeholder.svg"
 
   return (
     <Link
