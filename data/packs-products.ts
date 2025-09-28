@@ -83,7 +83,7 @@ export const packsProducts: Product[] = [
     id: 208,
     name: "pack8",
     description: "Elegant jewelry pack collection",
-    price: 99,
+    price: 129,
     category: "pack",
     rating: 4.8,
     reviews: 67,
