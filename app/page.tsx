@@ -9,7 +9,6 @@ import { products as baseProducts } from "@/data/products"
 import { managementProducts } from "@/data/management-products"
 import { collectionProducts } from "@/data/collection-products"
 import { promoProducts } from "@/data/promo-products"
-import { packsProducts } from "@/data/packs-products"
 
 export default function HomePage() {
   const products = [
@@ -17,8 +16,7 @@ export default function HomePage() {
     ...managementProducts,
     ...collectionProducts,
     ...promoProducts,
-    ...packsProducts,
-  ].filter(p => p.name)
+  ].filter(p => p.name && !p.isPack)
 
   return (
     <div className="min-h-screen">
