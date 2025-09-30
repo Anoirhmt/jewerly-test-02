@@ -9,7 +9,7 @@ export const collectionProducts: Product[] = [
     category: "ring",
     rating: 4.9,
     reviews: 89,
-    inStock: true,
+    inStock: false,
     variants: [
       // principal image + main colour
       {
