@@ -4,7 +4,7 @@ export const collectionProducts: Product[] = [
   {
     id: 301,
     name: "Cartier Ring",
-    description: "Elegant ring available in multiple colours",
+    description: "Elegant b available in multiple colours",
     price: 1500,
     category: "ring",
     rating: 4.9,
@@ -57,8 +57,8 @@ export const collectionProducts: Product[] = [
   },
   {
     id: 304,
-    name: "Cartier Love Earrings",
-    description: "Classic earrings in different metals",
+    name: "Cartier Love bracelet",
+    description: "Classic bracelet in different metals",
     price: 40,
     category: "earrings",
     rating: 4.8,
