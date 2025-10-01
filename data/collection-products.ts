@@ -60,7 +60,7 @@ export const collectionProducts: Product[] = [
     name: "Cartier Love bracelet",
     description: "Classic bracelet in different metals",
     price: 40,
-    category: "earrings",
+    category: "bracelet",
     rating: 4.8,
     reviews: 92,
     inStock: true,
