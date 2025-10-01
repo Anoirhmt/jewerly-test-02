@@ -36,7 +36,7 @@ export const collectionProducts: Product[] = [
     category: "necklace",
     rating: 4.7,
     reviews: 156,
-    inStock: true,
+    inStock: false,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/necklace1.jpg",
   },
   {
