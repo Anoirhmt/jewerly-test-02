@@ -50,10 +50,6 @@ export const collectionProducts: Product[] = [
     inStock: true,
     variants: [
       {
-        color: "Yellow Gold",
-        image: "https://raw.githubusercontent.com/omarhmt08/1collection/main/photo_5825869369337562908_y.jpg",
-      },
-      {
         color: "White Gold",
         image: "https://raw.githubusercontent.com/omarhmt08/1collection/main/photo_5825869369337562909_y.jpg",
       },
