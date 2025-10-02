@@ -33,6 +33,7 @@ export const promoProducts: Product[] = [
     name: "promo3",
     description: "Special summer jewelry collection pack",
     price: 129,
+    originalPrice: 190,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg",
     category: "",
     rating: 4.6,
