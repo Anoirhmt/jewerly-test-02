@@ -4,7 +4,7 @@ import type { Product } from "./products";
 export const promoProducts: Product[] = [
   {
     id: 101,
-    name: "pack1",
+    name: "promo1",
     description: "Special summer jewelry collection pack",
     price: 129,
     originalPrice: 130,
@@ -17,7 +17,7 @@ export const promoProducts: Product[] = [
   },
   {
     id: 102,
-    name: "pack 2",
+    name: "promo2",
     description: "Elegant promotional jewelry pack",
     price: 99,
     originalPrice: 239,
@@ -30,7 +30,7 @@ export const promoProducts: Product[] = [
   },
   {
     id: 103,
-    name: "pack3",
+    name: "promo3",
     description: "Special summer jewelry collection pack",
     price: 129,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg",
