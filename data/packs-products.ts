@@ -87,7 +87,7 @@ export const packsProducts: Product[] = [
     category: "pack",
     rating: 4.9,
     reviews: 89,
-    inStock: false,
+    inStock: true,
     variants: [
       // principal image + main colour
       {
