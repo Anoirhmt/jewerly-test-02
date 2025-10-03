@@ -78,7 +78,9 @@ export const packsProducts: Product[] = [
     rating: 4.7,
     reviews: 85,
     inStock: true,
-  },id: 208,
+  },
+  { 
+    id: 208,
     name: "Cartier Ring",
     description: "Elegant b available in multiple colours",
     price: 1500,
