@@ -78,16 +78,14 @@ export const packsProducts: Product[] = [
     rating: 4.7,
     reviews: 85,
     inStock: true,
-  },
-  {
-    id: 208,
-    name: "pack8",
-    description: "Elegant jewelry pack collection",
-    price: 129,
-    category: "pack",
-    rating: 4.8,
-    reviews: 67,
-    inStock: true,
+  },id: 301,
+    name: "Cartier Ring",
+    description: "Elegant b available in multiple colours",
+    price: 1500,
+    category: "ring",
+    rating: 4.9,
+    reviews: 89,
+    inStock: false,
     variants: [
       // principal image + main colour
       {
@@ -103,7 +101,7 @@ export const packsProducts: Product[] = [
       {
         color: "black",
         image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1549.jpeg",
-      }
+      },
     ],
   },
    {
