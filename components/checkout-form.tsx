@@ -35,6 +35,7 @@ export function CheckoutForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
   const [cityDialogOpen, setCityDialogOpen] = useState(false)
+  const [formError, setFormError] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let { name, value } = e.target;
@@ -105,15 +106,32 @@ export function CheckoutForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Client-side guard to avoid accidental submission when required fields are missing (e.g. hitting the Enter key in an input field).
-    if (
-      !formData.fullName.trim() ||
-      formData.phone.length !== 10 ||
-      !formData.address.trim() ||
-      !formData.city
-    ) {
-      // Show a helpful error toast / message (reuse promoCodeFeedback so we don't create new state)
-      setPromoCodeFeedback({ message: "Veuillez remplir toutes les informations requises avant de continuer", type: "error" })
+    // Client-side guard to validate required fields before continuing.
+    const firstMissingField = !formData.fullName.trim()
+      ? "fullName"
+      : formData.phone.length !== 10
+      ? "phone"
+      : !formData.address.trim()
+      ? "address"
+      : !formData.city
+      ? "city"
+      : null
+
+    if (firstMissingField) {
+      // Show visual feedback and scroll to the missing field
+      setPromoCodeFeedback({
+        message: "Veuillez remplir toutes les informations requises avant de continuer",
+        type: "error",
+      })
+      setFormError(true)
+      // Attempt to focus & scroll the missing element into view
+      const el = document.getElementsByName(firstMissingField)[0] as HTMLElement | undefined
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" })
+        el.focus()
+      }
+      // Reset the red state after a short delay so the button can turn back to black
+      setTimeout(() => setFormError(false), 3000)
       return
     }
     setIsSubmitting(true)
@@ -449,17 +467,12 @@ const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={
-                isSubmitting ||
-                !formData.city ||
-                formData.phone.length !== 10 ||
-                !formData.fullName.trim() ||
-                !formData.address.trim()
-              }
-              className="w-full premium-button text-white h-16 text-lg font-medium tracking-[0.1em] rounded-none mt-8 uppercase"
+              disabled={isSubmitting}
+              className={`w-full h-16 text-lg font-medium tracking-[0.1em] rounded-none mt-8 uppercase transition-colors shadow-[0_0_8px_rgba(0,0,0,0.35)] hover:shadow-[0_0_15px_rgba(0,0,0,0.6)] ${formError ? 'bg-red-600 hover:bg-red-700' : 'bg-black hover:bg-gray-900'} text-white`}
             >
               {isSubmitting ? "Envoi en cours..." : "Acheter Maintenant"}
             </Button>
+
           </form>
         </CardContent>
       </Card>

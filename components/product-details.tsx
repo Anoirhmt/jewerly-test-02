@@ -204,7 +204,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             <span>{formatPrice(subtotal)}</span>
           </div>
           <Button onClick={() => router.push('/checkout')} className="mt-4 w-full">
-            Passer à la caisse
+            Acheter maintenant
           </Button>
 
           <div className="mt-3 grid grid-cols-2 gap-3">

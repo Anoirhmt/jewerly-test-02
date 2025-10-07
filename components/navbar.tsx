@@ -121,13 +121,13 @@ export function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-100 animate-in fade-in duration-200">
             <div className="flex flex-col space-y-2">
-              <Link href="/" className="block py-3 text-center text-lg font-medium text-gray-800 hover:bg-gray-100 rounded-md transition-all duration-200">
+              <Link href="/" className="block py-3 px-6 text-left text-lg font-medium text-gray-800 hover:bg-gray-100 rounded-md transition-all duration-200">
                 Home
               </Link>
-              <Link href="/products" className="block py-3 text-center text-lg font-medium text-gray-800 hover:bg-gray-100 rounded-md transition-all duration-200">
+              <Link href="/products" className="block py-3 px-6 text-left text-lg font-medium text-gray-800 hover:bg-gray-100 rounded-md transition-all duration-200">
                 Collection
               </Link>
-              <Link href="/packs" className="block py-3 text-center text-lg font-medium text-gray-800 hover:bg-gray-100 rounded-md transition-all duration-200">
+              <Link href="/packs" className="block py-3 px-6 text-left text-lg font-medium text-gray-800 hover:bg-gray-100 rounded-md transition-all duration-200">
                 Luxury Packs
               </Link>
             </div>

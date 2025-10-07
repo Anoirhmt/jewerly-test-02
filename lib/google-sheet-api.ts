@@ -1,4 +1,7 @@
-const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwKVHmzlYwlj3igVqBe17WMMgZq_3VZ8nYKZ2GKRzGRKBSyywmZO2hAutgdvLPr26SdBw/exec';
+// Use direct URL on the server and internal API proxy on the client
+const GOOGLE_SHEET_API_URL = typeof window === "undefined"
+  ? process.env.GOOGLE_SHEET_API_URL!
+  : "/api/products";
 
 export async function getProducts() {
   try {

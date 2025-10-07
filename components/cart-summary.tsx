@@ -39,30 +39,12 @@ export function CartSummary() {
 {/* removed total price paragraph */}
         </section>
 
-
-
-        <aside className="bg-gray-50 p-4 border border-gray-200 rounded-none">
-          <p className="text-sm text-gray-700 font-light">
-            💰 <strong>Paiement à la livraison:</strong> Payez lorsque vos bijoux arrivent à votre porte. Aucun paiement
-            anticipé requis.
-          </p>
-        </aside>
-
         <Link href={total > 0 ? "/checkout" : "#"}>
           <Button 
-            className="w-full bg-black hover:bg-gray-900 text-white border-0 py-4 text-sm tracking-wider font-medium rounded-none"
+            className="w-full bg-black hover:bg-gray-900 text-white border-0 py-4 text-sm tracking-wider font-medium rounded-none transition duration-300 ease-in-out shadow-[0_0_8px_rgba(0,0,0,0.35)] hover:shadow-[0_0_15px_rgba(0,0,0,0.6)]"
             disabled={total <= 0}
           >
-            {total <= 0 ? "AJOUTER DES ARTICLES" : "PASSER À LA CAISSE"}
-          </Button>
-        </Link>
-
-        <Link href="/products">
-          <Button
-            variant="outline"
-            className="w-full bg-transparent border-gray-300 text-gray-700 hover:bg-gray-50 rounded-none py-4 text-sm tracking-wider font-light"
-          >
-            CONTINUER VOS ACHATS
+            {total <= 0 ? "AJOUTER DES ARTICLES" : "ACHETER MAINTENANT"}
           </Button>
         </Link>
       </CardContent>

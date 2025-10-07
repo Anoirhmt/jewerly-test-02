@@ -61,10 +61,10 @@ export function ProductCard({ product }: ProductCardProps) {
             </Badge>
           )}
         </div>
-        <h3 className="text-sm font-medium text-gray-900">
+        <h3 className="text-sm font-semibold text-black">
           {product.name}
         </h3>
-        <p className="text-sm text-gray-500">
+        <p className="text-base font-semibold text-black">
           {formatPrice(product.price)}
         </p>
       </div>
