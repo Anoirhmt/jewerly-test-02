@@ -4,10 +4,10 @@ import type { Product } from "./products";
 export const packsProducts: Product[] = [
   {
     id: 201,
-    name: "pack1",
+    name: "pack1+boite",
     description: "Premium jewelry pack with elegant design",
-    price: 99,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5825869369337562928_y.jpg",
+    price: 199,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_6016821605273029121_y.jpg",
     category: "pack",
     rating: 4.8,
     reviews: 124,
