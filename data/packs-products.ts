@@ -83,7 +83,7 @@ export const packsProducts: Product[] = [
     id: 208,
     name: "Cartier Ring",
     description: "Elegant b available in multiple colours",
-    price: 1500,
+    price: 129,
     category: "pack",
     rating: 4.9,
     reviews: 89,
