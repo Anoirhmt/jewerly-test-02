@@ -240,12 +240,12 @@ const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
       <section className="max-w-2xl mx-auto">
         <Card className="border-0 luxury-card premium-shadow bg-white">
           <CardContent className="p-12 text-center">
-            <figure className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="h-10 w-10 text-red-600" aria-hidden="true" />
+            <figure className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="h-10 w-10 text-green-600" aria-hidden="true" />
             </figure>
-            <h2 className="text-3xl font-serif font-medium mb-4 text-black">Panier vide ou invalide</h2>
+            <h2 className="text-3xl font-serif font-medium mb-4 text-black">Commande validée</h2>
             <p className="text-gray-600 mb-8 text-lg">
-              Votre panier est vide ou le montant total est invalide. Veuillez ajouter des articles avant de passer commande.
+              Votre commande a été validée avec succès. Merci pour votre achat!
             </p>
             <a href="/products">
               <Button className="w-full premium-button text-white px-8 py-3 text-sm tracking-[0.1em] rounded-none uppercase">
