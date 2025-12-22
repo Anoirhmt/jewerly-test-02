@@ -59,10 +59,10 @@ export const packsProducts: Product[] = [
   },
   {
     id: 206,
-    name: "pack6",
+    name: "pack6+boit",
     description: "Premium gold jewelry pack",
-    price: 99,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5873068869487282084_y.jpg",
+    price: 199,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3687.jpeg",
     category: "pack",
     rating: 4.9,
     reviews: 108,
