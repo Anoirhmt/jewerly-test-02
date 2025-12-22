@@ -114,7 +114,7 @@ export const packsProducts: Product[] = [
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3687.jpeg", 
     category: "pack",
     rating: 4,5,
-    reviews: 5,4,
+    reviews: 564,
     inStock: true,
   },
   {
