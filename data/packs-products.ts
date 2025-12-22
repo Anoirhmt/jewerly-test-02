@@ -83,28 +83,12 @@ export const packsProducts: Product[] = [
     id: 208,
     name: "Cartier Ring",
     description: "Elegant b available in multiple colours",
-    price: 129,
+    price: 99,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg",
     category: "pack",
     rating: 4.9,
     reviews: 89,
     inStock: true,
-    variants: [
-      // principal image + main colour
-      {
-        color: "gold",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg",
-      },
-      // hover image + second colour
-      {
-        color: "white",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1558.jpeg",
-      },
-      // other option
-      {
-        color: "black",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1549.jpeg",
-      },
-    ],
   },
    {
      id: 209,
@@ -127,5 +111,16 @@ export const packsProducts: Product[] = [
     rating: 0,
     reviews: 0,
     inStock: false,
+  },
+  {
+    id: 211,
+    name: "ensemble montre et le article et boite gratuite 😍💋 199 dh",
+    description: "باك ساعة مع الإكسسوارات وعلبة مجانية 😍💋 199 درهم",
+    price: 199,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_6016821605273029121_y.jpg",
+    category: "pack",
+    rating: 4.9,
+    reviews: 78,
+    inStock: true,
   },
 ];

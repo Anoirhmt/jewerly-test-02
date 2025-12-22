@@ -11,7 +11,7 @@ interface ProductGridProps {
 
 export function ProductGrid({ products, showNavCards = false }: ProductGridProps) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 cv-auto">
       {showNavCards && (
         <>
           {/* Navigation card: Packs */}
@@ -24,6 +24,8 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
                     alt="Voir les packs"
                     fill
                     className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    style={{ willChange: "transform", transform: "translateZ(0)" }}
                   />
                 </Link>
               </CardContent>
@@ -43,6 +45,8 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
                     alt="Nos collection"
                     fill
                     className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    style={{ willChange: "transform", transform: "translateZ(0)" }}
                   />
                 </Link>
               </CardContent>
@@ -62,6 +66,8 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
                     alt="Nos montres"
                     fill
                     className="object-cover object-[center_70%] transition-transform duration-500 ease-in-out group-hover:scale-110"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    style={{ willChange: "transform", transform: "translateZ(0)" }}
                   />
                 </Link>
               </CardContent>

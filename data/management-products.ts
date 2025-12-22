@@ -5,28 +5,19 @@ export const managementProducts: Product[] = [
   {
     id: 401,
     name: "Cartier Watch",
-    description: "Cartier Watch",
-    price: 120,
+    description: "",
+    price: 150,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg",
     category: "watch",
     rating: 4.8,
     reviews: 124,
     inStock: true,
-    variants: [
-      {
-        color: "doré",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg"
-      },
-      {
-        color: "argenté",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg"
-      }
-    ]
   },
   {
     id: 402,
     name: "rolexe",
     description: "watch",
-    price: 788,
+    price: 150,
     category: "watch",
     rating: 4.8,
     reviews: 124,
@@ -58,7 +49,7 @@ export const managementProducts: Product[] = [
       },
       {
         color: "argenté",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568919_y.jpg"
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568916_y.jpg"
       }
     ]
   },
@@ -66,7 +57,7 @@ export const managementProducts: Product[] = [
     id: 404,
     name: "BVLGARI SEDUTTORI DIAMONDS",
     description: "BVLGARI SEDUTTORI DIAMONDS",
-    price: 99,
+    price: 130,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568916_y.jpg",
     category: "watch",
     rating: 0,

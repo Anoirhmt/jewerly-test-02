@@ -6,6 +6,7 @@ import { collectionProducts } from "@/data/collection-products"
 import { promoProducts } from "@/data/promo-products"
 import { packsProducts } from "@/data/packs-products"
 import { notFound } from "next/navigation"
+import { SpecialPackForm } from "@/components/special-pack-form"
 
 interface ProductPageProps {
   params: {
@@ -46,7 +47,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <ProductDetails product={product} />
-      <RelatedProducts currentProductId={product.id} products={relatedProductsSource} />
+      {product.id === 211 ? (
+        <SpecialPackForm product={product} />
+      ) : (
+        <RelatedProducts currentProductId={product.id} products={relatedProductsSource} />
+      )}
     </div>
   )
 }

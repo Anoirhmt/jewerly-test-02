@@ -1,4 +1,5 @@
 import type React from "react"
+import { RouteTransition } from "@/components/route-transition"
 import type { Metadata } from "next"
 import { Inter, Playfair_Display } from "next/font/google"
 import "./globals.css"
@@ -42,10 +43,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} font-sans flex flex-col min-h-screen`}>
+      <body className={`${inter.variable} ${playfair.variable} font-sans flex flex-col min-h-screen scroll-smooth antialiased`}>
         <CartProvider>
           <Navbar />
-          {children}
+          <RouteTransition>
+            {children}
+          </RouteTransition>
           <Footer />
           <Link href="https://wa.me/212693011454" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="fixed bottom-4 right-4 z-50 inline-flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-lg">
             <Image src="/whatsapp.png" alt="WhatsApp" width={48} height={48} priority />

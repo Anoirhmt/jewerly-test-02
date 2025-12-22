@@ -1,35 +1,8 @@
 import type { Product } from "./products";
 
-export const collectionProducts: Product[] = [
+export const collectionProducts: Product[] = [ 
   {
     id: 301,
-    name: "Cartier Ring",
-    description: "Elegant b available in multiple colours",
-    price: 1500,
-    category: "ring",
-    rating: 4.9,
-    reviews: 89,
-    inStock: false,
-    variants: [
-      // principal image + main colour
-      {
-        color: "gold",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg",
-      },
-      // hover image + second colour
-      {
-        color: "white",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1558.jpeg",
-      },
-      // other option
-      {
-        color: "black",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1549.jpeg",
-      },
-    ],
-  },
-  {
-    id: 302,
     name: "Gold Necklace",
     description: "Elegant gold necklace",
     price: 800,
@@ -40,7 +13,7 @@ export const collectionProducts: Product[] = [
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/necklace1.jpg",
   },
   {
-    id: 303,
+    id: 302,
     name: "Cartier Clou Bracelet",
     description: "Modern bracelet in multiple finishes",
     price: 40,
@@ -56,7 +29,7 @@ export const collectionProducts: Product[] = [
     ],
   },
   {
-    id: 304,
+    id: 303,
     name: "Cartier Love bracelet",
     description: "Classic bracelet in different metals",
     price: 40,

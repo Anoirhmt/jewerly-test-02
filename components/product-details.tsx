@@ -75,7 +75,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         {/* Product Info */}
         <div className="space-y-8">
           <div>
-            <h1 className="text-5xl font-serif font-semibold uppercase tracking-wide mb-3 text-black">{product.name}</h1>
+            <h1 className={`${product.id === 211 ? "text-2xl sm:text-3xl md:text-4xl" : "text-5xl uppercase"} font-serif font-semibold tracking-wide leading-tight mb-3 text-black`}>{product.name}</h1>
             <div className="mb-4">
               {product.inStock ? (
                 <Badge className="bg-green-100 text-green-800 border-0">
@@ -89,15 +89,17 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <span className="text-lg font-semibold text-black">{formatPrice(product.price)}</span>
-            {product.originalPrice && (
-              <>
-                <span className="text-sm text-gray-500 line-through">{formatPrice(product.originalPrice)}</span>
-                <Badge className="bg-green-100 text-green-800 border-0">Économisez {discountPercentage}%</Badge>
-              </>
-            )}
-          </div>
+          {product.id !== 211 && (
+            <div className="flex items-center space-x-4">
+              <span className="text-lg font-semibold text-black">{formatPrice(product.price)}</span>
+              {product.originalPrice && (
+                <>
+                  <span className="text-sm text-gray-500 line-through">{formatPrice(product.originalPrice)}</span>
+                  <Badge className="bg-green-100 text-green-800 border-0">Économisez {discountPercentage}%</Badge>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Variant selector */}
           {product.variants && product.variants.length > 0 && (
@@ -132,48 +134,52 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             </div>
           )}
 
-          <p className="text-gray-600 leading-relaxed">{product.description}</p>
+            <p className={product.id === 211 ? "text-black font-black tracking-tight font-sans" : "text-gray-600 leading-relaxed"}>{product.description}</p>
 
-          {/* Quantity Selector */}
-          <div className="flex items-center space-x-4">
-            <span className="font-medium">Quantité:</span>
-            <div className="flex items-center border border-gray-300">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                disabled={quantity <= 1}
-                className="rounded-none"
-              >
-                <Minus className="h-4 w-4" />
-              </Button>
-              <span className="px-6 py-2 font-medium">{quantity}</span>
-              <Button variant="ghost" size="icon" onClick={() => setQuantity(quantity + 1)} className="rounded-none">
-                <Plus className="h-4 w-4" />
-              </Button>
+          {/* Quantity Selector (hidden for special pack) */}
+          {product.id !== 211 && (
+            <div className="flex items-center space-x-4">
+              <span className="font-medium">Quantité:</span>
+              <div className="flex items-center border border-gray-300">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  disabled={quantity <= 1}
+                  className="rounded-none"
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <span className="px-6 py-2 font-medium">{quantity}</span>
+                <Button variant="ghost" size="icon" onClick={() => setQuantity(quantity + 1)} className="rounded-none">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button
-              onClick={handleBuyNow}
-              className="flex-1 bg-white text-black border border-black px-4 py-2 font-semibold tracking-wide rounded-none uppercase transition-all duration-300 hover:bg-gray-100 hover:scale-105"
-              size="lg"
-              disabled={!product.inStock}
-            >
-              Acheter maintenant
-            </Button>
-            <Button
-              onClick={handleAddToCart}
-              className="flex-1 bg-black hover:bg-gray-900 text-white rounded-none transform transition-transform duration-500 ease-in-out hover:scale-105 text-lg py-4 sm:text-base sm:py-2"
-              size="lg"
-              disabled={!product.inStock}
-            >
-              <ShoppingCart className="h-5 w-5 mr-2" />
-              Ajouter au panier
-            </Button>
-          </div>
+          {product.id !== 211 && (
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button
+                onClick={handleBuyNow}
+                className="flex-1 bg-white text-black border border-black px-4 py-2 font-semibold tracking-wide rounded-none uppercase transition-all duration-300 hover:bg-gray-100 hover:scale-105"
+                size="lg"
+                disabled={!product.inStock}
+              >
+                Acheter maintenant
+              </Button>
+              <Button
+                onClick={handleAddToCart}
+                className="flex-1 bg-black hover:bg-gray-900 text-white rounded-none transform transition-transform duration-500 ease-in-out hover:scale-105 text-lg py-4 sm:text-base sm:py-2"
+                size="lg"
+                disabled={!product.inStock}
+              >
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                Ajouter au panier
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 

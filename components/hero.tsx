@@ -1,5 +1,6 @@
 'use client';
 
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -11,20 +12,31 @@ const architects = Architects_Daughter({ weight: ["400"], subsets: ["latin"] });
 
 export function Hero() {
   return (
-    <section className="relative h-[50vh] sm:h-[100dvh] min-h-[300px] sm:min-h-[600px] overflow-hidden">
-      {/* Background Image */}
-      <Image
-        src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/Image_fx%20(5)%20(1).jpg"
-        alt="Elarain Luxury Jewelry Collection"
-        fill
-        className="object-cover object-center"
-        priority
-        quality={70}
-        sizes="100vw"
-        fetchPriority="high"
-      />
-      <div className="absolute inset-0 bg-black/40" />
-      {/* Bottom Gradient Fade */}
+    <section className="relative h-[60vh] sm:h-[70vh] flex items-center justify-center bg-black overflow-hidden">
+      <div className="absolute inset-0 w-full h-full">
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/hero.mp4"
+          playsInline
+          autoPlay
+          muted
+          loop
+          preload="auto"
+          style={{ pointerEvents: "none" }}
+          onError={(e) => {
+            const container = (e.currentTarget.parentElement as HTMLElement)
+            if (!container) return
+            const iframe = document.createElement('iframe')
+            iframe.className = 'absolute inset-0 w-full h-full'
+            iframe.src = 'https://www.youtube.com/embed/W5PRZuaQ3VM?autoplay=1&mute=1&loop=1&playlist=W5PRZuaQ3VM&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1'
+            iframe.title = 'Background video'
+            iframe.allow = 'autoplay; encrypted-media'
+            iframe.style.pointerEvents = 'none'
+            container.replaceChildren(iframe)
+          }}
+        />
+      </div>
+
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-white/90" />
 
       {/* Content */}
