@@ -30,7 +30,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
                 </Link>
               </CardContent>
             </Card>
-            <Link href="/packs" className="mt-2 text-center font-semibold text-gray-800 hover:text-[#D4AF37] transition-colors whitespace-nowrap">
+            <Link href="/packs" className="mt-2 text-center font-medium font-serif text-[15px] tracking-[0.30em] uppercase text-[#3a4352] hover:text-[#2a2f3a] transition-colors whitespace-nowrap">
               NOS PACKS →
             </Link>
           </div>
@@ -51,7 +51,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
                 </Link>
               </CardContent>
             </Card>
-            <Link href="/products" className="mt-2 text-center font-semibold text-gray-800 hover:text-[#D4AF37] transition-colors whitespace-nowrap">
+            <Link href="/products" className="mt-2 text-center font-medium font-serif text-[15px] tracking-[0.30em] uppercase text-[#3a4352] hover:text-[#2a2f3a] transition-colors whitespace-nowrap">
               NOS COLLECTION →
             </Link>
           </div>
@@ -72,7 +72,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
                 </Link>
               </CardContent>
             </Card>
-            <Link href="/watches" className="mt-2 text-center font-semibold text-gray-800 hover:text-[#D4AF37] transition-colors whitespace-nowrap">
+            <Link href="/watches" className="mt-2 text-center font-medium font-serif text-[15px] tracking-[0.30em] uppercase text-[#3a4352] hover:text-[#2a2f3a] transition-colors whitespace-nowrap">
               NOS MONTRES →
             </Link>
           </div>
