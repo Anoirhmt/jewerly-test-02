@@ -95,7 +95,7 @@ export const packsProducts: Product[] = [
     name: "pack9+boite",
     description: "Silver jewelry pack set",
     price: 199,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3687.jpeg", 
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3050.jpeg", 
     category: "pack",
     rating: 4.5,
     reviews: 564,
