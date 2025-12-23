@@ -121,6 +121,6 @@ export const packsProducts: Product[] = [
     category: "pack",
     rating: 4.9,
     reviews: 78,
-    inStock: true,
+    inStock: false,
   },
 ];
