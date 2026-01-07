@@ -41,7 +41,7 @@ export const managementProducts: Product[] = [
     category: "watch",
     rating: 4.8,
     reviews: 124,
-    inStock: false,
+    inStock: true,
     variants: [
       {
         color: "or rose",

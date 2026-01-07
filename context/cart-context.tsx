@@ -5,6 +5,7 @@ import type { Product } from "@/data/products"
 
 interface CartItem extends Product {
   quantity: number
+  selectedColor?: string
 }
 
 interface CartState {
@@ -13,7 +14,7 @@ interface CartState {
 }
 
 interface CartContextType extends CartState {
-  addItem: (product: Product) => void
+  addItem: (product: Product, options?: { selectedColor?: string; selectedImage?: string }) => void
   removeItem: (productId: number) => void
   updateQuantity: (productId: number, quantity: number) => void
   clearCart: () => void
@@ -22,7 +23,7 @@ interface CartContextType extends CartState {
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
 type CartAction =
-  | { type: "ADD_ITEM"; payload: Product }
+  | { type: "ADD_ITEM"; payload: Product & { selectedColor?: string; image?: string } }
   | { type: "REMOVE_ITEM"; payload: number }
   | { type: "UPDATE_QUANTITY"; payload: { id: number; quantity: number } }
   | { type: "CLEAR_CART" }
@@ -44,13 +45,13 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       }
 
     case "ADD_ITEM": {
-      const existingItem = state.items.find((item) => item.id === action.payload.id)
+      const existingItem = state.items.find((item) => item.id === action.payload.id && item.selectedColor === action.payload.selectedColor)
 
       if (existingItem) {
         const newState = {
           ...state,
-          items: state.items.map((item) =>
-            item.id === action.payload.id ? { ...item, quantity: item.quantity + 1 } : item,
+        items: state.items.map((item) =>
+            item.id === action.payload.id && item.selectedColor === action.payload.selectedColor ? { ...item, quantity: item.quantity + 1 } : item,
           ),
         }
         // Save to localStorage
@@ -62,7 +63,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 
       const newState = {
         ...state,
-        items: [...state.items, { ...action.payload, quantity: 1 }],
+        items: [...state.items, { ...action.payload, quantity: 1, selectedColor: action.payload.selectedColor }],
       }
       // Save to localStorage
       if (typeof window !== "undefined") {
@@ -143,8 +144,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const addItem = (product: Product) => {
-    dispatch({ type: "ADD_ITEM", payload: product })
+  const addItem = (product: Product, options?: { selectedColor?: string; selectedImage?: string }) => {
+    const payload = { ...product } as Product & { selectedColor?: string; image?: string }
+    if (options?.selectedColor) {
+      (payload as any).selectedColor = options.selectedColor
+    }
+    if (options?.selectedImage) {
+      payload.image = options.selectedImage
+    }
+    dispatch({ type: "ADD_ITEM", payload })
   }
 
   const removeItem = (productId: number) => {

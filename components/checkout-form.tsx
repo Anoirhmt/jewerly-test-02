@@ -138,7 +138,7 @@ export function CheckoutForm() {
 
     // Prepare order details from cart items
     const orderDetails = items
-      .map((item) => `${item.name} x${item.quantity} (${formatPrice(item.price * item.quantity)})`)
+      .map((item) => `${item.name}${(item as any).selectedColor ? ` [${(item as any).selectedColor}]` : ''} x${item.quantity} (${formatPrice(item.price * item.quantity)})`)
       .join(" + ")
 
     const formDataToSend = {

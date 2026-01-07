@@ -21,6 +21,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
   const [activeImage, setActiveImage] = useState<string>(
     product.image ?? product.variants?.[0]?.image ?? "/placeholder.svg"
   )
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(product.variants?.[0]?.color)
 
   const { addItem, items } = useCart()
   const router = useRouter()
@@ -29,14 +30,14 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
-      addItem(product)
+      addItem(product, { selectedColor, selectedImage: activeImage })
     }
     setDrawerOpen(true)
   }
 
   const handleBuyNow = () => {
     for (let i = 0; i < quantity; i++) {
-      addItem(product)
+      addItem(product, { selectedColor, selectedImage: activeImage })
     }
     router.push("/checkout")
   }
@@ -111,7 +112,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   key={variant.color}
                   type="button"
                   aria-label={variant.color}
-                  onClick={() => setActiveImage(variant.image)}
+                  onClick={() => { setActiveImage(variant.image); setSelectedColor(variant.color) }}
                   className={`h-8 w-8 rounded-full border border-gray-300 transition-transform duration-200 ease-out hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black ${activeImage === variant.image ? "ring-2 ring-offset-2 ring-black" : ""}`}
                   style={{ backgroundColor: getColorHex(variant.color) }}
                 />
