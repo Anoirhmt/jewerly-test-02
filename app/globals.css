@@ -54,8 +54,28 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-black text-white;
+  }
+
+  /* Custom Scrollbar for Luxury Feel */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
 
   h1,
@@ -64,11 +84,27 @@
   h4,
   h5,
   h6 {
-    @apply font-serif;
+    @apply font-serif tracking-luxury uppercase;
   }
 }
 
 @layer components {
+  .text-luxury {
+    @apply tracking-luxury-lg uppercase font-serif;
+  }
+
+  .img-zoom {
+    @apply overflow-hidden;
+  }
+
+  .img-zoom img {
+    @apply transition-transform duration-700 ease-out;
+  }
+
+  .img-zoom:hover img {
+    @apply scale-110;
+  }
+
   .luxury-gradient {
     background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
   }
@@ -153,6 +189,6 @@
   }
   .cv-auto {
     content-visibility: auto;
-    contain-intrinsic-size: 1000px;
+    contain-intrinsic-size: 0 500px;
   }
 }

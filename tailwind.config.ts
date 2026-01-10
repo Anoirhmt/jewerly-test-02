@@ -57,6 +57,13 @@ const config = {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
         serif: ["var(--font-playfair)", "serif"],
       },
+      letterSpacing: {
+        'luxury': '0.15em',
+        'luxury-lg': '0.3em',
+      },
+      lineHeight: {
+        'relaxed-extra': '1.8',
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

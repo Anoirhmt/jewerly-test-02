@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Drawer, DrawerContent } from "@/components/ui/drawer"
 
-import { ShoppingCart, Minus, Plus } from "lucide-react"
+import { ShoppingCart, Minus, Plus, ChevronRight, Share2, Heart } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 import { formatPrice } from "@/utils/format-price"
 import type { Product } from "@/data/products"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface ProductDetailsProps {
   product: Product
@@ -22,6 +23,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
     product.image ?? product.variants?.[0]?.image ?? "/placeholder.svg"
   )
   const [selectedColor, setSelectedColor] = useState<string | undefined>(product.variants?.[0]?.color)
+  const [isZoomed, setIsZoomed] = useState(false)
 
   const { addItem, items } = useCart()
   const router = useRouter()
@@ -49,139 +51,184 @@ export function ProductDetails({ product }: ProductDetailsProps) {
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   return (
-    <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Product Image */}
-        <div className="space-y-4 max-w-md mx-auto lg:mx-0">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Breadcrumbs */}
+      <nav className="flex items-center space-x-2 text-[10px] tracking-[0.2em] uppercase text-gray-400 mb-12">
+        <Link href="/" className="hover:text-black transition-colors">Accueil</Link>
+        <ChevronRight className="h-3 w-3" />
+        <Link href="/products" className="hover:text-black transition-colors">{product.category}</Link>
+        <ChevronRight className="h-3 w-3" />
+        <span className="text-black">{product.name}</span>
+      </nav>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        {/* Product Image Section */}
+        <div className="space-y-6">
           <div
-            className="aspect-square overflow-hidden rounded-lg border border-gray-200 select-none"
-            draggable={false}
-            onContextMenu={(e) => e.preventDefault()}
-            onDragStart={(e) => e.preventDefault()}
-            onCopy={(e) => e.preventDefault()}
+            className="relative aspect-[4/5] overflow-hidden bg-[#f9f9f9] cursor-zoom-in"
+            onClick={() => setIsZoomed(!isZoomed)}
           >
-            <img
-              src={activeImage || "/placeholder.svg"}
-               alt={product.name}
-              className="w-full h-full object-cover pointer-events-none"
-              draggable={false}
-              onContextMenu={(e) => e.preventDefault()}
-              onDragStart={(e) => e.preventDefault()}
-              onCopy={(e) => e.preventDefault()}
-              style={{ WebkitUserDrag: "none" } as React.CSSProperties}
-            />
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={activeImage}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                src={activeImage || "/placeholder.svg"}
+                alt={product.name}
+                className={`w-full h-full object-cover transition-transform duration-700 ${isZoomed ? "scale-150" : "scale-100"}`}
+              />
+            </AnimatePresence>
+            
+            {discountPercentage > 0 && (
+              <Badge className="absolute top-6 left-6 bg-black text-white border-0 px-4 py-1.5 text-[10px] tracking-[0.2em] uppercase font-medium rounded-none">
+                -{discountPercentage}%
+              </Badge>
+            )}
+          </div>
+
+          {/* Thumbnail Gallery */}
+          <div className="grid grid-cols-4 gap-4">
+            {product.variants?.map((variant) => (
+              <button
+                key={variant.color}
+                onClick={() => { setActiveImage(variant.image); setSelectedColor(variant.color) }}
+                className={`relative aspect-square overflow-hidden bg-[#f9f9f9] border transition-all duration-300 ${activeImage === variant.image ? "border-black" : "border-transparent opacity-60 hover:opacity-100"}`}
+              >
+                <img src={variant.image} alt={variant.color} className="w-full h-full object-cover" />
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Product Info */}
-        <div className="space-y-8">
-          <div>
-            <h1 className={`${product.id === 211 ? "text-2xl sm:text-3xl md:text-4xl" : "text-5xl uppercase"} font-serif font-semibold tracking-wide leading-tight mb-3 text-black`}>{product.name}</h1>
-            <div className="mb-4">
-              {product.inStock ? (
-                <Badge className="bg-green-100 text-green-800 border-0">
-                  En stock
-                </Badge>
-              ) : (
-                <Badge variant="destructive" className="border-0">
-                  En rupture de stock
-                </Badge>
-              )}
-            </div>
-          </div>
-
-          {product.id !== 211 && (
-            <div className="flex items-center space-x-4">
-              <span className="text-lg font-semibold text-black">{formatPrice(product.price)}</span>
+        {/* Product Info Section */}
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="flex flex-col"
+        >
+          <div className="mb-8 border-b border-gray-100 pb-8">
+            <p className="text-[10px] tracking-[0.4em] uppercase text-gray-400 mb-4 font-serif">
+              {product.category}
+            </p>
+            <h1 className="text-4xl sm:text-5xl font-serif font-medium tracking-luxury mb-6 text-black uppercase">
+              {product.name}
+            </h1>
+            
+            <div className="flex items-center space-x-6">
+              <span className="text-2xl font-light text-black tracking-widest">{formatPrice(product.price)}</span>
               {product.originalPrice && (
-                <>
-                  <span className="text-sm text-gray-500 line-through">{formatPrice(product.originalPrice)}</span>
-                  <Badge className="bg-green-100 text-green-800 border-0">Économisez {discountPercentage}%</Badge>
-                </>
+                <span className="text-lg text-gray-400 line-through font-light">{formatPrice(product.originalPrice)}</span>
               )}
             </div>
-          )}
-
-          {/* Variant selector */}
-          {product.variants && product.variants.length > 0 && (
-          <div className="space-y-1">
-            <p className="text-gray-700 font-medium">Couleur</p>
-            <div className="flex space-x-2">
-              {product.variants.map((variant) => (
-                <button
-                  key={variant.color}
-                  type="button"
-                  aria-label={variant.color}
-                  onClick={() => { setActiveImage(variant.image); setSelectedColor(variant.color) }}
-                  className={`h-8 w-8 rounded-full border border-gray-300 transition-transform duration-200 ease-out hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black ${activeImage === variant.image ? "ring-2 ring-offset-2 ring-black" : ""}`}
-                  style={{ backgroundColor: getColorHex(variant.color) }}
-                />
-              ))}
-            </div>
           </div>
-          )}
 
-          {product.material && (
-            <div className="space-y-1">
-              <p className="text-gray-700 font-medium">Matériau</p>
-              <p className="text-gray-600">{product.material}</p>
+          <div className="space-y-10 flex-grow">
+            {/* Description */}
+            <p className="text-gray-600 leading-relaxed-extra text-lg font-light">
+              {product.description}
+            </p>
+
+            {/* Variant selector */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <p className="text-[10px] tracking-[0.2em] uppercase text-black font-medium">Couleur: <span className="text-gray-400 ml-2">{selectedColor}</span></p>
+                </div>
+                <div className="flex space-x-3">
+                  {product.variants.map((variant) => (
+                    <button
+                      key={variant.color}
+                      type="button"
+                      aria-label={variant.color}
+                      onClick={() => { setActiveImage(variant.image); setSelectedColor(variant.color) }}
+                      className={`h-10 w-10 rounded-full border transition-all duration-300 flex items-center justify-center ${selectedColor === variant.color ? "border-black scale-110" : "border-gray-200 hover:border-gray-400"}`}
+                    >
+                      <div 
+                        className="h-7 w-7 rounded-full shadow-inner"
+                        style={{ backgroundColor: getColorHex(variant.color) }}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Details Grid */}
+            <div className="grid grid-cols-2 gap-8 border-t border-b border-gray-100 py-8">
+              {product.material && (
+                <div>
+                  <p className="text-[10px] tracking-[0.2em] uppercase text-gray-400 mb-2">Matériau</p>
+                  <p className="text-sm text-black font-light">{product.material}</p>
+                </div>
+              )}
+              {product.gemstone && (
+                <div>
+                  <p className="text-[10px] tracking-[0.2em] uppercase text-gray-400 mb-2">Pierre</p>
+                  <p className="text-sm text-black font-light">{product.gemstone}</p>
+                </div>
+              )}
             </div>
-          )}
 
-          {product.gemstone && (
-            <div className="space-y-1">
-              <p className="text-gray-700 font-medium">Pierre précieuse</p>
-              <p className="text-gray-600">{product.gemstone}</p>
-            </div>
-          )}
+            {/* Action Buttons */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4 mb-6">
+                <p className="text-[10px] tracking-[0.2em] uppercase text-black font-medium">Quantité</p>
+                <div className="flex items-center border border-gray-200 h-12">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    disabled={quantity <= 1}
+                    className="rounded-none hover:bg-transparent"
+                  >
+                    <Minus className="h-3 w-3" />
+                  </Button>
+                  <span className="px-6 text-sm font-light">{quantity}</span>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setQuantity(quantity + 1)} 
+                    className="rounded-none hover:bg-transparent"
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
 
-            <p className={product.id === 211 ? "text-black font-black tracking-tight font-sans" : "text-gray-600 leading-relaxed"}>{product.description}</p>
-
-          {/* Quantity Selector (hidden for special pack) */}
-          {product.id !== 211 && (
-            <div className="flex items-center space-x-4">
-              <span className="font-medium">Quantité:</span>
-              <div className="flex items-center border border-gray-300">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  disabled={quantity <= 1}
-                  className="rounded-none"
+                  onClick={handleBuyNow}
+                  className="bg-black text-white px-8 py-7 text-[10px] tracking-[0.3em] rounded-none uppercase transition-all duration-500 hover:bg-gray-900"
+                  disabled={!product.inStock}
                 >
-                  <Minus className="h-4 w-4" />
+                  Acheter maintenant
                 </Button>
-                <span className="px-6 py-2 font-medium">{quantity}</span>
-                <Button variant="ghost" size="icon" onClick={() => setQuantity(quantity + 1)} className="rounded-none">
-                  <Plus className="h-4 w-4" />
+                <Button
+                  onClick={handleAddToCart}
+                  variant="outline"
+                  className="border-black text-black px-8 py-7 text-[10px] tracking-[0.3em] rounded-none uppercase transition-all duration-500 hover:bg-black hover:text-white"
+                  disabled={!product.inStock}
+                >
+                  <ShoppingCart className="h-4 w-4 mr-3" />
+                  Ajouter au panier
                 </Button>
               </div>
             </div>
-          )}
-
-          {/* Action Buttons */}
-          {product.id !== 211 && (
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                onClick={handleBuyNow}
-                className="flex-1 bg-white text-black border border-black px-4 py-2 font-semibold tracking-wide rounded-none uppercase transition-all duration-300 hover:bg-gray-100 hover:scale-105"
-                size="lg"
-                disabled={!product.inStock}
-              >
-                Acheter maintenant
-              </Button>
-              <Button
-                onClick={handleAddToCart}
-                className="flex-1 bg-black hover:bg-gray-900 text-white rounded-none transform transition-transform duration-500 ease-in-out hover:scale-105 text-lg py-4 sm:text-base sm:py-2"
-                size="lg"
-                disabled={!product.inStock}
-              >
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                Ajouter au panier
-              </Button>
-            </div>
-          )}
-        </div>
+          </div>
+          
+          {/* Footer Info */}
+          <div className="mt-12 flex items-center justify-between text-[10px] tracking-[0.2em] uppercase text-gray-400">
+            <button className="flex items-center hover:text-black transition-colors">
+              <Heart className="h-3 w-3 mr-2" /> Liste de souhaits
+            </button>
+            <button className="flex items-center hover:text-black transition-colors">
+              <Share2 className="h-3 w-3 mr-2" /> Partager
+            </button>
+          </div>
+        </motion.div>
       </div>
 
       {/* Cart Drawer */}
