@@ -308,7 +308,7 @@ export function CheckoutForm() {
                     variant="ghost"
                     className="w-full text-[10px] tracking-[0.3em] uppercase hover:bg-gray-50 rounded-none py-4 transition-colors"
                   >
-                    RETOUR À L'ACCUEIL
+                    RETOUR À L&apos;ACCUEIL
                   </Button>
                 </Link>
               </div>

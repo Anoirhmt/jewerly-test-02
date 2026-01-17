@@ -15,7 +15,7 @@ import { motion } from "framer-motion"
 
 const ITEMS_PER_PAGE = 9
 
-export default async function ProductsPage({
+export default function ProductsPage({
   searchParams,
 }: {
   searchParams?: { search?: string; page?: string }
@@ -41,14 +41,14 @@ export default async function ProductsPage({
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           >
             <span className="text-[9px] md:text-[10px] tracking-luxury-xl uppercase text-black/30 mb-4 md:mb-6 block font-light">
-              L'Art du Détail
+              L&apos;Art du Détail
             </span>
             <h1 className="text-6xl md:text-[110px] font-serif font-medium text-black tracking-luxury-lg uppercase mb-6 md:mb-10 leading-[0.9]">
               Notre <br /> <span className="text-black/10 italic font-light">Collection</span>
             </h1>
             <div className="w-12 h-[1px] bg-black/10 mx-auto mb-6 md:mb-10" />
             <p className="text-black/40 font-light tracking-luxury-xl uppercase text-[9px] md:text-[11px] leading-relaxed-extra max-w-2xl mx-auto px-4">
-              Une sélection raffinée de pièces d'exception, conçues pour traverser le temps avec éclat. Chaque bijou est une promesse d'éternité.
+              Une sélection raffinée de pièces d&apos;exception, conçues pour traverser le temps avec éclat. Chaque bijou est une promesse d&apos;éternité.
             </p>
           </motion.div>
         </div>

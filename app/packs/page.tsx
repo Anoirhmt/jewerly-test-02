@@ -15,7 +15,7 @@ import { motion } from "framer-motion"
 
 const ITEMS_PER_PAGE = 9
 
-export default async function PacksPage({
+export default function PacksPage({
   searchParams,
 }: {
   searchParams: { page?: string }

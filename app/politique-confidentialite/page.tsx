@@ -15,7 +15,7 @@ export default function PolitiqueConfidentialitePage() {
           <section className="space-y-4">
             <h2 className="text-[10px] tracking-luxury-lg uppercase text-black font-medium">1. Données collectées</h2>
             <ul className="list-none space-y-2">
-              <li className="flex items-start"><span className="w-1.5 h-[1px] bg-black/20 mt-2.5 mr-3 shrink-0" /> Informations d'identification : nom, adresse, email, numéro de téléphone.</li>
+              <li className="flex items-start"><span className="w-1.5 h-[1px] bg-black/20 mt-2.5 mr-3 shrink-0" /> Informations d&apos;identification : nom, adresse, email, numéro de téléphone.</li>
               <li className="flex items-start"><span className="w-1.5 h-[1px] bg-black/20 mt-2.5 mr-3 shrink-0" /> Données de paiement : uniquement les informations nécessaires pour traiter votre transaction.</li>
               <li className="flex items-start"><span className="w-1.5 h-[1px] bg-black/20 mt-2.5 mr-3 shrink-0" /> Données de navigation : pages consultées, durée de visite, adresse IP.</li>
             </ul>
@@ -33,14 +33,14 @@ export default function PolitiqueConfidentialitePage() {
           <section className="space-y-4">
             <h2 className="text-[10px] tracking-luxury-lg uppercase text-black font-medium">3. Partage des données</h2>
             <p>
-              Vos informations ne sont jamais vendues. Elles ne sont partagées qu'avec des prestataires de confiance (paiement, logistique) dans la stricte mesure nécessaire à l'exécution de vos commandes.
+              Vos informations ne sont jamais vendues. Elles ne sont partagées qu&apos;avec des prestataires de confiance (paiement, logistique) dans la stricte mesure nécessaire à l&apos;exécution de vos commandes.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-[10px] tracking-luxury-lg uppercase text-black font-medium">4. Vos droits</h2>
             <ul className="list-none space-y-2">
-              <li className="flex items-start"><span className="w-1.5 h-[1px] bg-black/20 mt-2.5 mr-3 shrink-0" /> Droit d'accès, de rectification et de suppression de vos données.</li>
+              <li className="flex items-start"><span className="w-1.5 h-[1px] bg-black/20 mt-2.5 mr-3 shrink-0" /> Droit d&apos;accès, de rectification et de suppression de vos données.</li>
               <li className="flex items-start"><span className="w-1.5 h-[1px] bg-black/20 mt-2.5 mr-3 shrink-0" /> Droit de vous opposer au traitement.</li>
             </ul>
           </section>

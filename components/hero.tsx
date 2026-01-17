@@ -68,7 +68,7 @@ export function Hero() {
             </h2>
             <div className="mt-8 h-[1px] w-16 bg-white/10" />
             <p className="mt-10 text-[11px] leading-relaxed-extra tracking-luxury text-white/50 font-light max-w-xs italic">
-              "Chaque facette capture la lumière pour raconter une histoire de précision infinie, où le métal rencontre la perfection absolue."
+              &quot;Chaque facette capture la lumi&egrave;re pour raconter une histoire de pr&eacute;cision infinie, o&ugrave; le m&eacute;tal rencontre la perfection absolue.&quot;
             </p>
           </motion.div>
 
@@ -79,11 +79,11 @@ export function Hero() {
           >
             <span className="text-[9px] tracking-luxury-lg uppercase text-white/30 mb-6 block font-medium">02. Structure</span>
             <h2 className="text-4xl font-serif font-medium tracking-luxury text-white sm:text-7xl leading-[1.1] uppercase">
-              L'Équilibre <br /> <span className="text-white/40">du Geste</span>
+              L&apos;&Eacute;quilibre <br /> <span className="text-white/40">du Geste</span>
             </h2>
             <div className="mt-8 h-[1px] w-16 bg-white/10 ml-auto" />
             <p className="mt-10 text-[11px] leading-relaxed-extra tracking-luxury text-white/50 font-light max-w-xs ml-auto italic">
-              "Une ingénierie secrète qui danse au rythme de vos instants. Le luxe n'est pas une parure, c'est une émotion qui se porte."
+              &quot;Une ing&eacute;nierie secr&egrave;te qui danse au rythme de vos instants. Le luxe n&apos;est pas une parure, c&apos;est une &eacute;motion qui se porte.&quot;
             </p>
           </motion.div>
 
@@ -95,11 +95,11 @@ export function Hero() {
             <div className="flex flex-col items-center gap-6">
               <span className="text-[9px] tracking-luxury-lg uppercase text-white/30 mb-2 block font-medium">03. Éternité</span>
               <h2 className="text-6xl font-serif font-medium tracking-luxury-xl uppercase text-white sm:text-9xl text-center">
-                L'Éclat <br /> <span className="text-white/40 italic">Suprême</span>
+                L&apos;&Eacute;clat <br /> <span className="text-white/40 italic">Supr&ecirc;me</span>
               </h2>
               <div className="mt-4 h-[1px] w-16 bg-white/10 mx-auto" />
               <p className="max-w-lg text-[9px] tracking-luxury-xl text-white/30 uppercase ml-[1em] font-light">
-                Redéfinir l'Héritage du Luxe Moderne
+                Red&eacute;finir l&apos;H&eacute;ritage du Luxe Moderne
               </p>
             </div>
 

@@ -34,8 +34,8 @@ export default function HomePage() {
                 Notre Philosophie
               </span>
               <h2 className="text-luxury-md w-full mx-auto mb-12 leading-relaxed italic text-black">
-                "La joaillerie n'est pas seulement un ornement, c'est le reflet d'une âme, 
-                le souvenir d'un instant, la promesse d'un futur."
+                &quot;La joaillerie n&apos;est pas seulement un ornement, c&apos;est le reflet d&apos;une âme,
+                le souvenir d&apos;un instant, la promesse d&apos;un futur.&quot;
               </h2>
               <div className="w-12 h-[1px] bg-black/30 mx-auto" />
             </ScrollReveal>

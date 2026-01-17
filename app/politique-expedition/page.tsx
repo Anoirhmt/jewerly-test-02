@@ -4,17 +4,17 @@ export default function PolitiqueExpeditionPage() {
   return (
     <main className="min-h-screen bg-white text-black pt-48 pb-24">
       <div className="w-full px-6 max-w-4xl mx-auto">
-        <h1 className="text-4xl font-serif tracking-luxury-lg uppercase mb-16 text-center">Politique d'expédition</h1>
+        <h1 className="text-4xl font-serif tracking-luxury-lg uppercase mb-16 text-center">Politique d&apos;expédition</h1>
         <div className="text-xs md:text-sm leading-relaxed-extra text-black/60 space-y-10 font-sans font-light">
           <section className="space-y-4">
             <p>
-              Cette politique d'expédition décrit nos modes de livraison, les délais estimés et les frais applicables pour vos commandes ELARAIN.
+              Cette politique d&apos;expédition décrit nos modes de livraison, les délais estimés et les frais applicables pour vos commandes ELARAIN.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-[10px] tracking-luxury-lg uppercase text-black font-medium">1. Zones de livraison</h2>
-            <p>Nous livrons exclusivement sur l'ensemble du territoire marocain.</p>
+            <p>Nous livrons exclusivement sur l&apos;ensemble du territoire marocain.</p>
           </section>
 
           <section className="space-y-4">

@@ -31,7 +31,7 @@ export function CartSummary() {
             <span>Sous-total</span>
             <span className="font-medium text-black">{formatPrice(subtotal)}</span>
           </div>
-          
+
           <div className="flex justify-between items-center text-[10px] tracking-[0.2em] uppercase text-gray-500 italic">
             <span>Livraison</span>
             <span>Calculée au paiement</span>
@@ -44,16 +44,16 @@ export function CartSummary() {
         </div>
 
         <Link href="/checkout" className="block">
-          <Button 
+          <Button
             className="w-full bg-black hover:bg-gray-900 text-white border-0 h-16 text-[10px] tracking-[0.4em] uppercase rounded-none transition-all duration-700 shadow-luxury group relative overflow-hidden"
           >
             <span className="relative z-10">Finaliser la commande</span>
             <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
           </Button>
         </Link>
-        
+
         <p className="text-center text-[9px] text-gray-400 tracking-[0.2em] uppercase">
-          Taxes incluses. Livraison calculée à l'étape suivante.
+          Taxes incluses. Livraison calculée à l&apos;étape suivante.
         </p>
       </CardContent>
     </Card>

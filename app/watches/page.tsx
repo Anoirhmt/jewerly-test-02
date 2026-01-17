@@ -15,7 +15,7 @@ import { motion } from "framer-motion"
 
 const ITEMS_PER_PAGE = 9;
 
-export default async function WatchesPage({
+export default function WatchesPage({
   searchParams,
 }: {
   searchParams?: { search?: string; page?: string };
@@ -54,7 +54,7 @@ export default async function WatchesPage({
             </h1>
             <div className="w-12 h-[1px] bg-black/10 mx-auto mb-6 md:mb-10" />
             <p className="text-black/40 font-light tracking-luxury-xl uppercase text-[9px] md:text-[11px] leading-relaxed-extra max-w-2xl mx-auto px-4">
-              L'alliance parfaite de la précision technique et du design intemporel. Des garde-temps d'exception pour ceux qui exigent l'excellence.
+              L&apos;alliance parfaite de la précision technique et du design intemporel. Des garde-temps d&apos;exception pour ceux qui exigent l&apos;excellence.
             </p>
           </motion.div>
         </div>
