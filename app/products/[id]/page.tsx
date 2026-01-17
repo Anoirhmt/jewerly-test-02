@@ -45,13 +45,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <ProductDetails product={product} />
-      {product.id === 211 ? (
-        <SpecialPackForm product={product} />
-      ) : (
-        <RelatedProducts currentProductId={product.id} products={relatedProductsSource} />
-      )}
+    <div className="bg-white min-h-screen pt-48 md:pt-56">
+      <div className="w-full px-6 py-12">
+        <ProductDetails product={product} />
+        {product.id === 211 ? (
+          <SpecialPackForm product={product} />
+        ) : (
+          <RelatedProducts currentProductId={product.id} products={relatedProductsSource} />
+        )}
+      </div>
     </div>
   )
 }

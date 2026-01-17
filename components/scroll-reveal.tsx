@@ -15,8 +15,8 @@ export function ScrollReveal({
   children,
   direction = "up",
   delay = 0,
-  duration = 0.8,
-  distance = 50,
+  duration = 0.5,
+  distance = 30,
 }: ScrollRevealProps) {
   const directions = {
     up: { y: distance },

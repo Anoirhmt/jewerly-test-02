@@ -45,76 +45,20 @@ export function FeaturedCategories() {
   const promos = promoProducts.filter(promo => promo.inStock && promo.name)
 
   return (
-    <section className="py-20 bg-gray-50">
-      <section className="container mx-auto px-6">
-        <header className="text-center mb-16">
-          <h2 className="text-4xl font-serif font-light mb-6 text-black">PROMO DE LA SEMAINE</h2>
+    <section className="py-24 bg-white">
+      <div className="w-full px-6">
+        <div className="flex flex-col items-center mb-16 text-center">
+          <span className="text-[10px] tracking-[0.5em] uppercase text-gray-400 mb-4 block">Offres Spéciales</span>
+          <h2 className="text-3xl font-serif font-medium text-black tracking-luxury uppercase italic">Promotions de la Semaine</h2>
+          <div className="w-12 h-[1px] bg-black mt-8" />
+        </div>
 
-        </header>
-
-        <section className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {promos.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
-        </section>
-      </section>
+        </div>
+      </div>
     </section>
   )
 }
-
-export function CheckoutSummary() {
-  const { items } = useCart()
-
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const shipping = subtotal > 50 ? 0 : 9.99
-  const tax = subtotal * 0.08
-  const total = subtotal + shipping + tax
-
-  return (
-    <Card>
-      <CardContent className="space-y-4">
-        {/* Order Items */}
-        <div className="space-y-3">
-          {items.map((item) => (
-            <div key={item.id} className="flex items-center space-x-3">
-              <img src={item.image || "/placeholder.svg"} alt={item.name} className="w-12 h-12 object-cover rounded" />
-              <div className="flex-1">
-                <p className="font-medium text-sm">{item.name}</p>
-                <p className="text-gray-600 text-sm">Qty: {item.quantity}</p>
-              </div>
-              <p className="font-medium">{formatPrice(item.price * item.quantity)}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <span>Subtotal</span>
-            <span>{formatPrice(subtotal)}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span>Shipping</span>
-            <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span>Tax</span>
-            <span>{formatPrice(tax)}</span>
-          </div>
-        </div>
-
-        <div className="flex justify-between text-lg font-semibold">
-          <span>Total</span>
-          <span>{formatPrice(total)}</span>
-        </div>
-
-        {subtotal < 50 && (
-          <p className="text-sm text-gray-600">Add {formatPrice(50 - subtotal)} more for free shipping!</p>
-        )}
-      </CardContent>
-    </Card>
-  )
-}
-
-// Remove misplaced global promos state

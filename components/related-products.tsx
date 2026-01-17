@@ -24,9 +24,13 @@ export function RelatedProducts({ currentProductId, products }: RelatedProductsP
   }
 
   return (
-    <section className="mt-16">
-      <h2 className="text-2xl font-bold mb-8">You May Also Like</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <section className="mt-32 pt-16 border-t border-gray-100">
+      <div className="flex flex-col items-center mb-16 text-center">
+        <span className="text-[10px] tracking-[0.5em] uppercase text-gray-400 mb-4 block">Découvrez aussi</span>
+        <h2 className="text-3xl font-serif font-medium text-black tracking-luxury uppercase italic">Vous Aimerez Aussi</h2>
+        <div className="w-12 h-[1px] bg-black mt-8" />
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
         {relatedProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

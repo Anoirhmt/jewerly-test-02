@@ -14,24 +14,32 @@ interface CartState {
 }
 
 interface CartContextType extends CartState {
-  addItem: (product: Product, options?: { selectedColor?: string; selectedImage?: string }) => void
+  addItem: (product: Product, options?: { selectedColor?: string; selectedImage?: string; quantity?: number }) => void
   removeItem: (productId: number) => void
   updateQuantity: (productId: number, quantity: number) => void
   clearCart: () => void
+  isCartOpen: boolean
+  setCartOpen: (isOpen: boolean) => void
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
 type CartAction =
-  | { type: "ADD_ITEM"; payload: Product & { selectedColor?: string; image?: string } }
+  | { type: "ADD_ITEM"; payload: Product & { selectedColor?: string; image?: string; quantity?: number } }
   | { type: "REMOVE_ITEM"; payload: number }
   | { type: "UPDATE_QUANTITY"; payload: { id: number; quantity: number } }
   | { type: "CLEAR_CART" }
   | { type: "LOAD_CART"; payload: CartItem[] }
   | { type: "SET_LOADING"; payload: boolean }
+  | { type: "SET_CART_OPEN"; payload: boolean }
 
-function cartReducer(state: CartState, action: CartAction): CartState {
+function cartReducer(state: CartState & { isCartOpen: boolean }, action: CartAction): CartState & { isCartOpen: boolean } {
   switch (action.type) {
+    case "SET_CART_OPEN":
+      return {
+        ...state,
+        isCartOpen: action.payload,
+      }
     case "SET_LOADING":
       return {
         ...state,
@@ -45,13 +53,16 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       }
 
     case "ADD_ITEM": {
+      const quantityToAdd = action.payload.quantity || 1
       const existingItem = state.items.find((item) => item.id === action.payload.id && item.selectedColor === action.payload.selectedColor)
 
       if (existingItem) {
         const newState = {
           ...state,
-        items: state.items.map((item) =>
-            item.id === action.payload.id && item.selectedColor === action.payload.selectedColor ? { ...item, quantity: item.quantity + 1 } : item,
+          items: state.items.map((item) =>
+            item.id === action.payload.id && item.selectedColor === action.payload.selectedColor 
+              ? { ...item, quantity: item.quantity + quantityToAdd } 
+              : item,
           ),
         }
         // Save to localStorage
@@ -63,7 +74,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 
       const newState = {
         ...state,
-        items: [...state.items, { ...action.payload, quantity: 1, selectedColor: action.payload.selectedColor }],
+        items: [...state.items, { ...action.payload, quantity: quantityToAdd, selectedColor: action.payload.selectedColor }],
       }
       // Save to localStorage
       if (typeof window !== "undefined") {
@@ -124,7 +135,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(cartReducer, { items: [], isLoading: true })
+  const [state, dispatch] = useReducer(cartReducer, { items: [], isLoading: true, isCartOpen: false })
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -144,15 +155,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const addItem = (product: Product, options?: { selectedColor?: string; selectedImage?: string }) => {
-    const payload = { ...product } as Product & { selectedColor?: string; image?: string }
+  const addItem = (product: Product, options?: { selectedColor?: string; selectedImage?: string; quantity?: number }) => {
+    const payload = { ...product } as Product & { selectedColor?: string; image?: string; quantity?: number }
     if (options?.selectedColor) {
       (payload as any).selectedColor = options.selectedColor
     }
     if (options?.selectedImage) {
       payload.image = options.selectedImage
     }
+    if (options?.quantity) {
+      payload.quantity = options.quantity
+    }
     dispatch({ type: "ADD_ITEM", payload })
+    dispatch({ type: "SET_CART_OPEN", payload: true })
   }
 
   const removeItem = (productId: number) => {
@@ -167,6 +182,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "CLEAR_CART" })
   }
 
+  const setCartOpen = (isOpen: boolean) => {
+    dispatch({ type: "SET_CART_OPEN", payload: isOpen })
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -175,6 +194,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         removeItem,
         updateQuantity,
         clearCart,
+        setCartOpen,
       }}
     >
       {children}

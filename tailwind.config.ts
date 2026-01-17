@@ -52,6 +52,14 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        'luxury-cream': '#F9F8F6',
+        'luxury-gold': '#D4AF37',
+        'luxury-gray': '#F5F5F5',
+      },
+      boxShadow: {
+        'luxury': '0 10px 40px -10px rgba(0, 0, 0, 0.05)',
+        'luxury-hover': '0 20px 60px -15px rgba(0, 0, 0, 0.08)',
+        'soft': '0 2px 15px rgba(0, 0, 0, 0.02)',
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
@@ -60,9 +68,11 @@ const config = {
       letterSpacing: {
         'luxury': '0.15em',
         'luxury-lg': '0.3em',
+        'luxury-xl': '0.5em',
       },
       lineHeight: {
         'relaxed-extra': '1.8',
+        'luxury': '1.4',
       },
       keyframes: {
         "accordion-down": {

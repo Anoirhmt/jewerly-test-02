@@ -16,72 +16,82 @@ export function CartItems() {
 
   if (items.length === 0) {
     return (
-      <Card>
-        <CardContent className="p-8 text-center">
-          <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
-          <p className="text-gray-600 mb-6">Add some products to get started!</p>
-          <Link href="/products">
-            <Button>Continue Shopping</Button>
-          </Link>
-        </CardContent>
-      </Card>
+      <div className="bg-white p-12 text-center shadow-luxury">
+        <h2 className="text-2xl font-serif font-medium mb-4 tracking-luxury uppercase">Votre panier est vide</h2>
+        <p className="text-gray-400 mb-8 font-light tracking-widest uppercase text-xs">Découvrez nos collections exclusives</p>
+        <Link href="/products">
+          <Button className="bg-black text-white px-8 py-6 text-[10px] tracking-[0.3em] rounded-none uppercase transition-all duration-500 hover:bg-gray-900">
+            Voir les produits
+          </Button>
+        </Link>
+      </div>
     )
   }
 
   return (
-    <ul className="space-y-4">
+    <ul className="space-y-6">
       {items.map((item) => (
-        <Card key={item.id}>
-          <CardContent className="p-4">
-            <article className="flex flex-wrap items-center gap-4 sm:flex-nowrap">
+        <div key={item.id} className="bg-white p-6 shadow-sm border border-gray-50 group transition-all duration-500 hover:shadow-luxury">
+          <article className="flex flex-wrap items-center gap-6 sm:flex-nowrap">
+            <div className="relative aspect-[4/5] w-24 overflow-hidden bg-gray-50 flex-shrink-0">
               <img
-                src={item.image || "/placeholder.svg"}
+                src={item.image || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDQwMCA1MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiNGOEY4RjgiLz48L3N2Zz4="}
                 alt={item.name}
-                className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 select-none"
               />
+            </div>
 
-              <header className="flex-1 min-w-[140px]">
-                <Link href={`/products/${item.id}`}>
-                  <h3 className="font-semibold text-base hover:text-primary transition-colors">{item.name}</h3>
-                </Link>
-                <p className="text-gray-500 text-sm">{formatPrice(item.price)}</p>
-              </header>
+            <header className="flex-1 min-w-[140px] space-y-1">
+              <Link href={`/products/${item.id}`}>
+                <h3 className="font-serif font-medium text-sm tracking-luxury uppercase hover:text-gray-600 transition-colors">{item.name}</h3>
+              </Link>
+              <p className="text-gray-400 text-[10px] tracking-widest uppercase font-light">{formatPrice(item.price)}</p>
+              {(item as any).selectedColor && (
+                <p className="text-[9px] text-gray-400 tracking-widest uppercase mt-2">Couleur: {(item as any).selectedColor}</p>
+              )}
+            </header>
 
-              <section className="flex items-center space-x-2 mt-1 sm:mt-0" aria-label="Quantity controls">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  disabled={item.quantity <= 1}
-                  aria-label="Decrease quantity"
-                  className="h-8 w-8"
-                >
-                  <Minus className="h-3 w-3" />
-                </Button>
-                <span className="w-8 text-center font-medium text-sm" aria-label={`Quantity: ${item.quantity}`}>{item.quantity}</span>
-                <Button variant="outline" size="icon" onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label="Increase quantity" className="h-8 w-8">
-                  <Plus className="h-3 w-3" />
-                </Button>
-              </section>
-
-              <div className="w-full sm:w-24 text-right whitespace-nowrap mt-1 sm:mt-0">
-                <p className="font-semibold text-base">{formatPrice(item.price * item.quantity)}</p>
-              </div>
-
-              <div className="w-full sm:w-12 text-right mt-1 sm:mt-0">
+            <section className="flex items-center space-x-4" aria-label="Quantity controls">
+              <div className="flex items-center border border-gray-100">
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => removeItem(item.id)}
-                  className="text-red-600 hover:text-red-700 h-8 w-8"
-                  aria-label="Remove item"
+                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  disabled={item.quantity <= 1}
+                  className="h-10 w-10 rounded-none hover:bg-transparent"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Minus className="h-3 w-3" />
+                </Button>
+                <span className="w-8 text-center text-xs font-light">{item.quantity}</span>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => updateQuantity(item.id, item.quantity + 1)} 
+                  className="h-10 w-10 rounded-none hover:bg-transparent"
+                >
+                  <Plus className="h-3 w-3" />
                 </Button>
               </div>
-            </article>
-          </CardContent>
-        </Card>
+            </section>
+
+            <div className="w-full sm:w-32 text-right whitespace-nowrap">
+              <p className="font-medium text-sm tracking-widest">{formatPrice(item.price * item.quantity)}</p>
+            </div>
+
+            <div className="flex-shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => removeItem(item.id)}
+                className="text-gray-300 hover:text-black transition-colors h-10 w-10"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </article>
+        </div>
       ))}
     </ul>
   )

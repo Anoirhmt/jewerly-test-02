@@ -23,7 +23,13 @@ export function CheckoutSummary() {
         <section className="space-y-3">
           {items.map((item) => (
             <article key={item.id} className="flex items-center space-x-3">
-              <img src={item.image || "/placeholder.svg"} alt={item.name} className="w-12 h-12 object-cover rounded" />
+              <img 
+                src={item.image || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDQwMCA1MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiNGOEY4RjgiLz48L3N2Zz4="} 
+                alt={item.name} 
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                className="w-12 h-12 object-cover rounded select-none" 
+              />
               <section className="flex-1">
                 <h3 className="font-medium text-sm">{item.name}</h3>
                 <p className="text-gray-600 text-sm">Qté : {item.quantity}</p>
@@ -44,7 +50,7 @@ export function CheckoutSummary() {
 
           <p className="flex justify-between">
             <span>Livraison</span>
-            <span>{shipping === 0 ? "Gratuit" : formatPrice(shipping)}</span>
+            <span>{formatPrice(shipping)}</span>
           </p>
 
           <p className="flex justify-between">

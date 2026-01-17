@@ -3,17 +3,12 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select"
+import Link from "next/link"
+import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { User, Phone, MapPin, Map, CheckCircle } from "lucide-react"
+import { User, Phone, MapPin, Map, CheckCircle, ChevronRight } from "lucide-react"
 import { CommandDialog, CommandInput, CommandList, CommandItem, CommandEmpty } from "@/components/ui/command"
 import { useCart } from "@/context/cart-context"
 import { formatPrice } from "@/utils/format-price"
@@ -89,12 +84,12 @@ export function CheckoutForm() {
       } else {
         setPromoCodeFeedback({
           message: data.reason === "MAX_USES_REACHED" ? "Limite d'utilisation atteinte" :
-                   data.reason === "PER_USER_LIMIT_REACHED" ? "Vous avez déjà utilisé ce code" :
-                   data.reason === "MIN_SUBTOTAL_NOT_MET" ? `Montant minimum non atteint` :
-                   data.reason === "EXPIRED" ? "Code expiré" :
-                   data.reason === "NOT_STARTED" ? "Code non encore actif" :
-                   data.reason === "CITY_NOT_ELIGIBLE" ? "Ville non éligible" :
-                   "Code promo invalide",
+            data.reason === "PER_USER_LIMIT_REACHED" ? "Vous avez déjà utilisé ce code" :
+              data.reason === "MIN_SUBTOTAL_NOT_MET" ? `Montant minimum non atteint` :
+                data.reason === "EXPIRED" ? "Code expiré" :
+                  data.reason === "NOT_STARTED" ? "Code non encore actif" :
+                    data.reason === "CITY_NOT_ELIGIBLE" ? "Ville non éligible" :
+                      "Code promo invalide",
           type: "error",
         })
       }
@@ -111,12 +106,12 @@ export function CheckoutForm() {
     const firstMissingField = !formData.fullName.trim()
       ? "fullName"
       : formData.phone.length !== 10
-      ? "phone"
-      : !formData.address.trim()
-      ? "address"
-      : !formData.city
-      ? "city"
-      : null
+        ? "phone"
+        : !formData.address.trim()
+          ? "address"
+          : !formData.city
+            ? "city"
+            : null
 
     if (firstMissingField) {
       // Show visual feedback and scroll to the missing field
@@ -142,26 +137,27 @@ export function CheckoutForm() {
       .map((item) => `${item.name}${(item as any).selectedColor ? ` [${(item as any).selectedColor}]` : ''} x${item.quantity} (${formatPrice(item.price * item.quantity)})`)
       .join(" + ")
 
-    const formDataToSend = {
-      name: formData.fullName,
-      phone: formData.phone,
-      address: `${formData.address}, ${formData.city}`,
-      orderDetails,
-      total: formatPrice(total),
-      delivery: formatPrice(effectiveDelivery),
-      promoCode: promoCode.trim().toUpperCase() || null,
+    const params = new URLSearchParams()
+    params.append("nom et prenom", formData.fullName)
+    params.append("Téléphone", formData.phone)
+    params.append("Adresse", `${formData.address}, ${formData.city}`)
+    params.append("Détails de commande", orderDetails)
+    params.append("TOTAL", formatPrice(total))
+    params.append("delivery", formatPrice(effectiveDelivery))
+    if (promoCode.trim()) {
+      params.append("promoCode", promoCode.trim().toUpperCase())
     }
 
     try {
       await fetch(
-        "https://script.google.com/macros/s/AKfycby8cjoqZpv9aOP71a2HfN3-wPWboHf_uTJD7u0hfaKI7E-0kJcFV_HMu6iqU9-6YXfctg/exec",
+        "https://script.google.com/macros/s/AKfycbyQagx3a8x5-vfVy1afXcWSa0gdTJupjvFoJ6Jn8k3qt1Hp-KRYC6eZTKbUPS-PmhsF/exec",
         {
           method: "POST",
           mode: "no-cors",
-          body: JSON.stringify(formDataToSend),
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
           },
+          body: params.toString(),
         },
       )
 
@@ -187,52 +183,57 @@ export function CheckoutForm() {
       })
     } catch (error) {
       console.error("Error details:", error)
-      // You can choose to show nothing here too, or just log the error
+      setPromoCodeFeedback({
+        message: "Une erreur est survenue lors de la validation. Veuillez réessayer.",
+        type: "error",
+      })
+      setFormError(true)
+      setTimeout(() => setFormError(false), 3000)
     } finally {
       setIsSubmitting(false)
     }
   }
 
   // Calculate subtotal
-const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
-// Shipping rates and delivery fee
-const [shippingRates, setShippingRates] = useState<Record<string, number>>({})
-const [delivery, setDelivery] = useState<number>(0)
+  // Shipping rates and delivery fee
+  const [shippingRates, setShippingRates] = useState<Record<string, number>>({})
+  const [delivery, setDelivery] = useState<number>(0)
 
-// Load shipping rates once
-useEffect(() => {
-  fetch("/shipping-rates.txt")
-    .then((res) => res.text())
-    .then((text) => {
-      const rates: Record<string, number> = {}
-      text.split(/\r?\n/).forEach((line) => {
-        const parts = line.trim().split(/\s+/)
-        if (parts.length >= 2) {
-          const price = parseInt(parts[parts.length - 2])
-          const city = parts.slice(0, parts.length - 2).join(" ")
-          if (!isNaN(price)) {
-            rates[city.toLowerCase()] = price
+  // Load shipping rates once
+  useEffect(() => {
+    fetch("/shipping-rates.txt")
+      .then((res) => res.text())
+      .then((text) => {
+        const rates: Record<string, number> = {}
+        text.split(/\r?\n/).forEach((line) => {
+          const parts = line.trim().split(/\s+/)
+          if (parts.length >= 2) {
+            const price = parseInt(parts[parts.length - 2])
+            const city = parts.slice(0, parts.length - 2).join(" ")
+            if (!isNaN(price)) {
+              rates[city.toLowerCase()] = price
+            }
           }
-        }
+        })
+        setShippingRates(rates)
       })
-      setShippingRates(rates)
-    })
-    .catch(console.error)
-}, [])
+      .catch(console.error)
+  }, [])
 
-// Update delivery when city changes
-useEffect(() => {
-  if (formData.city) {
-    const fee = shippingRates[formData.city.toLowerCase()] || 0
-    setDelivery(fee)
-  }
-}, [formData.city, shippingRates])
+  // Update delivery when city changes
+  useEffect(() => {
+    if (formData.city) {
+      const fee = shippingRates[formData.city.toLowerCase()] || 0
+      setDelivery(fee)
+    }
+  }, [formData.city, shippingRates])
 
-const effectiveDelivery = freeShipping ? 0 : delivery
-const percentOff = subtotal * discount
-const fixedOff = flatDiscount
-const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
+  const effectiveDelivery = freeShipping ? 0 : delivery
+  const percentOff = subtotal * discount
+  const fixedOff = flatDiscount
+  const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
 
 
   // Prevent checkout with empty cart or zero total
@@ -273,23 +274,26 @@ const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
   // Show success message instead of form
   if (orderSuccess) {
     return (
-      <section className="max-w-2xl mx-auto py-12 px-4">
+      <section className="w-full py-12 px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
         >
-          <Card className="border-0 bg-white shadow-luxury overflow-hidden">
+          <Card className="border-0 bg-white shadow-luxury overflow-hidden max-w-2xl mx-auto">
             <CardContent className="p-12 text-center">
               <motion.div
-                initial={{ rotate: -180, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="w-24 h-24 bg-black rounded-full flex items-center justify-center mx-auto mb-10"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6, ease: "backOut" }}
+                className="relative w-24 h-24 mx-auto mb-8 flex items-center justify-center"
               >
-                <CheckCircle className="h-12 w-12 text-white" />
+                <div className="absolute inset-0 bg-green-100 rounded-full animate-pulse opacity-50" />
+                <div className="relative w-20 h-20 bg-green-50 rounded-full flex items-center justify-center shadow-sm border border-green-100">
+                  <CheckCircle className="h-10 w-10 text-green-600 stroke-[1.5]" />
+                </div>
               </motion.div>
-              <h2 className="text-4xl font-serif font-medium mb-6 text-black tracking-luxury uppercase">Merci</h2>
+              <h2 className="text-3xl font-serif font-medium mb-4 text-black tracking-luxury uppercase">Commande Validée</h2>
               <p className="text-gray-500 mb-12 text-lg font-light leading-relaxed">
                 Votre commande a été reçue. Notre équipe vous contactera sous peu pour la confirmation finale.
               </p>
@@ -316,150 +320,144 @@ const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
   }
 
   return (
-    <section className="max-w-3xl mx-auto py-12 px-4">
+    <section className="w-full py-4 px-4">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <Card className="border-0 bg-white shadow-luxury overflow-hidden">
-          <CardHeader className="pb-8 border-b border-gray-50 px-10 pt-10">
-            <CardTitle className="text-3xl font-serif font-medium text-black tracking-luxury uppercase">
-              Finaliser la commande
+        <Card className="border-0 bg-white shadow-luxury overflow-hidden max-w-3xl mx-auto">
+          <CardHeader className="pb-8 border-b border-black/[0.03] px-8 pt-10 text-center">
+            <CardTitle className="text-2xl font-sans font-medium text-black tracking-tight">
+              Insérer vos coordonnées
             </CardTitle>
-            <p className="text-gray-400 text-[10px] tracking-[0.2em] uppercase mt-2">Paiement à la livraison</p>
           </CardHeader>
 
-          <CardContent className="p-10">
-            <form onSubmit={handleSubmit} className="space-y-12">
+          <CardContent className="p-8 md:p-12">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Contact Information */}
-              <div className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <motion.div 
-                    className="group relative"
-                    whileFocus={{ scale: 1.01 }}
-                  >
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black transition-colors">
-                      <User className="h-5 w-5" />
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 gap-5">
+                  {/* Nom & Prénom */}
+                  <div className="flex gap-4">
+                    <div className="h-14 w-14 shrink-0 bg-gray-50 flex items-center justify-center rounded-xl border border-gray-100 text-gray-400">
+                      <User className="h-5 w-5 stroke-[1.5]" />
                     </div>
                     <Input
                       name="fullName"
                       type="text"
-                      placeholder="NOM & PRÉNOM | الاسم الكامل"
+                      placeholder="Nom & Prénom | الاسم الكامل"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      maxLength={23}
+                      maxLength={50}
                       required
                       disabled={isSubmitting}
-                      className="h-14 pl-12 border-gray-100 bg-gray-50/30 rounded-none focus:bg-white focus:border-black focus:ring-0 text-sm tracking-wider placeholder:text-gray-300 transition-all"
+                      className="h-14 flex-1 border-gray-200 bg-white rounded-xl focus:border-black focus:ring-black/5 text-sm placeholder:text-gray-400 transition-all shadow-sm"
                     />
-                  </motion.div>
+                  </div>
 
-                  <motion.div 
-                    className="group relative"
-                    whileFocus={{ scale: 1.01 }}
-                  >
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black transition-colors">
-                      <Phone className="h-5 w-5" />
+                  {/* Téléphone */}
+                  <div className="flex gap-4">
+                    <div className="h-14 w-14 shrink-0 bg-gray-50 flex items-center justify-center rounded-xl border border-gray-100 text-gray-400">
+                      <Phone className="h-5 w-5 stroke-[1.5]" />
                     </div>
                     <Input
                       name="phone"
                       type="tel"
                       inputMode="tel"
                       pattern="[0-9]{10}" minLength={10} maxLength={10}
-                      placeholder="TÉLÉPHONE | الهاتف"
+                      placeholder="Téléphone | الهاتف"
                       value={formData.phone}
                       onChange={handleInputChange}
                       required
                       disabled={isSubmitting}
-                      className="h-14 pl-12 border-gray-100 bg-gray-50/30 rounded-none focus:bg-white focus:border-black focus:ring-0 text-sm tracking-wider placeholder:text-gray-300 transition-all"
+                      className="h-14 flex-1 border-gray-200 bg-white rounded-xl focus:border-black focus:ring-black/5 text-sm placeholder:text-gray-400 transition-all shadow-sm"
                     />
-                  </motion.div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                    <button
-                      type="button"
-                      onClick={() => setCityDialogOpen(true)}
-                      className={`group relative flex h-14 w-full items-center justify-between px-4 text-sm transition-all duration-300 ${
-                        formData.city 
-                          ? 'border border-gray-100 bg-gray-50/30 text-black hover:border-black' 
-                          : 'border-2 border-dashed border-gray-200 text-gray-400 hover:border-black'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-4">
-                        <MapPin className={`h-5 w-5 ${formData.city ? 'text-black' : 'text-gray-300'}`} />
-                        <span className="tracking-wider uppercase text-xs">
-                          {formData.city ? formData.city : "SÉLECTIONNEZ VOTRE VILLE"}
-                        </span>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-black transition-colors" />
-                    </button>
-                    {!formData.city && (
-                      <motion.p 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="text-[10px] text-gray-400 tracking-widest uppercase ml-1"
-                      >
-                        * Requis pour la livraison
-                      </motion.p>
-                    )}
                   </div>
 
-                  <motion.div 
-                    className="group relative"
-                    whileFocus={{ scale: 1.01 }}
-                  >
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black transition-colors">
-                      <Map className="h-5 w-5" />
+                  {/* Ville */}
+                  <div className="space-y-3">
+                    <div className="flex gap-4">
+                      <div className="h-14 w-14 shrink-0 bg-gray-50 flex items-center justify-center rounded-xl border border-gray-100 text-gray-400">
+                        <MapPin className="h-5 w-5 stroke-[1.5]" />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCityDialogOpen(true)}
+                        className={`h-14 flex-1 flex items-center px-4 border rounded-xl transition-all text-sm text-left relative group shadow-sm ${formData.city
+                          ? "bg-white border-gray-200 text-black"
+                          : "bg-white border-dashed border-blue-300 text-gray-400 hover:border-blue-400"
+                          }`}
+                      >
+                        <span className="flex-1 truncate">
+                          {formData.city ? formData.city : "Sélectionnez votre ville | اختر المدينة"}
+                        </span>
+                        {!formData.city && (
+                          <span className="hidden sm:inline-block text-[10px] text-blue-400 ml-2 font-medium">
+                            Cliquez pour sélectionner
+                          </span>
+                        )}
+                        <ChevronRight className="h-4 w-4 text-gray-300 ml-2" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Adresse */}
+                  <div className="flex gap-4">
+                    <div className="h-14 w-14 shrink-0 bg-gray-50 flex items-center justify-center rounded-xl border border-gray-100 text-gray-400">
+                      <Map className="h-5 w-5 stroke-[1.5]" />
                     </div>
                     <Input
                       name="address"
                       type="text"
-                      placeholder="ADRESSE | العنوان"
+                      placeholder="Adresse | العنوان"
                       value={formData.address}
                       onChange={handleInputChange}
                       required
                       disabled={isSubmitting}
-                      className="h-14 pl-12 border-gray-100 bg-gray-50/30 rounded-none focus:bg-white focus:border-black focus:ring-0 text-sm tracking-wider placeholder:text-gray-300 transition-all"
+                      className="h-14 flex-1 border-gray-200 bg-white rounded-xl focus:border-black focus:ring-black/5 text-sm placeholder:text-gray-400 transition-all shadow-sm"
                     />
-                  </motion.div>
+                  </div>
                 </div>
               </div>
 
               {/* Order Summary */}
-              <div className="space-y-6 pt-10 border-t border-gray-50">
-                <h3 className="text-[10px] tracking-[0.3em] uppercase text-gray-400 font-medium mb-6">Votre Sélection</h3>
+              <div className="space-y-6 pt-6 border-t border-black/[0.03]">
+                <h3 className="text-[10px] tracking-luxury-lg uppercase text-black/40 font-medium text-center mb-8">Votre Sélection</h3>
                 <div className="space-y-4">
-                  <AnimatePresence>
+                  <AnimatePresence mode="popLayout">
                     {items.map((item) => (
-                      <motion.div 
-                        key={item.id}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 10 }}
-                        className="flex items-center space-x-6 bg-gray-50/50 p-4"
+                      <motion.div
+                        key={`${item.id}-${(item as any).selectedColor || 'default'}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        layout
+                        className="flex items-center space-x-6 bg-gray-50/30 p-4 border border-black/[0.02]"
                       >
-                        <div className="relative h-20 w-16 overflow-hidden">
-                          <img
-                            src={item.image || "/placeholder.svg"}
+                        <div className="relative h-24 w-20 overflow-hidden bg-white">
+                          <Image
+                            src={item.image || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDQwMCA1MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiNGOEY4RjgiLz48L3N2Zz4="}
                             alt={item.name}
-                            className="h-full w-full object-cover"
+                            fill
+                            className="object-cover"
+                            sizes="80px"
+                            draggable={false}
+                            onContextMenu={(e) => e.preventDefault()}
                           />
-                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-black text-white text-[9px] flex items-center justify-center font-bold">
+                          <div className="absolute -top-1 -right-1 w-6 h-6 bg-black text-white text-[10px] flex items-center justify-center font-bold z-10 shadow-lg">
                             {item.quantity}
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-xs tracking-widest uppercase text-black font-medium truncate">{item.name}</h4>
+                          <h4 className="text-[11px] tracking-luxury uppercase text-black font-medium truncate">{item.name}</h4>
                           {(item as any).selectedColor && (
-                            <p className="text-[10px] text-gray-400 tracking-widest uppercase mt-1">
-                              Couleur: {(item as any).selectedColor}
+                            <p className="text-[9px] text-black/30 tracking-luxury uppercase mt-2 font-light">
+                              Finition: {(item as any).selectedColor}
                             </p>
                           )}
                         </div>
-                        <div className="text-xs tracking-widest text-black font-light">
+                        <div className="text-[11px] tracking-luxury text-black font-medium">
                           {formatPrice(item.price * item.quantity)}
                         </div>
                       </motion.div>
@@ -469,47 +467,50 @@ const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
               </div>
 
               {/* Promo & Totals */}
-              <div className="pt-10 border-t border-gray-50 space-y-8">
+              <div className="pt-6 border-t border-black/[0.03] space-y-8">
                 <div className="flex space-x-4">
                   <Input
                     type="text"
                     placeholder="CODE PROMO"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
-                    className="h-12 border-gray-100 bg-gray-50/30 rounded-none focus:bg-white focus:border-black focus:ring-0 text-[10px] tracking-[0.3em] uppercase placeholder:text-gray-300 transition-all flex-1"
+                    className="h-8 md:h-10 border-black/[0.06] bg-white rounded-none focus:bg-white focus:border-black/20 focus:ring-0 text-[8px] md:text-[9px] tracking-luxury-lg uppercase placeholder:text-black/20 transition-all flex-1 shadow-sm"
                   />
                   <Button
                     type="button"
                     onClick={applyPromoCode}
-                    className="bg-black text-white px-8 py-3 text-[10px] tracking-[0.2em] rounded-none uppercase transition-all duration-500 hover:bg-gray-800"
+                    className="bg-black text-white px-3 md:px-6 h-8 md:h-10 text-[7px] md:text-[8px] tracking-luxury-lg uppercase rounded-none transition-all duration-700 hover:bg-gray-900 font-light"
                   >
                     Appliquer
                   </Button>
                 </div>
                 {promoCodeFeedback && (
-                  <motion.p 
+                  <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`text-[10px] tracking-[0.1em] uppercase ${promoCodeFeedback.type === "success" ? "text-green-600" : "text-red-500"}`}
+                    className={`text-[10px] tracking-luxury-lg uppercase text-center ${promoCodeFeedback.type === "success" ? "text-green-600" : "text-red-500"}`}
                   >
                     {promoCodeFeedback.message}
                   </motion.p>
                 )}
 
-                <div className="space-y-4 pt-4">
-                  <div className="flex justify-between text-[10px] tracking-[0.2em] uppercase text-gray-500">
+                <div className="space-y-5 px-2">
+                  <div className="flex justify-between text-[10px] tracking-luxury-lg uppercase text-black/40">
                     <span>Sous-total</span>
                     <span className="font-medium text-black">{formatPrice(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between text-[10px] tracking-[0.2em] uppercase text-gray-500">
-                    <span>Frais de livraison</span>
+                  <div className="flex justify-between text-[10px] tracking-luxury-lg uppercase text-black/40">
+                    <span>Livraison</span>
                     <span className="font-medium text-black">
-                      {effectiveDelivery === 0 ? "GRATUIT" : formatPrice(effectiveDelivery)}
+                      {effectiveDelivery === 0 ? formatPrice(0) : formatPrice(effectiveDelivery)}
                     </span>
                   </div>
-                  <div className="flex justify-between items-end pt-6 border-t border-gray-50">
-                    <span className="text-xs tracking-[0.4em] uppercase text-black font-medium">Total</span>
-                    <span className="text-2xl font-light text-black tracking-widest">{formatPrice(total)}</span>
+                  <div className="flex justify-between items-end pt-8 border-t border-black/[0.03]">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] tracking-luxury-lg uppercase text-black/40 mb-2">Total à payer</span>
+                      <span className="text-xs tracking-luxury-xl uppercase text-black font-bold">TTC</span>
+                    </div>
+                    <span className="text-3xl font-light text-black tracking-luxury leading-none">{formatPrice(total)}</span>
                   </div>
                 </div>
               </div>
@@ -519,23 +520,25 @@ const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`group relative w-full h-16 text-[10px] tracking-[0.4em] rounded-none uppercase transition-all duration-700 overflow-hidden ${
-                    formError ? 'bg-red-500' : 'bg-black hover:bg-gray-900'
-                  } text-white`}
+                  className={`group relative w-full h-10 md:h-20 text-[8px] md:text-[11px] tracking-luxury-xl rounded-none uppercase transition-all duration-700 overflow-hidden ${formError ? 'bg-red-600' : 'bg-black hover:bg-gray-900'
+                    } text-white shadow-xl`}
                 >
                   <span className="relative z-10">
-                    {isSubmitting ? "TRAITEMENT..." : "Confirmer la commande"}
+                    {isSubmitting ? "TRAITEMENT EN COURS..." : "Confirmer la commande"}
                   </span>
-                  <motion.div 
+                  <motion.div
                     className="absolute inset-0 bg-white/10"
                     initial={{ x: "-100%" }}
                     whileHover={{ x: "100%" }}
                     transition={{ duration: 0.8 }}
                   />
                 </Button>
-                <p className="text-center text-[9px] text-gray-400 tracking-[0.2em] uppercase mt-6">
-                  Paiement sécurisé à la réception
-                </p>
+                <div className="flex flex-col items-center gap-4 mt-4">
+                  <div className="h-[1px] w-12 bg-black/10" />
+                  <p className="text-[9px] text-black/30 tracking-luxury-lg uppercase font-light">
+                    Paiement sécurisé à la livraison
+                  </p>
+                </div>
               </div>
             </form>
           </CardContent>
@@ -556,8 +559,8 @@ const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
             <CommandItem
               key={city}
               value={city}
-              onSelect={(value) => {
-                setFormData((prev) => ({ ...prev, city: value.toUpperCase() }))
+              onSelect={() => {
+                setFormData((prev) => ({ ...prev, city: city.toUpperCase() }))
                 setCityDialogOpen(false)
               }}
               className="px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"

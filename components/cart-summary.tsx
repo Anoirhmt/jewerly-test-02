@@ -15,38 +15,46 @@ export function CartSummary() {
   }
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const deliveryFee = 15.99
-  const total = subtotal + deliveryFee
 
   if (items.length === 0) {
     return null
   }
 
   return (
-    <Card className="border-0 premium-shadow bg-white">
-      <CardHeader className="pb-6">
-        <CardTitle className="font-serif text-2xl font-medium text-black">Récapitulatif de la commande</CardTitle>
+    <Card className="border-0 bg-white shadow-luxury overflow-hidden rounded-none">
+      <CardHeader className="pb-8 pt-10 px-8 border-b border-gray-50">
+        <CardTitle className="font-serif text-xl font-medium text-black tracking-luxury uppercase">Récapitulatif</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <section className="space-y-4">
-          <p className="flex justify-between font-light">
-            <span className="text-gray-700">Sous-total</span>
-            <span className="text-black">{formatPrice(subtotal)}</span>
-          </p>
+      <CardContent className="p-8 space-y-8">
+        <div className="space-y-4">
+          <div className="flex justify-between items-center text-[10px] tracking-[0.2em] uppercase text-gray-500">
+            <span>Sous-total</span>
+            <span className="font-medium text-black">{formatPrice(subtotal)}</span>
+          </div>
+          
+          <div className="flex justify-between items-center text-[10px] tracking-[0.2em] uppercase text-gray-500 italic">
+            <span>Livraison</span>
+            <span>Calculée au paiement</span>
+          </div>
 
-          <Separator className="bg-gray-200" />
+          <div className="pt-6 border-t border-gray-50 flex justify-between items-end">
+            <span className="text-xs tracking-[0.3em] uppercase text-black font-medium">Total Estimé</span>
+            <span className="text-2xl font-light text-black tracking-widest">{formatPrice(subtotal)}</span>
+          </div>
+        </div>
 
-{/* removed total price paragraph */}
-        </section>
-
-        <Link href={total > 0 ? "/checkout" : "#"}>
+        <Link href="/checkout" className="block">
           <Button 
-            className="w-full bg-black hover:bg-gray-900 text-white border-0 py-4 text-sm tracking-wider font-medium rounded-none transition duration-300 ease-in-out shadow-[0_0_8px_rgba(0,0,0,0.35)] hover:shadow-[0_0_15px_rgba(0,0,0,0.6)]"
-            disabled={total <= 0}
+            className="w-full bg-black hover:bg-gray-900 text-white border-0 h-16 text-[10px] tracking-[0.4em] uppercase rounded-none transition-all duration-700 shadow-luxury group relative overflow-hidden"
           >
-            {total <= 0 ? "AJOUTER DES ARTICLES" : "ACHETER MAINTENANT"}
+            <span className="relative z-10">Finaliser la commande</span>
+            <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
           </Button>
         </Link>
+        
+        <p className="text-center text-[9px] text-gray-400 tracking-[0.2em] uppercase">
+          Taxes incluses. Livraison calculée à l'étape suivante.
+        </p>
       </CardContent>
     </Card>
   )

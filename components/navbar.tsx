@@ -8,142 +8,174 @@ import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { useCart } from "@/context/cart-context"
+import { motion, AnimatePresence } from "framer-motion"
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { items } = useCart()
+  const { items, setCartOpen } = useCart()
   const router = useRouter()
   const pathname = usePathname()
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
 
-  const isSpecialPage = pathname === "/products/211"
+  const isSpecialPage = ["211"].includes(pathname.split('/').pop() || "")
+
 
   useEffect(() => {
-    if (searchOpen) {
-      const q = searchQuery.trim()
-      if (q.length > 0) {
-        router.push(`/products?search=${encodeURIComponent(q)}`)
-      }
+    setIsMenuOpen(false)
+  }, [pathname])
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    const q = searchQuery.trim()
+    if (q.length > 0) {
+      router.push(`/products?search=${encodeURIComponent(q)}`)
+      setSearchOpen(false)
     }
-  }, [searchQuery, searchOpen, router])
+  }
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm backdrop-blur-sm bg-white/90">
-      <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-24">
-          {/* Mobile menu button - hidden on special product page */}
+    <nav className="fixed top-0 w-full z-50 transition-all duration-700 ease-in-out bg-white/80 backdrop-blur-xl border-b border-black/[0.03] py-0">
+      <div className="w-full px-8 md:px-12">
+        <div className="flex items-center justify-between transition-all duration-700 h-20 md:h-24">
+          {/* Mobile menu button */}
           {!isSpecialPage && (
-            <div className="md:hidden">
-              <Button variant="ghost" size="icon" className="hover:bg-gray-50/50 transition-colors duration-300" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? <X className="h-5 w-5 text-gray-800" /> : <Menu className="h-5 w-5 text-gray-800" />}
+            <div className="flex md:hidden flex-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-transparent p-0 h-auto w-auto transition-colors duration-700 text-black"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? <X className="h-4 w-4 stroke-[1.5]" /> : <Menu className="h-4 w-4 stroke-[1.5]" />}
               </Button>
             </div>
           )}
 
-          {/* Logo for Desktop - will be on the left */}
-          <div className="hidden md:block">
-            <Link href="/" className="flex items-center transition-transform duration-300 hover:scale-[1.02]">
-              <Image src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/erasebg-transformed%20(1)%20(1).png" alt="Elarain Jewelry" width={240} height={96} className="h-20 w-auto" />
-            </Link>
-          </div>
-
-          {/* Desktop Navigation - hidden on special product page */}
+          {/* Desktop Navigation - Left */}
           {!isSpecialPage && (
-            <div className="hidden md:flex items-center space-x-20">
-              <Link
-                href="/"
-                className="text-[#3a4352] hover:text-[#2a2f3a] transition-all duration-200 font-medium font-serif text-[15px] tracking-[0.30em] uppercase relative group"
-              >
-                Home
-                <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[#2a2f3a]/80 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link
-                href="/products"
-                className="text-[#3a4352] hover:text-[#2a2f3a] transition-all duration-200 font-medium font-serif text-[15px] tracking-[0.30em] uppercase relative group"
-              >
-                Collection
-                <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[#2a2f3a]/80 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link
-                href="/packs"
-                className="text-[#3a4352] hover:text-[#2a2f3a] transition-all duration-200 font-medium font-serif text-[15px] tracking-[0.30em] uppercase relative group"
-              >
-                Luxury Packs
-                <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[#2a2f3a]/80 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
+            <div className="hidden md:flex flex-1 items-center space-x-12">
+              {[
+                { name: "Accueil", href: "/" },
+                { name: "Collection", href: "/products" },
+                { name: "Packs", href: "/packs" },
+              ].map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`text-[10px] tracking-luxury-lg uppercase transition-all duration-700 relative group py-2 ${pathname === link.href
+                    ? "text-black font-medium"
+                    : "text-black/40 hover:text-black"
+                    }`}
+                >
+                  {link.name}
+                  <span className={`absolute bottom-0 left-0 h-[1px] transition-all duration-700 ease-in-out bg-black ${pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+                    }`} />
+                </Link>
+              ))}
             </div>
           )}
 
-          {/* Right side container */}
-          <div className="flex items-center space-x-4 relative">
-            {/* Logo for Mobile */}
-            <div className="md:hidden">
-              <Link href="/" className="flex items-center">
-                <Image src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/erasebg-transformed%20(1)%20(1).png" alt="Elarain Jewelry" width={240} height={96} className="h-20 w-auto" />
-              </Link>
-            </div>
+          {/* Logo - Centered */}
+          <div className="flex justify-center md:flex-initial transition-all duration-1000 opacity-100 scale-100 translate-y-0">
+            <Link href="/" className="flex items-center group px-4">
+              <Image
+                src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/elarain_jewelry_text_only.png"
+                alt="Elarain Jewelry"
+                width={200}
+                height={80}
+                priority
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                className="h-8 md:h-10 w-auto transition-all duration-1000 group-hover:opacity-70 select-none brightness-0"
+              />
+            </Link>
+          </div>
 
-            {/* Search and Cart - hidden on special product page */}
+          {/* Right side container */}
+          <div className="flex-1 flex items-center justify-end space-x-4 md:space-x-8">
             {!isSpecialPage && (
               <>
+                <div className="relative flex items-center">
+                  <AnimatePresence>
+                    {searchOpen && (
+                      <motion.form
+                        initial={{ width: 0, opacity: 0 }}
+                        animate={{ width: "auto", opacity: 1 }}
+                        exit={{ width: 0, opacity: 0 }}
+                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                        onSubmit={handleSearch}
+                        className="absolute right-10 flex items-center bg-transparent border-b px-0 py-1 transition-colors duration-700 border-black/10"
+                      >
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="RECHERCHER"
+                          className="bg-transparent outline-none text-[9px] tracking-luxury w-28 md:w-40 uppercase transition-colors duration-700 text-black placeholder:text-black/20"
+                          autoFocus
+                        />
+                      </motion.form>
+                    )}
+                  </AnimatePresence>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:bg-transparent p-0 h-auto w-auto transition-all duration-500 hover:scale-110 text-black"
+                    onClick={() => setSearchOpen(!searchOpen)}
+                  >
+                    {searchOpen ? <X className="h-4 w-4 stroke-[1.5]" /> : <Search className="h-4 w-4 stroke-[1.5]" />}
+                  </Button>
+                </div>
+
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="hover:bg-gray-50/50 transition-colors duration-300"
-                  onClick={() => setSearchOpen(!searchOpen)}
+                  className="relative hover:bg-transparent p-0 h-auto w-auto transition-all duration-500 hover:scale-110 text-black"
+                  onClick={() => setCartOpen(true)}
                 >
-                  <Search className="h-5 w-5" />
+                  <ShoppingCart className="h-4 w-4 stroke-[1.5]" />
+                  {itemCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 flex items-center justify-center text-[7px] rounded-full font-bold shadow-soft bg-black text-white">
+                      {itemCount}
+                    </span>
+                  )}
                 </Button>
-                {searchOpen && (
-                  <div className="absolute right-14 md:right-16 top-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded-full flex items-center shadow-lg px-4 transition-all duration-300 focus-within:ring-2 focus-within:ring-black">
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Recherche"
-                      className="outline-none text-sm w-52 md:w-64 bg-transparent placeholder-gray-400 flex-1"
-                      autoFocus
-                    />
-                    <button onClick={() => setSearchOpen(false)} className="p-1 text-gray-500 hover:text-gray-800 transition-colors">
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                )}
-
-                <Link href="/cart">
-                  <Button variant="ghost" size="icon" className="relative hover:bg-gray-50/50 transition-colors duration-300">
-                    <ShoppingCart className="h-5 w-5 text-gray-800" />
-                    {itemCount > 0 && (
-                      <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-gradient-to-r from-amber-400 to-yellow-300 text-black shadow-sm">
-                        {itemCount}
-                      </Badge>
-                    )}
-                  </Button>
-                </Link>
               </>
             )}
           </div>
         </div>
 
         {/* Mobile Navigation */}
-        {!isSpecialPage && isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-100 animate-in fade-in duration-200">
-            <div className="flex flex-col space-y-2">
-              <Link href="/" className="block py-3 px-6 text-left text-lg font-medium font-serif tracking-[0.25em] uppercase text-[#3a4352] hover:bg-gray-100 rounded-md transition-all duration-200">
-                Home
-              </Link>
-              <Link href="/products" className="block py-3 px-6 text-left text-lg font-medium font-serif tracking-[0.25em] uppercase text-[#3a4352] hover:bg-gray-100 rounded-md transition-all duration-200">
-                Collection
-              </Link>
-              <Link href="/packs" className="block py-3 px-6 text-left text-lg font-medium font-serif tracking-[0.25em] uppercase text-[#3a4352] hover:bg-gray-100 rounded-md transition-all duration-200">
-                Luxury Packs
-              </Link>
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {!isSpecialPage && isMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="md:hidden overflow-hidden border-t border-black/[0.03]"
+            >
+              <div className="flex flex-col py-10 space-y-6 text-center">
+                {[
+                  { name: "Accueil", href: "/" },
+                  { name: "Collection", href: "/products" },
+                  { name: "Packs de Luxe", href: "/packs" },
+                ].map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="text-[10px] tracking-luxury-lg uppercase text-black/60 hover:text-black transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   )

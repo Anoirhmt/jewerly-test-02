@@ -21,56 +21,54 @@ export function PackCard({ product }: PackCardProps) {
       product.image.startsWith("https://") ||
       product.image.startsWith("/"))
       ? product.image
-      : "/placeholder.svg"
+      : "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDQwMCA1MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiNGOEY4RjgiLz48L3N2Zz4="
 
   return (
-    <div className="group block transform-gpu transition-all duration-300">
+    <div className="group block transform-gpu transition-all duration-500">
       <Link
         href={`/products/${product.id}`}
         draggable={false}
-        onContextMenu={(e) => e.preventDefault()}
-        onDragStart={(e) => e.preventDefault()}
-        onCopy={(e) => e.preventDefault()}
-        className="cursor-pointer block"
+        className="cursor-pointer block group"
       >
         {/* Image */}
-        <div className="p-2 bg-white">
-          <div className="relative h-48 md:h-80 w-full overflow-hidden rounded-lg">
-            <Image
-              src={validSrc}
-              alt={product.name}
-              fill
-              draggable={false}
-              onContextMenu={(e) => e.preventDefault()}
-              onDragStart={(e) => e.preventDefault()}
-              className="object-cover group-hover:scale-103 transition-transform duration-1000 pointer-events-none rounded-lg"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-              style={{ WebkitUserDrag: "none" }}
-            />
-            <Badge className="absolute top-4 left-4 bg-black text-white border-0 px-2 py-0.5 text-[10px] tracking-wider flex items-center gap-1">
-              <Package className="h-2.5 w-2.5" />
-              PAQUET
+        <div className="relative aspect-[4/5] overflow-hidden bg-gray-50 mb-6">
+          <Image
+            src={validSrc}
+            alt={product.name}
+            fill
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            className="object-cover group-hover:scale-110 transition-transform duration-500 select-none"
+            sizes="(max-width: 768px) 50vw, 33vw"
+          />
+          <div className="absolute top-3 left-3 md:top-4 md:left-4 flex flex-col gap-1.5 md:gap-2">
+            <Badge className="bg-white/95 backdrop-blur-sm text-black border-0 rounded-full px-2 py-0.5 md:px-3 md:py-1 text-[7px] md:text-[8px] tracking-[0.2em] uppercase font-medium shadow-sm">
+              Pack Exclusif
+            </Badge>
+            <Badge className="bg-white/95 backdrop-blur-sm text-black border-0 rounded-full px-2 py-0.5 md:px-3 md:py-1 text-[7px] md:text-[8px] tracking-[0.2em] uppercase font-medium shadow-sm w-fit">
+              -20%
             </Badge>
           </div>
         </div>
 
         {/* Info */}
-        <div className="p-4 space-y-2">
-          <h3 className="font-semibold text-lg leading-tight uppercase tracking-wide line-clamp-2 text-black">
+        <div className="text-center space-y-3 px-2">
+          <h3 className="text-[11px] md:text-xs font-medium text-black tracking-[0.2em] uppercase line-clamp-1">
             {product.name}
           </h3>
           {product.material && (
-            <p className="text-gray-500 text-sm font-light">{product.material}</p>
+            <p className="text-[10px] text-gray-400 font-light tracking-widest uppercase">{product.material}</p>
           )}
-
-          <div className="flex items-center justify-between">
-            <span className="text-base font-semibold text-black whitespace-nowrap">{formatPrice(product.price)}</span>
-            <Badge className="bg-green-100 text-green-800 border-0 px-1.5 py-0.5 text-[8px]">ÉCONOMISEZ 20%</Badge>
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-xs font-light text-gray-400 line-through tracking-wider">
+              {formatPrice(product.price * 1.25)}
+            </span>
+            <span className="text-xs font-medium text-black tracking-[0.2em]">
+              {formatPrice(product.price)}
+            </span>
           </div>
         </div>
       </Link>
-      
-      
     </div>
   )
 }

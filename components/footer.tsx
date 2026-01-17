@@ -3,42 +3,39 @@ import { SocialMediaCard } from "@/components/social-media-card"
 
 export function Footer() {
   return (
-    <footer className="bg-white text-black">
-      <div className="container mx-auto px-6 py-16">
-        {/* Only the bottom section remains */}
-        <div className="border-t border-gray-200 mt-12 pt-8 flex flex-col items-center">
-          <p className="text-black text-[10px] mt-6 md:mt-2">© 2024 ELARAIN JEWELRY.</p>
-          <div className="flex flex-wrap justify-center md:justify-end space-x-3 mt-6 md:mt-2 text-[10px] tracking-wide uppercase text-black">
-            <Link
-              href="/politique-confidentialite"
-              className="text-black hover:text-gray-800 transition-colors"
-            >
-              Politique de confidentialité
-            </Link>
-            <span className="text-black text-[10px]">•</span>
-            <Link
-              href="/politique-remboursement"
-              className="text-gray-600 hover:text-black transition-colors font-light"
-            >
-              Politique de remboursement
-            </Link>
-            <span className="text-gray-400 text-xs">•</span>
-            <Link
-              href="/conditions-utilisation"
-              className="text-black hover:text-gray-800 transition-colors"
-            >
-              Conditions d'utilisation
-            </Link>
-            <span className="text-black">•</span>
-            <Link href="/politique-expedition" className="text-black hover:text-gray-800 transition-colors">
-              Politique d'expédition
-            </Link>
-          </div>
-          <div className="order-first mb-8">
+    <footer className="relative z-50 bg-white text-black border-t border-black/[0.03]">
+      <div className="w-full px-8 md:px-12 py-8">
+        <div className="flex flex-col items-center">
+          <div className="mb-6">
             <SocialMediaCard />
           </div>
+          
+          <div className="flex flex-row flex-wrap items-center justify-center gap-x-2 sm:gap-x-4 gap-y-2 mb-6 text-center max-w-[90vw] mx-auto">
+            {[
+              { name: "Politique de confidentialité", href: "/politique-confidentialite" },
+              { name: "Politique de remboursement", href: "/politique-remboursement" },
+              { name: "Conditions d'utilisation", href: "/conditions-utilisation" },
+              { name: "Politique d'expédition", href: "/politique-expedition" },
+            ].map((link, index, array) => (
+              <div key={link.name} className="flex items-center gap-x-2 sm:gap-x-4">
+                <Link
+                  href={link.href}
+                  className="text-[7px] sm:text-[9px] tracking-[0.15em] sm:tracking-luxury-lg uppercase text-black/40 hover:text-black transition-all duration-700 ease-in-out py-1 cursor-pointer relative z-[60] whitespace-nowrap"
+                >
+                  {link.name}
+                </Link>
+                {index < array.length - 1 && (
+                  <span className="text-[7px] sm:text-[9px] text-black/10">/</span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="w-12 h-[1px] bg-black/5 mb-6" />
+
+          <p className="text-[9px] tracking-luxury-xl text-black/20 uppercase font-light">© 2024 ELARAIN JEWELRY. TOUS DROITS RÉSERVÉS.</p>
         </div>
       </div>
     </footer>
-  )
+  );
 }
