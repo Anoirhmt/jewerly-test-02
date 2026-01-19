@@ -47,9 +47,7 @@ export default function PacksPage({
               Packs <br /> <span className="text-black/10 italic font-light">Exclusifs</span>
             </h1>
             <div className="w-12 h-[1px] bg-black/10 mx-auto mb-6 md:mb-10" />
-            <p className="text-black/40 font-light tracking-luxury-xl uppercase text-[9px] md:text-[11px] leading-relaxed-extra max-w-2xl mx-auto px-4">
-              Découvrez nos ensembles de bijoux soigneusement sélectionnés pour sublimer votre élégance naturelle. Une symphonie de luxe et de raffinement.
-            </p>
+
           </motion.div>
         </div>
       </section>

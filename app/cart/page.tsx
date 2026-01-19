@@ -7,9 +7,7 @@ export default function CartPage() {
       <header className="text-center mb-16 max-w-4xl mx-auto">
         <h1 className="text-5xl md:text-7xl font-serif font-medium uppercase tracking-luxury-lg mb-8 text-black">Mon Panier</h1>
         <div className="w-16 h-[1px] bg-black/10 mx-auto mb-8" />
-        <p className="text-black/40 font-light tracking-luxury-xl uppercase text-[9px] md:text-[11px] leading-relaxed-extra">
-          Gérez vos sélections et finalisez votre commande.
-        </p>
+
       </header>
 
       <main className="grid grid-cols-1 lg:grid-cols-3 gap-16">

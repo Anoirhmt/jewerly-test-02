@@ -47,9 +47,7 @@ export default function ProductsPage({
               Notre <br /> <span className="text-black/10 italic font-light">Collection</span>
             </h1>
             <div className="w-12 h-[1px] bg-black/10 mx-auto mb-6 md:mb-10" />
-            <p className="text-black/40 font-light tracking-luxury-xl uppercase text-[9px] md:text-[11px] leading-relaxed-extra max-w-2xl mx-auto px-4">
-              Une sélection raffinée de pièces d&apos;exception, conçues pour traverser le temps avec éclat. Chaque bijou est une promesse d&apos;éternité.
-            </p>
+
           </motion.div>
         </div>
       </section>
