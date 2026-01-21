@@ -42,6 +42,23 @@ export default function HomePage() {
           </div>
         </section>
 
+        <section className="py-24 bg-luxury-cream/30">
+          <div className="max-w-4xl mx-auto px-6 text-center">
+            <ScrollReveal>
+              <h2 className="text-3xl font-serif mb-8 tracking-widest uppercase">Elarain Jewelry & Watches</h2>
+              <p className="text-sm leading-relaxed text-gray-600 mb-6 font-light">
+                Bienvenue sur <strong>Elarain Jewelry</strong>, votre destination de prestige pour la joaillerie de luxe et l&apos;horlogerie d&apos;exception.
+                Que vous recherchiez une <strong>montre Elarain</strong> sophistiquée, des colliers étincelants ou des accessoires qui redéfinissent l&apos;élégance,
+                notre <strong>shop Elarain</strong> vous propose des pièces uniques conçues pour durer.
+              </p>
+              <p className="text-sm leading-relaxed text-gray-600 font-light">
+                Depuis la création de notre <strong>site Elarain</strong>, nous nous engageons à offrir l&apos;excellence à travers chaque bijou.
+                Explorez l&apos;univers <strong>Elarain Jewelry</strong> et laissez-vous séduire par l&apos;éclat suprême de nos collections.
+              </p>
+            </ScrollReveal>
+          </div>
+        </section>
+
         <section className="py-24 bg-white">
           <div className="w-full px-4">
             <ScrollReveal>
