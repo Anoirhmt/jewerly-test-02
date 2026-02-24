@@ -19,10 +19,24 @@ export const packsProducts: Product[] = [
     description: "Luxury jewelry collection pack",
     price: 120,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg",
-    category: "pack",
-    rating: 4.9,
-    reviews: 89,
+    category: "watch",
+    rating: 4.8,
+    reviews: 124,
     inStock: true,
+    variants: [
+      {
+        color: "red",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg"
+      },
+      {
+        color: "white",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/Gemini_Generated_Image_oc8fbpoc8fbpoc8f.png"
+      },
+      {
+        color: "black",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1549.jpeg"
+      }
+    ]
   },
   {
     id: 203,
@@ -34,13 +48,23 @@ export const packsProducts: Product[] = [
     rating: 4.7,
     reviews: 156,
     inStock: true,
+    variants: [
+      {
+        color: "white",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5870919414453046160_y.jpg"
+      },
+      {
+        color: "rose",
+        image: "/pack203_rose_vancleef.png"
+      }
+    ]
   },
   {
     id: 204,
     name: "pack4",
     description: "Special edition jewelry pack",
-    price: 99,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/WhatsApp%20Image%202025-08-15%20at%2017.56.10.jpeg",
+    price: 149,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3061.jpeg",
     category: "pack",
     rating: 4.6,
     reviews: 73,
@@ -48,10 +72,10 @@ export const packsProducts: Product[] = [
   },
   {
     id: 205,
-    name: "pack5+boite",
+    name: "pack5",
     description: "Deluxe jewelry pack collection",
-    price: 199,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5870919414453046161_y.jpg",
+    price: 150,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3060.jpeg",
     category: "pack",
     rating: 4.8,
     reviews: 92,
@@ -59,7 +83,7 @@ export const packsProducts: Product[] = [
   },
   {
     id: 206,
-    name: "pack6+boit",
+    name: "pack6+boite",
     description: "Premium gold jewelry pack",
     price: 199,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3687.jpeg",
@@ -79,23 +103,23 @@ export const packsProducts: Product[] = [
     reviews: 85,
     inStock: true,
   },
-  { 
+  {
     id: 208,
-    name: "Cartier Ring",
+    name: "pack8+boite",
     description: "Elegant b available in multiple colours",
-    price: 99,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5825869369337562936_y.jpg",
+    price: 199,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_4408.png",
     category: "pack",
     rating: 4.9,
     reviews: 89,
     inStock: true,
   },
-   {
-     id: 209,
-    name: "pack9+boite",
-    description: "Silver jewelry pack set",
-    price: 199,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3688.jpeg", 
+  {
+    id: 209,
+    name: "pack9",
+    description: "jewelry pack set",
+    price: 100,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5825869369337562936_y.jpg",
     category: "pack",
     rating: 4.5,
     reviews: 564,
@@ -103,14 +127,14 @@ export const packsProducts: Product[] = [
   },
   {
     id: 210,
-    name: "",
-    description: "",
-    price: 0,
-    image: "",
-    category: "",
-    rating: 0,
-    reviews: 0,
-    inStock: false,
+    name: "pack 10",
+    description: "Premium jewelry collection pack",
+    price: 150,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3068.jpeg",
+    category: "pack",
+    rating: 4.8,
+    reviews: 112,
+    inStock: true,
   },
   {
     id: 211,

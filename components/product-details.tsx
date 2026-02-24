@@ -20,8 +20,8 @@ const getColorHex = (name: string): string => {
   const map: Record<string, string> = {
     rouge: "#FF0000",
     red: "#800000",
-    bleu: "#0000FF",
-    blue: "#0000FF",
+    bleu: "#003366",
+    blue: "#003366",
     vert: "#008000",
     green: "#008000",
     jaune: "#FFFF00",
@@ -33,6 +33,7 @@ const getColorHex = (name: string): string => {
     gold: "#FFD366",
     or: "#D4AF37",
     rosegold: "#B76E79",
+    rose: "#B76E79",
     orrose: "#B76E79",
     silver: "#C0C0C0",
     argent: "#C0C0C0",
@@ -40,6 +41,7 @@ const getColorHex = (name: string): string => {
     doré: "#D4AF37",
     signature: "#B25E5E",
     vintage: "#F5E6C4",
+    warmbrown: "#675443",
   };
 
   return map[normalized] ?? name;
@@ -94,19 +96,13 @@ export function ProductDetails({ product }: ProductDetailsProps) {
   }
 
   return (
-    <div className="w-full px-6 sm:px-12 lg:px-16 py-20 lg:py-32">
+    <div className="w-full px-6 sm:px-12 lg:px-16 pb-0 pt-0 lg:pt-2">
       {/* Breadcrumbs */}
-      <nav className="flex items-center space-x-3 text-[9px] tracking-luxury uppercase text-black/30 mb-16 md:mb-24">
-        <Link href="/" className="hover:text-black transition-colors duration-500">Accueil</Link>
-        <span className="w-4 h-[1px] bg-black/10" />
-        <Link href="/products" className="hover:text-black transition-colors duration-500">{product.category}</Link>
-        <span className="w-4 h-[1px] bg-black/10" />
-        <span className="text-black font-medium">{product.name}</span>
-      </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-32">
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Product Image Section */}
-        <div className="space-y-10">
+        <div className="space-y-6">
           <div
             className="relative aspect-[4/5] overflow-hidden bg-luxury-cream cursor-zoom-in group shadow-soft hover:shadow-luxury transition-all duration-1000"
             onClick={() => setIsZoomed(!isZoomed)}
@@ -141,24 +137,6 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/[0.01] transition-colors duration-700 pointer-events-none" />
           </div>
 
-          {/* Thumbnail Gallery */}
-          <div className="grid grid-cols-4 gap-6">
-            {product.variants?.map((variant) => (
-              <button
-                key={variant.color}
-                onClick={() => { setActiveImage(variant.image); setSelectedColor(variant.color) }}
-                className={`relative aspect-square overflow-hidden bg-luxury-cream transition-all duration-700 ease-in-out border ${activeImage === variant.image ? "border-black shadow-soft" : "border-transparent opacity-50 hover:opacity-100 hover:border-black/10"}`}
-                onContextMenu={(e) => e.preventDefault()}
-              >
-                <img
-                  src={variant.image}
-                  alt={variant.color}
-                  draggable={false}
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 select-none"
-                />
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* Product Info Section */}
@@ -166,9 +144,9 @@ export function ProductDetails({ product }: ProductDetailsProps) {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col lg:pt-4"
+          className="flex flex-col lg:pt-2"
         >
-          <div className="mb-12 space-y-8">
+          <div className="mb-4 space-y-4">
             <div className="space-y-4">
               <p className="text-[10px] tracking-luxury-xl uppercase text-black/30 font-light">
                 {product.category}
@@ -188,43 +166,49 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             <div className="w-16 h-[1px] bg-black/10" />
           </div>
 
-          <div className="space-y-16 flex-grow">
+          <div className="space-y-6">
             {/* Variant selector */}
             {product.variants && product.variants.length > 0 && (
               <div className="space-y-8">
                 <p className="text-[10px] tracking-luxury-lg uppercase text-black/40 font-medium">Finish Archive</p>
-                <div className="flex items-start space-x-10">
-                  {product.variants.map((variant) => {
-                    const isActive = selectedColor === variant.color;
-                    return (
-                      <button
-                        key={variant.color}
-                        type="button"
-                        aria-label={variant.color}
-                        onClick={() => { setActiveImage(variant.image); setSelectedColor(variant.color) }}
-                        className="group flex flex-col items-center gap-4 outline-none"
-                      >
-                        <div className={`relative flex items-center justify-center w-14 h-14 rounded-full transition-all duration-700 ease-out ${isActive ? "border border-black shadow-luxury" : "border border-black/5 group-hover:border-black/20"}`}>
-                          <div
-                            className={`w-10 h-10 rounded-full shadow-inner transition-all duration-700 ${isActive ? "scale-90" : "scale-100 group-hover:scale-105"}`}
-                            style={{
-                              backgroundColor: getColorHex(variant.color),
-                              boxShadow: isActive ? `0 6px 20px ${getColorHex(variant.color)}40` : 'none'
-                            }}
-                          />
-                        </div>
-                        <span className={`text-[9px] tracking-luxury uppercase transition-all duration-500 ${isActive ? "text-black font-bold" : "text-black/30 font-medium group-hover:text-black/60"}`}>
-                          {variant.color}
-                        </span>
-                      </button>
-                    );
-                  })}
+                <div className="relative">
+                  <div className="flex items-start space-x-6 md:space-x-10 overflow-x-auto no-scrollbar snap-x touch-pan-x pb-2 -mx-2 px-2">
+                    {product.variants.map((variant) => {
+                      const isActive = selectedColor === variant.color;
+                      return (
+                        <button
+                          key={variant.color}
+                          type="button"
+                          aria-label={variant.color}
+                          onClick={() => { setActiveImage(variant.image); setSelectedColor(variant.color) }}
+                          className="group flex flex-col items-center gap-4 outline-none flex-shrink-0 snap-start"
+                        >
+                          <div className={`relative flex items-center justify-center w-14 h-14 rounded-full transition-all duration-700 ease-out ${isActive ? "border border-black shadow-luxury" : "border border-black/5 group-hover:border-black/20"}`}>
+                            <div
+                              className={`w-10 h-10 rounded-full shadow-inner transition-alls duration-700 ${isActive ? "scale-90" : "scale-100 group-hover:scale-105"}`}
+                              style={{
+                                backgroundColor: getColorHex(variant.color),
+                                boxShadow: isActive ? `0 6px 20px ${getColorHex(variant.color)}40` : 'none'
+                              }}
+                            />
+                          </div>
+                          <span className={`text-[9px] tracking-luxury uppercase transition-all duration-500 ${isActive ? "text-black font-bold" : "text-black/30 font-medium group-hover:text-black/60"}`}>
+                            {variant.color}
+                          </span>
+                        </button>
+                      );
+                    })}
+                    {/* Extra space at the end to allow full scrolling past the fade */}
+                    <div className="w-10 flex-shrink-0 md:hidden" />
+                  </div>
+                  {/* Subtle fade indicator - narrowed to show more of the peeking item */}
+                  <div className="absolute top-0 right-0 w-12 h-full bg-gradient-to-l from-white via-white/40 to-transparent pointer-events-none md:hidden z-10" />
                 </div>
               </div>
             )}
 
             {/* Action Buttons */}
-            <div className="space-y-10 pt-4">
+            <div className="space-y-4 pt-1">
               <div className="flex items-center space-x-8">
                 <p className="text-[10px] tracking-luxury-lg uppercase text-black/40 font-medium">Quantité</p>
                 <div className="flex items-center border border-black/5 h-14 bg-luxury-gray/30 px-2">
@@ -295,7 +279,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
           </div>
 
           {/* Footer Info */}
-          <div className="mt-20 flex items-center justify-end border-t border-black/[0.03] pt-10">
+          <div className="mt-6 md:mt-8 flex items-center justify-end border-t border-black/[0.03] pt-6 md:pt-8">
             <button
               onClick={handleShare}
               className="flex items-center text-[10px] tracking-luxury uppercase text-black/30 hover:text-black transition-all duration-700 group"

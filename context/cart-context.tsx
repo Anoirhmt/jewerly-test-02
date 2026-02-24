@@ -20,6 +20,8 @@ interface CartContextType extends CartState {
   clearCart: () => void
   isCartOpen: boolean
   setCartOpen: (isOpen: boolean) => void
+  totalItems: number
+  totalPrice: number
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -60,8 +62,8 @@ function cartReducer(state: CartState & { isCartOpen: boolean }, action: CartAct
         const newState = {
           ...state,
           items: state.items.map((item) =>
-            item.id === action.payload.id && item.selectedColor === action.payload.selectedColor 
-              ? { ...item, quantity: item.quantity + quantityToAdd } 
+            item.id === action.payload.id && item.selectedColor === action.payload.selectedColor
+              ? { ...item, quantity: item.quantity + quantityToAdd }
               : item,
           ),
         }
@@ -195,6 +197,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updateQuantity,
         clearCart,
         setCartOpen,
+        totalItems: state.items.reduce((sum, item) => sum + item.quantity, 0),
+        totalPrice: state.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
       }}
     >
       {children}

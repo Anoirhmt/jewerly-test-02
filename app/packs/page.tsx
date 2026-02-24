@@ -33,7 +33,7 @@ export default function PacksPage({
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-luxury-cream pt-32 pb-12 border-b border-black/[0.03] relative z-10">
+      <section className="bg-luxury-cream pt-24 pb-12 border-b border-black/[0.03] relative z-10">
         <div className="w-full px-6 text-center max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 15 }}

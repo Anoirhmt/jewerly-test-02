@@ -24,6 +24,8 @@
     --input: 0 0% 89.8%;
     --ring: 0 0% 3.9%;
     --radius: 0.5rem;
+    --brand: 350 31% 48%;
+    --brand-light: 350 31% 95%;
   }
 }
 
@@ -31,6 +33,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-white text-black antialiased overflow-x-hidden;
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -40,37 +43,58 @@
   }
 
   ::selection {
-    @apply bg-black/5 text-black;
+    background: rgba(155, 92, 92, 0.12);
+    color: #1a1a1a;
   }
 
-  /* Custom Scrollbar for Luxury Feel */
+  /* Luxury Scrollbar */
   ::-webkit-scrollbar {
-    width: 3px;
+    width: 2px;
   }
+
   ::-webkit-scrollbar-track {
-    background: #ffffff;
+    background: #fafafa;
   }
+
   ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(155, 92, 92, 0.2);
     border-radius: 10px;
     transition: all 0.3s ease;
   }
+
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(155, 92, 92, 0.4);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-playfair tracking-luxury uppercase leading-tight;
   }
 }
 
 @layer components {
+
+  /* Hide scrollbar but keep scrollability — for mobile snap carousels */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   .text-luxury {
     @apply tracking-luxury-lg uppercase font-playfair;
   }
 
+  /* PRIMARY luxury button – fill slides up on hover */
   .luxury-button {
-    @apply relative border border-black/10 bg-black px-12 py-5 text-[9px] tracking-luxury-xl uppercase text-white transition-all duration-700 ease-out overflow-hidden rounded-sm;
+    @apply relative border border-black/10 bg-black px-12 py-5 text-[9px] tracking-luxury-xl uppercase text-white transition-all duration-700 ease-out overflow-hidden rounded-none;
   }
 
   .luxury-button::before {
@@ -90,12 +114,95 @@
     @apply text-black;
   }
 
+  /* BRAND luxury button – uses brand rose */
+  .luxury-button-brand {
+    @apply relative border border-[#9b5c5c]/20 bg-[#9b5c5c] px-12 py-5 text-[9px] tracking-luxury-xl uppercase text-white transition-all duration-700 ease-out overflow-hidden rounded-none;
+  }
+
+  .luxury-button-brand::before {
+    content: '';
+    @apply absolute inset-0 bg-white translate-y-full transition-transform duration-700 ease-out z-0;
+  }
+
+  .luxury-button-brand:hover::before {
+    @apply translate-y-0;
+  }
+
+  .luxury-button-brand span {
+    @apply relative z-10 transition-colors duration-700;
+  }
+
+  .luxury-button-brand:hover span {
+    @apply text-[#9b5c5c];
+  }
+
   .luxury-card {
-    @apply bg-white transition-all duration-500 hover:shadow-luxury rounded-none;
+    @apply bg-white transition-all duration-500 hover:shadow-luxury-hover rounded-none;
   }
 
   .glass-panel {
     @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+
+  /* Animated underline for nav links */
+  .nav-link-underline {
+    @apply relative;
+  }
+
+  .nav-link-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 h-[1px] bg-current w-0 transition-all duration-500 ease-in-out;
+  }
+
+  .nav-link-underline:hover::after,
+  .nav-link-underline.active::after {
+    @apply w-full;
+  }
+
+  /* Marquee strip */
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 30s linear infinite;
+    width: max-content;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Section fade-in utility */
+  .section-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .section-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Shimmer skeleton */
+  .shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Brand color accent line */
+  .brand-line {
+    @apply h-[1px] w-12 bg-[#9b5c5c]/40 mx-auto;
+  }
+
+  /* Hover lift card */
+  .hover-lift {
+    @apply transition-all duration-500 ease-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -105,4 +212,104 @@
 
 .font-inter {
   font-family: var(--font-inter), sans-serif;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .text-brand {
+    color: #9b5c5c;
+  }
+
+  .bg-brand {
+    background-color: #9b5c5c;
+  }
+
+  .border-brand {
+    border-color: #9b5c5c;
+  }
+}
+
+/* ===== KEYFRAMES ===== */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes drawLine {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 3rem;
+  }
+}
+
+@keyframes pulse-brand {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(155, 92, 92, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(155, 92, 92, 0);
+  }
 }

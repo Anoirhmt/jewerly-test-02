@@ -1,7 +1,7 @@
 "use client"
 
 import { ProductGrid } from "@/components/product-grid";
-import { managementProducts } from "@/data/management-products";
+import { managementProducts } from "@/data/watche-products";
 import {
   Pagination,
   PaginationContent,

@@ -1,7 +1,7 @@
 import { ProductDetails } from "@/components/product-details"
 import { RelatedProducts } from "@/components/related-products"
 import { products } from "@/data/products"
-import { managementProducts } from "@/data/management-products"
+import { managementProducts } from "@/data/watche-products"
 import { collectionProducts } from "@/data/collection-products"
 import { promoProducts } from "@/data/promo-products"
 import { packsProducts } from "@/data/packs-products"
@@ -45,8 +45,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
-    <div className="bg-white min-h-screen pt-48 md:pt-56">
-      <div className="w-full px-6 py-12">
+    <div className="bg-white min-h-screen pt-16 md:pt-20">
+      <div className="w-full px-6">
         <ProductDetails product={product} />
         {product.id === 211 ? (
           <SpecialPackForm product={product} />

@@ -320,20 +320,27 @@ export function CheckoutForm() {
   }
 
   return (
-    <section className="w-full py-4 px-4">
+    <section className="w-full py-2 sm:py-4 px-0 sm:px-4">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <Card className="border-0 bg-white shadow-luxury overflow-hidden max-w-3xl mx-auto">
-          <CardHeader className="pb-8 border-b border-black/[0.03] px-8 pt-10 text-center">
-            <CardTitle className="text-2xl font-sans font-medium text-black tracking-tight">
-              Insérer vos coordonnées
+        <Card className="border-0 bg-white shadow-luxury overflow-hidden sm:max-w-3xl sm:mx-auto rounded-none sm:rounded-xl">
+          <CardHeader className="pb-6 sm:pb-8 border-b border-black/[0.04] px-5 sm:px-8 pt-8 sm:pt-12 text-center">
+            <span className="text-[8px] tracking-[0.5em] uppercase text-[#9b5c5c] mb-3 block font-medium">
+              Finaliser la commande
+            </span>
+            <CardTitle className="font-playfair text-xl sm:text-2xl md:text-3xl font-medium text-black tracking-luxury uppercase">
+              Vos Coordonnées
             </CardTitle>
+            <div className="w-7 h-[1px] bg-[#9b5c5c]/40 mx-auto mt-4 mb-1" />
+            <p className="text-[8px] tracking-[0.28em] uppercase text-black/25 font-light mt-3">
+              Paiement à la livraison · Livraison Express
+            </p>
           </CardHeader>
 
-          <CardContent className="p-8 md:p-12">
+          <CardContent className="p-4 sm:p-8 md:p-12">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Contact Information */}
               <div className="space-y-6">
@@ -393,7 +400,7 @@ export function CheckoutForm() {
                           {formData.city ? formData.city : "Sélectionnez votre ville | اختر المدينة"}
                         </span>
                         {!formData.city && (
-                          <span className="hidden sm:inline-block text-[10px] text-blue-400 ml-2 font-medium">
+                          <span className="hidden sm:inline-block text-[10px] text-[#9b5c5c] ml-2 font-medium">
                             Cliquez pour sélectionner
                           </span>
                         )}
@@ -457,7 +464,7 @@ export function CheckoutForm() {
                             </p>
                           )}
                         </div>
-                        <div className="text-[11px] tracking-luxury text-black font-medium">
+                        <div className="text-[11px] tracking-luxury text-[#9b5c5c] font-medium">
                           {formatPrice(item.price * item.quantity)}
                         </div>
                       </motion.div>
@@ -497,11 +504,11 @@ export function CheckoutForm() {
                 <div className="space-y-5 px-2">
                   <div className="flex justify-between text-[10px] tracking-luxury-lg uppercase text-black/40">
                     <span>Sous-total</span>
-                    <span className="font-medium text-black">{formatPrice(subtotal)}</span>
+                    <span className="font-medium text-[#9b5c5c]">{formatPrice(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-[10px] tracking-luxury-lg uppercase text-black/40">
                     <span>Livraison</span>
-                    <span className="font-medium text-black">
+                    <span className="font-medium text-[#9b5c5c]">
                       {effectiveDelivery === 0 ? formatPrice(0) : formatPrice(effectiveDelivery)}
                     </span>
                   </div>
@@ -510,7 +517,7 @@ export function CheckoutForm() {
                       <span className="text-[10px] tracking-luxury-lg uppercase text-black/40 mb-2">Total à payer</span>
                       <span className="text-xs tracking-luxury-xl uppercase text-black font-bold">TTC</span>
                     </div>
-                    <span className="text-3xl font-light text-black tracking-luxury leading-none">{formatPrice(total)}</span>
+                    <span className="text-3xl font-light text-[#9b5c5c] tracking-luxury leading-none">{formatPrice(total)}</span>
                   </div>
                 </div>
               </div>
@@ -520,7 +527,7 @@ export function CheckoutForm() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`group relative w-full h-10 md:h-20 text-[8px] md:text-[11px] tracking-luxury-xl rounded-none uppercase transition-all duration-700 overflow-hidden ${formError ? 'bg-red-600' : 'bg-black hover:bg-gray-900'
+                  className={`group relative w-full h-10 md:h-20 text-[8px] md:text-[11px] tracking-luxury-xl rounded-none uppercase transition-all duration-700 overflow-hidden ${formError ? 'bg-red-600' : 'bg-[#9b5c5c] hover:bg-[#8a5252]'
                     } text-white shadow-xl`}
                 >
                   <span className="relative z-10">
