@@ -44,8 +44,8 @@ export const managementProducts: Product[] = [
     inStock: true,
     variants: [
       {
-        color: "or rose",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568919_y.jpg"
+        color: "or white",
+        image: "https://raw.githubusercontent.com/omarhmt08/Watches-/main/IMG_4185.jpeg"
       },
       {
         color: "argenté",
