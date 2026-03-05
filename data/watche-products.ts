@@ -48,8 +48,8 @@ export const managementProducts: Product[] = [
         image: "https://raw.githubusercontent.com/omarhmt08/Watches-/main/IMG_4185.jpeg"
       },
       {
-        color: "argenté",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5956095629610568916_y.jpg"
+        color: "bleu",
+        image: "https://raw.githubusercontent.com/omarhmt08/Watches-/main/IMG_4186.jpeg"
       }
     ]
   },
