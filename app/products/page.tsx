@@ -13,7 +13,7 @@ import {
 
 import { motion } from "framer-motion"
 
-const ITEMS_PER_PAGE = 9
+const ITEMS_PER_PAGE = 12
 
 export default function ProductsPage({
   searchParams,
