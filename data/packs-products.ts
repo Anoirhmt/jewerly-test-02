@@ -15,28 +15,14 @@ export const packsProducts: Product[] = [
   },
   {
     id: 202,
-    name: "pack2",
-    description: "Luxury jewelry collection pack",
-    price: 120,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg",
-    category: "watch",
+   name: "pack1+boite",
+    description: "Premium jewelry pack with elegant design",
+    price: 199,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_6016821605273029121_y.jpg",
+    category: "pack",
     rating: 4.8,
     reviews: 124,
     inStock: true,
-    variants: [
-      {
-        color: "red",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg"
-      },
-      {
-        color: "white",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/Gemini_Generated_Image_oc8fbpoc8fbpoc8f.png"
-      },
-      {
-        color: "black",
-        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1549.jpeg"
-      }
-    ]
   },
   {
     id: 203,
@@ -148,3 +134,28 @@ export const packsProducts: Product[] = [
     inStock: false,
   },
 ];
+{
+    id: 202,
+    name: "pack2",
+    description: "Luxury jewelry collection pack",
+    price: 120,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg",
+    category: "watch",
+    rating: 4.8,
+    reviews: 124,
+    inStock: true,
+    variants: [
+      {
+        color: "red",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg"
+      },
+      {
+        color: "white",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/Gemini_Generated_Image_oc8fbpoc8fbpoc8f.png"
+      },
+      {
+        color: "black",
+        image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1549.jpeg"
+      }
+    ]
+  },
