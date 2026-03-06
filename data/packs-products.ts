@@ -135,7 +135,7 @@ export const packsProducts: Product[] = [
   },
 ];
 {
-    id: 202,
+    id: 212,
     name: "pack2",
     description: "Luxury jewelry collection pack",
     price: 120,
