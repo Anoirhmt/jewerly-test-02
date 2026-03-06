@@ -13,6 +13,7 @@ export interface Product {
   reviews: number
   inStock: boolean
   isPack?: boolean
+  isBestSeller?: boolean
   packContents?: string[]
   // New: optional color/image variants for the same product
   variants?: {

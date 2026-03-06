@@ -15,7 +15,7 @@ export const packsProducts: Product[] = [
   },
   {
     id: 202,
-   name: "pack1+boite",
+    name: "pack1+boite",
     description: "Premium jewelry pack with elegant design",
     price: 130,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_4976.jpeg",
@@ -83,10 +83,11 @@ export const packsProducts: Product[] = [
     name: "pack7",
     description: "Silver jewelry pack set",
     price: 99,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5873068869487282087_y.jpg",
+    image: "https://raw.githubusercontent.com/omarhmt08/hamza/main/WhatsApp%20Image%202026-01-01%20at%2018.24.57.jpeg",
     category: "pack",
     rating: 4.7,
     reviews: 85,
+    isBestSeller: true,
     inStock: true,
   },
   {
@@ -115,8 +116,8 @@ export const packsProducts: Product[] = [
     id: 210,
     name: "pack 10",
     description: "Premium jewelry collection pack",
-    price: 150,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3068.jpeg",
+    price: 100,
+    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_4974.jpeg",
     category: "pack",
     rating: 4.8,
     reviews: 112,
@@ -133,10 +134,9 @@ export const packsProducts: Product[] = [
     reviews: 78,
     inStock: false,
   },
-];
-{
+  {
     id: 212,
-    name: "pack2",
+    name: "pack11",
     description: "Luxury jewelry collection pack",
     price: 120,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_1566.jpeg",
@@ -159,3 +159,4 @@ export const packsProducts: Product[] = [
       }
     ]
   },
+];

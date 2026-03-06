@@ -59,14 +59,19 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Bottom gradient — always on mobile so content is readable */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 z-[1]" />
 
-          {/* Discount badge */}
-          {discountPercentage > 0 && (
-            <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">
-              <span className="bg-[#9b5c5c] text-white text-[7px] tracking-[0.2em] uppercase font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-sm">
+          {/* Badges */}
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 flex flex-col gap-1">
+            {product.isBestSeller && (
+              <span className="bg-white/90 backdrop-blur-md text-[#B8860B] text-[7px] tracking-[0.25em] uppercase font-medium px-2.5 py-1 rounded-full border border-[#B8860B]/20 shadow-sm w-fit">
+                Best Seller
+              </span>
+            )}
+            {discountPercentage > 0 && (
+              <span className="bg-[#9b5c5c] text-white text-[7px] tracking-[0.2em] uppercase font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-sm w-fit">
                 -{discountPercentage}%
               </span>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* "Voir" pill — visible on mobile always, hover-only on desktop */}
           <div className="absolute bottom-3 left-0 right-0 flex justify-center z-10

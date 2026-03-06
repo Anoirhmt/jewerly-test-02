@@ -46,6 +46,11 @@ export function PackCard({ product }: PackCardProps) {
 
           {/* Badges */}
           <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-col gap-1 z-10">
+            {product.isBestSeller && (
+              <span className="bg-white/90 backdrop-blur-md text-[#B8860B] text-[7px] tracking-[0.25em] uppercase font-medium px-2.5 py-1 rounded-full border border-[#B8860B]/20 shadow-sm w-fit">
+                Best Seller
+              </span>
+            )}
             <span className="bg-[#9b5c5c] text-white text-[7px] tracking-[0.2em] uppercase font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-sm">
               Pack
             </span>
