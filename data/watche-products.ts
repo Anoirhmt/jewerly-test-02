@@ -45,7 +45,8 @@ export const managementProducts: Product[] = [
     variants: [
       {
         color: "or white",
-        image: "https://raw.githubusercontent.com/omarhmt08/Watches-/main/IMG_4185.jpeg"
+        image: "https://raw.githubusercontent.com/omarhmt08/Watches-/main/IMG_4185.jpeg",
+        inStock: false
       },
       {
         color: "bleu",
@@ -74,6 +75,52 @@ export const managementProducts: Product[] = [
     rating: 0,
     reviews: 0,
     inStock: true,
+  },
+  {
+    id: 408,
+    name: "montre femmes",
+    description: "",
+    price: 89,
+    image: "https://raw.githubusercontent.com/omarhmt08/Watches-/main/photo_5996734550039530659_y.jpg",
+    category: "watch",
+    rating: 0,
+    reviews: 0,
+    inStock: true,
+  },
+  {
+    id: 407,
+    name: "montre yake",
+    description: "",
+    price: 79,
+    image: "https://raw.githubusercontent.com/omarhmt08/Watches-/main/IMG_1872.jpeg",
+    category: "watch",
+    rating: 0,
+    reviews: 0,
+    inStock: true,
+  },
+  {
+    id: 406,
+    name: "montre pour femme",
+    description: "",
+    price: 89,
+    category: "watch",
+    rating: 0,
+    reviews: 0,
+    inStock: true,
+    variants: [
+      {
+        color: "tawny",
+        image: "https://raw.githubusercontent.com/omarhmt08/Watches-/main/photo_5996734550039530655_y.jpg"
+      },
+      {
+        color: "warm brown",
+        image: "https://raw.githubusercontent.com/omarhmt08/Watches-/main/IMG_4184.jpeg"
+      },
+      {
+        color: "doré",
+        image: "https://raw.githubusercontent.com/omarhmt08/Watches-/main/photo_5996734550039530656_y.jpg"
+      }
+    ]
   },
   {
     id: 8,

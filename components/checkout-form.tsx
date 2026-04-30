@@ -32,6 +32,8 @@ export function CheckoutForm() {
   const [orderSuccess, setOrderSuccess] = useState(false)
   const [cityDialogOpen, setCityDialogOpen] = useState(false)
   const [formError, setFormError] = useState(false)
+  const [customerName, setCustomerName] = useState("")
+  const [orderNumber, setOrderNumber] = useState("")
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let { name, value } = e.target;
@@ -172,6 +174,11 @@ export function CheckoutForm() {
         }).catch(console.error);
       }
 
+      // Save details for success page
+      const orderNum = `EL${Math.floor(100000 + Math.random() * 900000)}`
+      setOrderNumber(orderNum)
+      setCustomerName(formData.fullName)
+
       clearCart()
 
       // Reset form
@@ -236,6 +243,64 @@ export function CheckoutForm() {
   const total = Math.max(0, subtotal + effectiveDelivery - percentOff - fixedOff)
 
 
+  // Show success message instead of form
+  if (orderSuccess) {
+    return (
+      <section className="w-full min-h-screen flex flex-col items-center justify-start pt-0 pb-20 px-4 bg-white">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
+          className="max-w-4xl w-full text-center"
+        >
+          {/* Elarain Floral Logo */}
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0, rotate: -5 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            transition={{ 
+              delay: 0.2, 
+              duration: 1.2, 
+              ease: [0.16, 1, 0.3, 1],
+              scale: { type: "spring", damping: 15, stiffness: 100 }
+            }}
+            className="mb-0 -mt-6 sm:-mt-10"
+          >
+            <div className="relative w-full h-[280px] sm:h-[480px] mx-auto">
+              <Image
+                src="/Gemini_Generated_Image_5r67l45r67l45r67.png"
+                alt="Elarain Floral Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </motion.div>
+
+          {/* Main Message */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="space-y-6"
+          >
+            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-medium text-[#c5a367] tracking-wider uppercase">
+              Merci pour votre commande{customerName ? `, ${customerName}` : ""}!
+            </h1>
+          </motion.div>
+
+          {/* CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.8 }}
+            className="mt-12 space-y-6"
+          >
+          </motion.div>
+        </motion.div>
+      </section>
+    )
+  }
+
   // Prevent checkout with empty cart or zero total
   if (items.length === 0 || total <= 0) {
     return (
@@ -247,71 +312,15 @@ export function CheckoutForm() {
         >
           <Card className="border-0 bg-white shadow-luxury overflow-hidden">
             <CardContent className="p-12 text-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-                className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-8"
-              >
-                <CheckCircle className="h-10 w-10 text-black" />
-              </motion.div>
-              <h2 className="text-3xl font-serif font-medium mb-4 text-black tracking-luxury">COMMANDE VALIDÉE</h2>
+              <h2 className="text-3xl font-serif font-medium mb-4 text-black tracking-luxury">Votre panier est vide</h2>
               <p className="text-gray-500 mb-10 text-lg font-light">
-                Votre commande a été validée avec succès. Merci pour votre confiance.
+                Ajoutez des produits à votre panier pour continuer.
               </p>
               <Link href="/products" className="block">
                 <Button className="w-full bg-black text-white px-8 py-4 text-[10px] tracking-[0.3em] rounded-none uppercase transition-all duration-500 hover:bg-gray-900">
                   VOIR LES PRODUITS
                 </Button>
               </Link>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </section>
-    )
-  }
-
-  // Show success message instead of form
-  if (orderSuccess) {
-    return (
-      <section className="w-full py-12 px-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
-        >
-          <Card className="border-0 bg-white shadow-luxury overflow-hidden max-w-2xl mx-auto">
-            <CardContent className="p-12 text-center">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.6, ease: "backOut" }}
-                className="relative w-24 h-24 mx-auto mb-8 flex items-center justify-center"
-              >
-                <div className="absolute inset-0 bg-green-100 rounded-full animate-pulse opacity-50" />
-                <div className="relative w-20 h-20 bg-green-50 rounded-full flex items-center justify-center shadow-sm border border-green-100">
-                  <CheckCircle className="h-10 w-10 text-green-600 stroke-[1.5]" />
-                </div>
-              </motion.div>
-              <h2 className="text-3xl font-serif font-medium mb-4 text-black tracking-luxury uppercase">Commande Validée</h2>
-              <p className="text-gray-500 mb-12 text-lg font-light leading-relaxed">
-                Votre commande a été reçue. Notre équipe vous contactera sous peu pour la confirmation finale.
-              </p>
-              <div className="space-y-4">
-                <Link href="/products" className="block">
-                  <Button className="w-full bg-black text-white px-8 py-4 text-[10px] tracking-[0.3em] rounded-none uppercase transition-all duration-500 hover:bg-gray-900">
-                    CONTINUER VOS ACHATS
-                  </Button>
-                </Link>
-                <Link href="/" className="block">
-                  <Button
-                    variant="ghost"
-                    className="w-full text-[10px] tracking-[0.3em] uppercase hover:bg-gray-50 rounded-none py-4 transition-colors"
-                  >
-                    RETOUR À L&apos;ACCUEIL
-                  </Button>
-                </Link>
-              </div>
             </CardContent>
           </Card>
         </motion.div>

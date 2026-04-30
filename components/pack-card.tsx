@@ -1,6 +1,5 @@
 "use client"
 
-import type React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { formatPrice } from "@/utils/format-price"
@@ -22,71 +21,81 @@ export function PackCard({ product }: PackCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-30px" }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className="group block"
     >
-      <Link href={`/products/${product.id}`} draggable={false} className="block active:opacity-80 transition-opacity">
+      <Link href={`/products/${product.id}`} draggable={false} className="block">
+
         {/* Image */}
-        <div className="relative aspect-[4/5] overflow-hidden bg-[#F9F7F5]">
+        <div className="relative aspect-[4/5] overflow-hidden bg-[#F2EDE6]">
           <Image
             src={validSrc}
             alt={product.name}
             fill
             draggable={false}
             onContextMenu={(e) => e.preventDefault()}
-            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06] select-none"
+            className="object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] select-none"
             sizes="(max-width: 640px) 50vw, 25vw"
           />
 
-          {/* Gradient — always on mobile */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500" />
+          {/* Dark overlay on hover/always mobile */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent
+            md:from-black/0 md:via-transparent md:to-transparent
+            md:group-hover:from-black/55 md:group-hover:via-black/15
+            transition-all duration-700" />
 
-          {/* Badges */}
-          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-col gap-1 z-10">
+          {/* Pack badge — top left */}
+          <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+            <span className="bg-[#c5a367] text-white text-[6px] tracking-[0.35em] uppercase font-medium px-2.5 py-1">
+              Pack
+            </span>
             {product.isBestSeller && (
-              <span className="bg-white/90 backdrop-blur-md text-[#B8860B] text-[7px] tracking-[0.25em] uppercase font-medium px-2.5 py-1 rounded-full border border-[#B8860B]/20 shadow-sm w-fit">
+              <span className="bg-black/70 backdrop-blur-sm text-[#c5a367] text-[6px] tracking-[0.3em] uppercase font-medium px-2.5 py-1">
                 Best Seller
               </span>
             )}
-            <span className="bg-[#9b5c5c] text-white text-[7px] tracking-[0.2em] uppercase font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-sm">
-              Pack
-            </span>
-            <span className="bg-white/90 backdrop-blur-sm text-black text-[7px] tracking-[0.2em] uppercase font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-sm w-fit">
+          </div>
+
+          {/* Discount badge — top right */}
+          <div className="absolute top-3 right-3 z-10">
+            <span className="bg-black/60 backdrop-blur-sm text-white text-[7px] tracking-[0.2em] font-medium px-2 py-1">
               −20%
             </span>
           </div>
 
-          {/* Hover pill — visible on mobile always */}
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center z-10
-            md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0
-            md:transition-all md:duration-400">
-            <span className="bg-white/90 backdrop-blur-sm text-black text-[7px] sm:text-[8px] tracking-[0.3em] uppercase font-medium px-4 py-1.5 rounded-full shadow-soft border border-white/60">
+          {/* CTA — bottom, always on mobile */}
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center pb-4
+            md:opacity-0 md:translate-y-3 md:group-hover:opacity-100 md:group-hover:translate-y-0
+            transition-all duration-500">
+            <span className="bg-white text-black text-[7px] tracking-[0.4em] uppercase font-medium px-6 py-2">
               Voir →
             </span>
           </div>
         </div>
 
         {/* Info */}
-        <div className="text-center pt-3 sm:pt-4 pb-2 px-1">
-          <h3 className="text-[10px] sm:text-[11px] md:text-[12px] font-medium text-black tracking-[0.12em] sm:tracking-luxury uppercase leading-snug line-clamp-2">
-            {product.name}
-          </h3>
-          {product.material && (
-            <p className="text-[7px] sm:text-[8px] tracking-[0.3em] text-[#9b5c5c]/60 font-light uppercase mt-1 truncate">
-              {product.material}
-            </p>
-          )}
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2 mt-1.5 sm:mt-2">
-            <span className="text-[9px] sm:text-[10px] font-light text-black/30 line-through tracking-wider">
-              {formatPrice(product.price * 1.25)}
-            </span>
-            <span className="text-[11px] sm:text-[13px] font-medium text-black tracking-[0.1em]">
-              {formatPrice(product.price)}
-            </span>
+        <div className="pt-3.5 pb-2 px-1">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-[7px] tracking-[0.45em] uppercase text-[#c5a367] font-medium mb-1">
+                Elarain
+              </p>
+              <h3 className="text-[10px] sm:text-[11px] font-medium text-black uppercase tracking-[0.12em] leading-snug line-clamp-2">
+                {product.name}
+              </h3>
+            </div>
+            <div className="shrink-0 text-right">
+              <p className="text-[12px] sm:text-[13px] font-semibold text-black tracking-[0.05em]">
+                {formatPrice(product.price)}
+              </p>
+            </div>
           </div>
+
+          {/* Gold underline on hover */}
+          <div className="mt-3 h-[1px] w-0 bg-[#c5a367]/50 group-hover:w-full transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
         </div>
       </Link>
     </motion.div>

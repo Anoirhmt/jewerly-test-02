@@ -16,7 +16,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
           {/* Packs nav card — full width on mobile */}
           <NavCard
             href="/packs"
-            src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/PinDown.io_%40777mbalenhle_1758181598%20(1).jpg"
+            src="/Yourtext.png"
             alt="Voir les packs"
             label="Packs Exclusifs"
             cta="Découvrir"
@@ -34,11 +34,11 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
           {/* Watches nav card */}
           <NavCard
             href="/watches"
-            src="https://raw.githubusercontent.com/omarhmt08/my-first-image/main/PinDown.io_%40maddyy_r_1757043506%20(1)%20(1).jpg"
+            src="/Yourtext (1).png"
             alt="Nos montres"
-            label="Haute Horlogerie"
+            label="Montre Pour Femme"
             cta="Voir tout"
-            objectPosition="center 70%"
+            objectPosition="center center"
           />
         </>
       )}
@@ -58,7 +58,7 @@ export function ProductGrid({ products, showNavCards = false }: ProductGridProps
 }
 
 /* ─────────────────────────────────────────────────── */
-/* NavCard — mobile-first, full-width on small screens */
+/* NavCard — simple, clean card like product cards    */
 /* ─────────────────────────────────────────────────── */
 function NavCard({
   href,
@@ -76,39 +76,28 @@ function NavCard({
   objectPosition?: string
 }) {
   return (
-    /* col-span-2 = full width on 2-col mobile grid; md:col-span-1 so 3 per row on md */
-    <div className="col-span-2 md:col-span-1 xl:col-span-2 group">
-      <Link
-        href={href}
-        className="relative block w-full overflow-hidden bg-[#F2EEE8]"
-        /* taller on mobile so image breathes */
-        style={{ aspectRatio: "16/9" }}
-      >
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="object-cover transition-transform duration-1100 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] active:scale-[1.02]"
-          style={{ objectPosition }}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
+    <div className="col-span-1 md:col-span-1 xl:col-span-1 group">
+      <Link href={href} className="block active:opacity-90 transition-opacity">
 
-        {/* Gradient scrim — always visible on mobile (no hover needed) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+        {/* Image */}
+        <div className="relative aspect-[4/5] overflow-hidden bg-[#F9F7F5]">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+            style={{ objectPosition }}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
 
-        {/* Text overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-6 flex items-end justify-between gap-2">
-          <div className="min-w-0">
-            <p className="text-[7px] sm:text-[8px] tracking-[0.4em] uppercase text-white/60 mb-1 font-light">
-              Elarain
-            </p>
-            <p className="text-sm sm:text-sm md:text-base tracking-[0.12em] uppercase text-white font-semibold leading-tight">
-              {label}
-            </p>
-          </div>
+        </div>
 
-          {/* CTA chip — always solid on mobile (bg-white by default, not hover-only) */}
-          <span className="shrink-0 bg-white text-black text-[8px] sm:text-[9px] tracking-[0.25em] uppercase font-medium px-3 py-1.5 sm:px-4 sm:py-2 rounded-sm whitespace-nowrap transition-all duration-300 active:bg-[#9b5c5c] active:text-white">
+        {/* Label + CTA below */}
+        <div className="pt-3 pb-2 text-center">
+          <h3 className="text-[10px] sm:text-[11px] font-medium text-black uppercase tracking-[0.15em] leading-snug mb-1.5">
+            {label}
+          </h3>
+          <span className="text-[8px] tracking-[0.3em] uppercase text-[#9b5c5c] font-light">
             {cta} →
           </span>
         </div>

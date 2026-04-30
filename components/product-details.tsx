@@ -42,6 +42,7 @@ const getColorHex = (name: string): string => {
     signature: "#B25E5E",
     vintage: "#F5E6C4",
     warmbrown: "#675443",
+    tawny: "#7B5B2A",
   };
 
   return map[normalized] ?? name;
@@ -175,13 +176,15 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   <div className="flex items-start space-x-6 md:space-x-10 overflow-x-auto no-scrollbar snap-x touch-pan-x pb-2 -mx-2 px-2">
                     {product.variants.map((variant) => {
                       const isActive = selectedColor === variant.color;
+                      const isSoldOut = variant.inStock === false;
                       return (
                         <button
                           key={variant.color}
                           type="button"
                           aria-label={variant.color}
-                          onClick={() => { setActiveImage(variant.image); setSelectedColor(variant.color) }}
-                          className="group flex flex-col items-center gap-4 outline-none flex-shrink-0 snap-start"
+                          onClick={() => { if (!isSoldOut) { setActiveImage(variant.image); setSelectedColor(variant.color) } }}
+                          disabled={isSoldOut}
+                          className={`group flex flex-col items-center gap-4 outline-none flex-shrink-0 snap-start ${isSoldOut ? 'cursor-not-allowed opacity-50' : ''}`}
                         >
                           <div className={`relative flex items-center justify-center w-14 h-14 rounded-full transition-all duration-700 ease-out ${isActive ? "border border-black shadow-luxury" : "border border-black/5 group-hover:border-black/20"}`}>
                             <div
@@ -191,9 +194,14 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                                 boxShadow: isActive ? `0 6px 20px ${getColorHex(variant.color)}40` : 'none'
                               }}
                             />
+                            {isSoldOut && (
+                              <div className="absolute inset-0 rounded-full flex items-center justify-center">
+                                <div className="absolute w-[110%] h-[1px] bg-black/40 rotate-45" />
+                              </div>
+                            )}
                           </div>
                           <span className={`text-[9px] tracking-luxury uppercase transition-all duration-500 ${isActive ? "text-black font-bold" : "text-black/30 font-medium group-hover:text-black/60"}`}>
-                            {variant.color}
+                            {isSoldOut ? 'épuisé' : variant.color}
                           </span>
                         </button>
                       );
@@ -238,7 +246,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   onClick={handleBuyNow}
                   variant="outline"
                   className="w-full h-14 border-black text-black hover:bg-black hover:text-white transition-all uppercase tracking-widest text-xs"
-                  disabled={!product.inStock}
+                  disabled={!product.inStock || product.variants?.find(v => v.color === selectedColor)?.inStock === false}
                 >
                   <span>Acheter maintenant</span>
                 </Button>
@@ -246,7 +254,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                   onClick={handleAddToCart}
                   variant="luxury"
                   className="w-full h-14 bg-black text-white hover:bg-black/90 uppercase tracking-widest text-xs"
-                  disabled={!product.inStock}
+                  disabled={!product.inStock || product.variants?.find(v => v.color === selectedColor)?.inStock === false}
                 >
                   <ShoppingCart className="h-4 w-4 mr-4 stroke-[1.5]" />
                   Ajouter au panier

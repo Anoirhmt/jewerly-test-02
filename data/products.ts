@@ -19,6 +19,7 @@ export interface Product {
   variants?: {
     color: string
     image: string
+    inStock?: boolean
   }[]
 }
 

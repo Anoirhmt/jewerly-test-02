@@ -22,6 +22,8 @@ export function SpecialPackForm({ product }: SpecialPackFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
   const [formError, setFormError] = useState(false)
+  const [customerName, setCustomerName] = useState("")
+  const [orderNumber, setOrderNumber] = useState("")
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let { name, value } = e.target;
@@ -70,6 +72,9 @@ export function SpecialPackForm({ product }: SpecialPackFormProps) {
       )
 
       setOrderSuccess(true)
+      const orderNum = `EL${Math.floor(100000 + Math.random() * 900000)}`
+      setOrderNumber(orderNum)
+      setCustomerName(formData.fullName)
       setFormData({ fullName: "", phone: "", address: "", city: "" })
     } catch (error) {
       console.error("Error details:", error)
@@ -80,33 +85,65 @@ export function SpecialPackForm({ product }: SpecialPackFormProps) {
 
   if (orderSuccess) {
     return (
-      <Card className="w-full max-w-lg mx-auto bg-white border-0 shadow-luxury overflow-hidden mt-12">
-        <CardContent className="p-16 flex flex-col items-center text-center">
+      <section className="w-full min-h-screen flex flex-col items-center justify-start pt-0 pb-20 px-4 bg-white">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
+          className="max-w-4xl w-full text-center"
+        >
+          {/* Elarain Floral Logo */}
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, ease: "custom" }}
-            className="relative w-24 h-24 mb-8 flex items-center justify-center"
+            initial={{ scale: 0.5, opacity: 0, rotate: -5 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            transition={{ 
+              delay: 0.2, 
+              duration: 1.2, 
+              ease: [0.16, 1, 0.3, 1],
+              scale: { type: "spring", damping: 15, stiffness: 100 }
+            }}
+            className="mb-0 -mt-6 sm:-mt-10"
           >
-            <div className="absolute inset-0 bg-green-100 rounded-full animate-pulse opacity-50" />
-            <div className="relative w-20 h-20 bg-green-50 rounded-full flex items-center justify-center shadow-sm border border-green-100">
-              <CheckCircle className="h-10 w-10 text-green-600 stroke-[1.5]" />
+            <div className="relative w-full h-[280px] sm:h-[480px] mx-auto">
+              <img
+                src="/Gemini_Generated_Image_5r67l45r67l45r67.png"
+                alt="Elarain Floral Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
           </motion.div>
-          <h2 className="text-2xl font-serif font-medium text-black tracking-luxury uppercase mb-6">Commande Validée</h2>
-          <p className="text-gray-500 font-light leading-relaxed mb-10 text-lg">
-            Merci pour votre commande ! Notre équipe vous contactera bientôt.
-            <br />
-            شكرًا لطلبك! سنتواصل معك قريبًا لتأكيد التفاصيل.
-          </p>
-          <Button
-            onClick={() => window.location.href = '/'}
-            className="w-full bg-black text-white px-12 py-7 text-[10px] tracking-[0.3em] rounded-none uppercase transition-all duration-500 hover:bg-gray-900"
+
+          {/* Main Message */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="space-y-6"
           >
-            Retour à l'accueil
-          </Button>
-        </CardContent>
-      </Card>
+            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-medium text-[#c5a367] tracking-wider uppercase">
+              Merci pour votre commande{customerName ? `, ${customerName}` : ""}!
+            </h1>
+            <p className="text-[11px] text-[#c5a367] tracking-widest uppercase mt-4">
+              Notre équipe vous contactera bientôt.
+            </p>
+          </motion.div>
+
+          {/* CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.8 }}
+            className="mt-12 space-y-6"
+          >
+            <button
+              onClick={() => window.location.href = '/'}
+              className="inline-block bg-[#c5a367] text-white px-12 py-4 text-[11px] tracking-[0.2em] uppercase rounded-full hover:bg-[#b49256] transition-all duration-300 shadow-lg font-medium"
+            >
+              Retour à l&apos;accueil
+            </button>
+          </motion.div>
+        </motion.div>
+      </section>
     )
   }
 

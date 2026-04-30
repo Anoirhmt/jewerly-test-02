@@ -1,6 +1,5 @@
 "use client"
 
-import type React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { formatPrice } from "@/utils/format-price"
@@ -21,15 +20,16 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-30px" }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className="group"
     >
-      <Link href={`/products/${product.id}`} className="block active:opacity-80 transition-opacity">
-        {/* ── Image wrapper ── */}
-        <div className="relative aspect-[4/5] overflow-hidden bg-[#F9F7F5]">
+      <Link href={`/products/${product.id}`} className="block">
+
+        {/* Image wrapper */}
+        <div className="relative aspect-[4/5] overflow-hidden bg-[#F2EDE6]">
 
           {/* Main image */}
           <Image
@@ -38,12 +38,13 @@ export function ProductCard({ product }: ProductCardProps) {
             fill
             draggable={false}
             onContextMenu={(e) => e.preventDefault()}
-            className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06] select-none ${hoverImg ? "opacity-100 group-hover:opacity-0" : "opacity-100"
-              }`}
+            className={`absolute inset-0 object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] select-none ${
+              hoverImg ? "opacity-100 group-hover:opacity-0" : ""
+            }`}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
 
-          {/* Swap image (desktop hover only) */}
+          {/* Hover swap image */}
           {hoverImg && (
             <Image
               src={hoverImg}
@@ -51,66 +52,66 @@ export function ProductCard({ product }: ProductCardProps) {
               fill
               draggable={false}
               onContextMenu={(e) => e.preventDefault()}
-              className="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06] select-none"
+              className="absolute inset-0 object-cover opacity-0 group-hover:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] select-none"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
           )}
 
-          {/* Bottom gradient — always on mobile so content is readable */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 z-[1]" />
+          {/* Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent
+            md:from-black/0 md:via-transparent
+            md:group-hover:from-black/50 md:group-hover:via-black/10
+            transition-all duration-700" />
 
           {/* Badges */}
-          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 flex flex-col gap-1">
+          <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
             {product.isBestSeller && (
-              <span className="bg-white/90 backdrop-blur-md text-[#B8860B] text-[7px] tracking-[0.25em] uppercase font-medium px-2.5 py-1 rounded-full border border-[#B8860B]/20 shadow-sm w-fit">
+              <span className="bg-black/65 backdrop-blur-sm text-[#c5a367] text-[6px] tracking-[0.35em] uppercase font-medium px-2.5 py-1">
                 Best Seller
               </span>
             )}
             {discountPercentage > 0 && (
-              <span className="bg-[#9b5c5c] text-white text-[7px] tracking-[0.2em] uppercase font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-sm w-fit">
+              <span className="bg-[#9b5c5c] text-white text-[6px] tracking-[0.3em] uppercase font-medium px-2.5 py-1">
                 -{discountPercentage}%
               </span>
             )}
           </div>
 
-          {/* "Voir" pill — visible on mobile always, hover-only on desktop */}
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center z-10
-            md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0
-            md:transition-all md:duration-400">
-            <span className="bg-white/90 backdrop-blur-sm text-black text-[7px] sm:text-[8px] tracking-[0.3em] uppercase font-medium px-4 py-1.5 rounded-full shadow-soft border border-white/60">
+          {/* CTA pill */}
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center pb-4
+            md:opacity-0 md:translate-y-3 md:group-hover:opacity-100 md:group-hover:translate-y-0
+            transition-all duration-500">
+            <span className="bg-white text-black text-[7px] tracking-[0.4em] uppercase font-medium px-6 py-2">
               Voir →
             </span>
           </div>
         </div>
 
-        {/* ── Info block ── */}
-        <div className="pt-3 sm:pt-4 pb-2 text-center px-1">
-          {/* Category */}
-          <p className="text-[7px] sm:text-[8px] tracking-[0.38em] uppercase text-[#9b5c5c]/70 font-light mb-1 sm:mb-2 truncate">
-            {product.category}
-          </p>
-
-          {/* Name */}
-          <h3 className="text-[10px] sm:text-[11px] md:text-[12px] font-medium text-black uppercase tracking-[0.12em] sm:tracking-luxury leading-snug line-clamp-2 px-1">
-            {product.name}
-          </h3>
-
-          {/* Price */}
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2 mt-1.5 sm:mt-2">
-            <p className="text-[11px] sm:text-[13px] font-medium text-black tracking-[0.1em]">
-              {formatPrice(product.price)}
-            </p>
-            {product.originalPrice && (
-              <p className="text-[9px] sm:text-[10px] font-light text-black/30 line-through tracking-[0.08em]">
-                {formatPrice(product.originalPrice)}
+        {/* Info block */}
+        <div className="pt-3.5 pb-2 px-1">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-[7px] tracking-[0.45em] uppercase text-[#c5a367] font-medium mb-1 truncate">
+                {product.category || "Elarain"}
               </p>
-            )}
+              <h3 className="text-[10px] sm:text-[11px] font-medium text-black uppercase tracking-[0.12em] leading-snug line-clamp-2">
+                {product.name}
+              </h3>
+            </div>
+            <div className="shrink-0 text-right">
+              <p className="text-[12px] sm:text-[13px] font-semibold text-black tracking-[0.05em]">
+                {formatPrice(product.price)}
+              </p>
+              {product.originalPrice && (
+                <p className="text-[9px] font-light text-black/30 line-through">
+                  {formatPrice(product.originalPrice)}
+                </p>
+              )}
+            </div>
           </div>
 
-          {/* Accent underline — desktop only */}
-          <div className="hidden md:flex justify-center mt-3">
-            <div className="h-[1px] w-0 bg-[#9b5c5c]/30 group-hover:w-10 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
-          </div>
+          {/* Gold underline animate on hover */}
+          <div className="mt-3 h-[1px] w-0 bg-[#c5a367]/40 group-hover:w-full transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
         </div>
       </Link>
     </motion.div>
