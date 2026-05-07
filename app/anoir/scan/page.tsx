@@ -14,31 +14,20 @@ export default function ScanPage() {
   const [result, setResult] = useState<ScanResult | null>(null)
   const [scanning, setScanning] = useState(false)
   const [libReady, setLibReady] = useState(false)
-  const [cameraActive, setCameraActive] = useState(false)
   const doneRef = useRef(false)
-  const liveRef = useRef<any>(null)
   const fileRef = useRef<any>(null)
 
   useEffect(() => {
     getRetourOrders().then(({ orders: data }) => setOrders(data))
 
     if (typeof window === 'undefined') return
-    if ((window as any).Html5Qrcode) {
-      setLibReady(true)
-      return
-    }
+    if ((window as any).Html5Qrcode) { setLibReady(true); return }
     const s = document.createElement('script')
     s.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'
     s.async = true
     s.onload = () => setLibReady(true)
     document.head.appendChild(s)
-
-    return () => { liveRef.current?.stop().catch(() => {}) }
   }, [])
-
-  useEffect(() => {
-    if (libReady && !result && !cameraActive) startCamera()
-  }, [libReady])
 
   function matchOrder(code: string): RiyaltoOrder | null {
     const up = code.toUpperCase().trim()
@@ -52,8 +41,6 @@ export default function ScanPage() {
   async function handleCode(code: string) {
     if (doneRef.current) return
     doneRef.current = true
-    liveRef.current?.stop().catch(() => {})
-    setCameraActive(false)
     const matched = matchOrder(code)
     if (matched) {
       await receiveOrder(matched.riya)
@@ -61,24 +48,6 @@ export default function ScanPage() {
     } else {
       setResult({ ok: false, code })
     }
-  }
-
-  function startCamera() {
-    const Lib = (window as any).Html5Qrcode
-    if (!Lib) return
-    try {
-      const scanner = new Lib('reader')
-      liveRef.current = scanner
-      scanner
-        .start(
-          { facingMode: 'environment' },
-          { fps: 10, qrbox: { width: 220, height: 220 } },
-          (code: string) => handleCode(code),
-          () => {}
-        )
-        .then(() => setCameraActive(true))
-        .catch(() => {})
-    } catch {}
   }
 
   function resizeAndScan(file: File) {
@@ -120,8 +89,6 @@ export default function ScanPage() {
     doneRef.current = false
     setResult(null)
     setScanning(false)
-    setCameraActive(false)
-    setTimeout(() => { if (libReady) startCamera() }, 150)
   }
 
   return (
@@ -135,23 +102,11 @@ export default function ScanPage() {
 
       {!result && (
         <>
-          {/* Live camera */}
-          <div
-            id="reader"
-            className="w-full bg-black"
-            style={{ display: cameraActive ? 'block' : 'none', minHeight: cameraActive ? '300px' : 0 }}
-          />
-          {cameraActive && (
-            <p className="text-center text-sm text-zinc-300 py-2 bg-zinc-900">
-              Pointez vers le code-barres du colis
-            </p>
-          )}
-
-          {/* Photo button — shown when camera not active */}
-          {!cameraActive && !scanning && (
+          {/* Photo capture button — primary method, works on all devices */}
+          {!scanning && (
             <div className="p-5">
-              <label className="flex items-center justify-center gap-3 w-full bg-blue-600 text-white rounded-2xl py-5 text-lg font-bold cursor-pointer hover:bg-blue-700 transition-colors">
-                <Camera size={22} />
+              <label className="flex items-center justify-center gap-3 w-full bg-blue-600 text-white rounded-2xl py-6 text-lg font-bold cursor-pointer hover:bg-blue-700 active:scale-95 transition-all shadow-lg shadow-blue-200">
+                <Camera size={26} />
                 Photographier le code-barres
                 <input
                   type="file"
@@ -161,20 +116,25 @@ export default function ScanPage() {
                   onChange={e => {
                     const file = e.target.files?.[0]
                     if (!file) return
-                    if (!libReady) { alert('Chargement en cours, réessayez dans 2 secondes.'); return }
+                    if (!libReady) {
+                      alert('Chargement en cours, réessayez dans 2 secondes.')
+                      return
+                    }
                     resizeAndScan(file)
                     e.target.value = ''
                   }}
                 />
               </label>
-              <p className="text-center text-xs text-zinc-400 mt-3">Ouvre directement votre caméra</p>
+              <p className="text-center text-sm text-zinc-400 mt-3">
+                Ouvre directement votre caméra
+              </p>
             </div>
           )}
 
           {scanning && (
-            <div className="flex flex-col items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-4" />
-              <p className="text-sm font-semibold text-blue-600">Analyse en cours...</p>
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4" />
+              <p className="text-base font-semibold text-blue-600">Analyse en cours...</p>
             </div>
           )}
 
@@ -182,7 +142,9 @@ export default function ScanPage() {
 
           {/* Manual input */}
           <div className="p-4 mt-auto border-t border-gray-200">
-            <p className="text-xs text-zinc-500 font-semibold mb-2">Ou entrez le code manuellement :</p>
+            <p className="text-xs text-zinc-500 font-semibold mb-2 uppercase tracking-wide">
+              Ou entrez le code manuellement :
+            </p>
             <form
               onSubmit={e => {
                 e.preventDefault()
@@ -196,6 +158,7 @@ export default function ScanPage() {
                 placeholder="RIYA-XXXXXXXX-XXXXX"
                 autoComplete="off"
                 spellCheck={false}
+                autoCapitalize="characters"
                 className="flex-1 border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               />
               <button
@@ -205,6 +168,7 @@ export default function ScanPage() {
                 OK
               </button>
             </form>
+            <p className="text-xs text-zinc-400 mt-2">Fonctionne aussi avec un scanner Bluetooth</p>
           </div>
         </>
       )}
