@@ -1,178 +1,190 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Search, CheckCircle2, Clock, Truck, XCircle } from 'lucide-react'
-import { getReturns, updateReturnStatus } from '@/lib/riyalto-api'
-import type { Return, ReturnStatus } from '@/types/admin'
+import { getRetourOrders, receiveOrder, unreceiveOrder } from '@/lib/retours-api'
+import type { RiyaltoOrder } from '@/lib/retours-api'
+import { RefreshCw, AlertTriangle, ScanLine } from 'lucide-react'
+import Link from 'next/link'
 
-const returnStatusConfig: Record<ReturnStatus, { label: string; color: string; icon: React.ElementType }> = {
-  en_attente: { label: 'En attente', color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-  en_transit_retour: { label: 'En transit retour', color: 'bg-blue-100 text-blue-800', icon: Truck },
-  recu: { label: 'Reçu', color: 'bg-green-100 text-green-800', icon: CheckCircle2 },
-  non_recu: { label: 'Non reçu', color: 'bg-red-100 text-red-800', icon: XCircle },
+const STATE_COLORS: Record<string, { text: string; bg: string }> = {
+  'retourné vers client': { text: '#1b5e20', bg: '#e7f3e8' },
+  'Annulé':              { text: '#b71c1c', bg: '#fff0f0' },
+  'Injoignable':         { text: '#e65100', bg: '#fff3e0' },
+  'Reporté':             { text: '#1565c0', bg: '#e3f2fd' },
+}
+
+function priceInt(p: string) {
+  try { return parseInt(p) || 0 } catch { return 0 }
 }
 
 export default function RetoursPage() {
-  const [returns, setReturns] = useState<Return[]>([])
+  const [orders, setOrders] = useState<RiyaltoOrder[]>([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [filterStatus, setFilterStatus] = useState<string>('all')
+  const [error, setError] = useState<string | null>(null)
+  const [tab, setTab] = useState<'pending' | 'received'>('pending')
   const [updating, setUpdating] = useState<string | null>(null)
 
-  useEffect(() => { loadReturns() }, [])
+  useEffect(() => { load() }, [])
 
-  async function loadReturns() {
+  async function load() {
     setLoading(true)
-    setReturns(await getReturns())
+    const { orders: data, error: err } = await getRetourOrders()
+    setOrders(data)
+    setError(err)
     setLoading(false)
   }
 
-  async function handleStatusChange(returnId: string, status: ReturnStatus) {
-    setUpdating(returnId)
-    await updateReturnStatus(returnId, status)
-    setReturns(prev =>
-      prev.map(r =>
-        r.id === returnId
-          ? { ...r, returnStatus: status, receivedAt: status === 'recu' ? new Date().toISOString() : r.receivedAt }
-          : r
-      )
-    )
+  async function handleReceive(riya: string) {
+    setUpdating(riya)
+    await receiveOrder(riya)
+    setOrders(prev => prev.map(o =>
+      o.riya === riya ? { ...o, received: true, date_recu: new Date().toISOString().split('T')[0] } : o
+    ))
     setUpdating(null)
   }
 
-  const filtered = returns.filter(r => {
-    const q = search.toLowerCase()
-    const matchSearch = !search ||
-      r.customerName.toLowerCase().includes(q) ||
-      r.trackingNumber.toLowerCase().includes(q) ||
-      r.customerPhone.includes(q)
-    const matchStatus = filterStatus === 'all' || r.returnStatus === filterStatus
-    return matchSearch && matchStatus
-  })
-
-  const stats = {
-    enAttente: returns.filter(r => r.returnStatus === 'en_attente').length,
-    enTransit: returns.filter(r => r.returnStatus === 'en_transit_retour').length,
-    recu: returns.filter(r => r.returnStatus === 'recu').length,
-    nonRecu: returns.filter(r => r.returnStatus === 'non_recu').length,
+  async function handleUnreceive(riya: string) {
+    setUpdating(riya)
+    await unreceiveOrder(riya)
+    setOrders(prev => prev.map(o =>
+      o.riya === riya ? { ...o, received: false, date_recu: '' } : o
+    ))
+    setUpdating(null)
   }
 
+  const pending  = orders.filter(o => !o.received)
+  const received = orders.filter(o => o.received)
+  const totalP   = pending.reduce((s, o) => s + priceInt(o.price), 0)
+  const totalR   = received.reduce((s, o) => s + priceInt(o.price), 0)
+  const shown    = tab === 'pending' ? pending : received
+
   return (
-    <div className="space-y-6 font-sans">
-      <div>
-        <h1 className="text-2xl font-semibold text-zinc-900">Gestion des retours</h1>
-        <p className="text-sm text-zinc-500 mt-1">{returns.length} retour{returns.length !== 1 ? 's' : ''} au total</p>
+    <div className="space-y-5 font-sans pb-24">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-zinc-900">Retours Riyalto</h1>
+        <button onClick={load} className="p-2 rounded-lg hover:bg-gray-100 text-zinc-500 transition-colors">
+          <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
+        </button>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <MiniStat label="En attente" value={stats.enAttente} className="bg-yellow-50 text-yellow-700 border border-yellow-200" />
-        <MiniStat label="En transit retour" value={stats.enTransit} className="bg-blue-50 text-blue-700 border border-blue-200" />
-        <MiniStat label="Reçus" value={stats.recu} className="bg-green-50 text-green-700 border border-green-200" />
-        <MiniStat label="Non reçus" value={stats.nonRecu} className="bg-red-50 text-red-700 border border-red-200" />
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Rechercher par nom, téléphone, tracking..."
-            className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-zinc-900 bg-white"
-          />
+      {error && (
+        <div className="flex items-center gap-2 bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-3 text-sm text-yellow-800">
+          <AlertTriangle size={16} className="shrink-0" />
+          <span>Riyalto indisponible — données locales affichées</span>
         </div>
-        <select
-          value={filterStatus}
-          onChange={e => setFilterStatus(e.target.value)}
-          className="px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-zinc-900 bg-white"
-        >
-          <option value="all">Tous les statuts</option>
-          {Object.entries(returnStatusConfig).map(([v, { label }]) => (
-            <option key={v} value={v}>{label}</option>
-          ))}
-        </select>
+      )}
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="bg-white rounded-xl border border-gray-200 p-4 border-l-4 border-l-red-500">
+          <div className="text-2xl font-bold text-zinc-900">{pending.length}</div>
+          <div className="text-xs text-zinc-500 mt-1 font-semibold uppercase tracking-wide">À recevoir</div>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4 border-l-4 border-l-orange-400">
+          <div className="text-xl font-bold text-zinc-900">{totalP} DH</div>
+          <div className="text-xs text-zinc-500 mt-1 font-semibold uppercase tracking-wide">Valeur att.</div>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4 border-l-4 border-l-green-500">
+          <div className="text-2xl font-bold text-zinc-900">{received.length}</div>
+          <div className="text-xs text-zinc-500 mt-1 font-semibold uppercase tracking-wide">Reçus</div>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4 border-l-4 border-l-blue-500">
+          <div className="text-xl font-bold text-zinc-900">{totalR} DH</div>
+          <div className="text-xs text-zinc-500 mt-1 font-semibold uppercase tracking-wide">Valeur rec.</div>
+        </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        {loading ? (
-          <div className="flex items-center justify-center h-48">
-            <div className="animate-spin rounded-full h-7 w-7 border-b-2 border-zinc-900" />
+      <div className="flex bg-white rounded-xl border border-gray-200 p-1 gap-1">
+        {(['pending', 'received'] as const).map(t => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              tab === t ? 'bg-[#1a1a2e] text-white' : 'text-zinc-500 hover:bg-gray-50'
+            }`}
+          >
+            {t === 'pending' ? 'En attente' : 'Reçus'}
+            <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+              tab === t ? 'bg-white/20 text-white' : 'bg-gray-100 text-zinc-500'
+            }`}>
+              {t === 'pending' ? pending.length : received.length}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center h-48">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-900" />
+        </div>
+      ) : shown.length === 0 ? (
+        <div className="text-center py-16 text-zinc-400">
+          <div className="text-5xl mb-3">{tab === 'pending' ? '📭' : '📦'}</div>
+          <div className="font-semibold text-zinc-600">
+            {tab === 'pending' ? 'Aucun retour en attente' : 'Aucun retour reçu'}
           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
-                <tr>
-                  <th className="text-left px-6 py-3">Tracking</th>
-                  <th className="text-left px-6 py-3">Client</th>
-                  <th className="text-left px-6 py-3">Articles</th>
-                  <th className="text-left px-6 py-3">Ville</th>
-                  <th className="text-left px-6 py-3">Total</th>
-                  <th className="text-left px-6 py-3">Raison</th>
-                  <th className="text-left px-6 py-3">Date retour</th>
-                  <th className="text-left px-6 py-3">Statut</th>
-                  <th className="text-left px-6 py-3">Modifier</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {filtered.map(ret => {
-                  const config = returnStatusConfig[ret.returnStatus]
-                  const StatusIcon = config.icon
-                  return (
-                    <tr key={ret.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 font-mono text-xs text-zinc-600">{ret.trackingNumber}</td>
-                      <td className="px-6 py-4">
-                        <div className="font-medium text-zinc-900">{ret.customerName}</div>
-                        <div className="text-zinc-400 text-xs">{ret.customerPhone}</div>
-                      </td>
-                      <td className="px-6 py-4 text-zinc-600 max-w-[160px] truncate" title={ret.items}>{ret.items}</td>
-                      <td className="px-6 py-4 text-zinc-600">{ret.city}</td>
-                      <td className="px-6 py-4 font-medium text-zinc-900">{ret.total} MAD</td>
-                      <td className="px-6 py-4 text-zinc-500 text-xs max-w-[120px] truncate" title={ret.reason}>{ret.reason || '—'}</td>
-                      <td className="px-6 py-4 text-zinc-500 text-xs">
-                        {new Date(ret.createdAt).toLocaleDateString('fr-MA')}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
-                          <StatusIcon size={12} />
-                          {config.label}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <select
-                          value={ret.returnStatus}
-                          onChange={e => handleStatusChange(ret.id, e.target.value as ReturnStatus)}
-                          disabled={updating === ret.id}
-                          className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 outline-none focus:ring-2 focus:ring-zinc-900 disabled:opacity-50 bg-white"
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {shown.map(o => {
+            const sc = STATE_COLORS[o.state] || { text: '#65676b', bg: '#e4e6eb' }
+            return (
+              <div
+                key={o.riya}
+                className={`bg-white rounded-xl border border-gray-200 overflow-hidden border-l-4 ${
+                  o.received ? 'border-l-green-500' : 'border-l-red-500'
+                }`}
+              >
+                <div className="p-4">
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div className="min-w-0">
+                      <div className="font-mono text-sm font-bold text-blue-600">{o.riya}</div>
+                      <div className="font-semibold text-zinc-900 mt-1">{o.name || '—'}</div>
+                      <div className="text-sm text-zinc-500 mt-0.5">{o.city} · {o.price} DH · {o.date}</div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                      {o.received ? (
+                        <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Reçu ✓</span>
+                      ) : (
+                        <span
+                          style={{ background: sc.bg, color: sc.text }}
+                          className="text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap"
                         >
-                          {Object.entries(returnStatusConfig).map(([v, { label }]) => (
-                            <option key={v} value={v}>{label}</option>
-                          ))}
-                        </select>
-                      </td>
-                    </tr>
-                  )
-                })}
-                {filtered.length === 0 && (
-                  <tr>
-                    <td colSpan={9} className="px-6 py-12 text-center text-zinc-400">
-                      Aucun retour trouvé
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
+                          {o.state}
+                        </span>
+                      )}
+                      {o.archived && <span className="text-xs text-zinc-400">Archivé</span>}
+                    </div>
+                  </div>
+                  {o.received ? (
+                    <button
+                      onClick={() => handleUnreceive(o.riya)}
+                      disabled={updating === o.riya}
+                      className="w-full py-2.5 text-sm font-semibold text-zinc-500 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                    >
+                      {updating === o.riya ? 'En cours...' : 'Annuler la réception'}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleReceive(o.riya)}
+                      disabled={updating === o.riya}
+                      className="w-full py-3 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                    >
+                      {updating === o.riya ? 'En cours...' : '✓ Reçu physiquement'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
 
-function MiniStat({ label, value, className }: { label: string; value: number; className: string }) {
-  return (
-    <div className={`rounded-xl p-4 ${className}`}>
-      <div className="text-2xl font-bold">{value}</div>
-      <div className="text-xs mt-0.5 opacity-80">{label}</div>
+      <Link
+        href="/anoir/scan"
+        className="fixed bottom-6 right-6 flex items-center gap-2 bg-blue-600 text-white px-5 py-3.5 rounded-2xl shadow-lg font-bold text-sm hover:bg-blue-700 transition-colors z-50"
+      >
+        <ScanLine size={18} />
+        Scanner
+      </Link>
     </div>
   )
 }

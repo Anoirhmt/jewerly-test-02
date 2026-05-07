@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import {
-  LayoutDashboard, Package, RotateCcw, Warehouse, ScanLine,
-  History, Settings, RefreshCw, LogOut, Menu, Wifi, WifiOff,
+  LayoutDashboard, Package, RotateCcw, ScanLine,
+  History, Settings, RefreshCw, LogOut, Menu, Wifi, WifiOff, Camera,
 } from 'lucide-react'
-import { getOrders, getReturns } from '@/lib/riyalto-api'
+import { getRetourOrders } from '@/lib/retours-api'
 
 interface NavCounts {
   tousLesColis: number
@@ -17,10 +17,10 @@ interface NavCounts {
 
 const navMain = [
   { href: '/anoir/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/anoir/tous-les-colis', label: 'Tous les colis', icon: Package, countKey: 'tousLesColis' as keyof NavCounts },
+  { href: '/anoir/retours', label: 'Retours', icon: Package, countKey: 'tousLesColis' as keyof NavCounts },
   { href: '/anoir/retours-recus', label: 'Retours reçus', icon: RotateCcw, countKey: 'retoursRecus' as keyof NavCounts, badgeColor: 'bg-green-500' },
-  { href: '/anoir/retours-wh', label: 'Retours WH', icon: Warehouse, countKey: 'retoursWH' as keyof NavCounts, badgeColor: 'bg-orange-500' },
-  { href: '/anoir/non-scannes', label: 'Non scannés', icon: ScanLine, countKey: 'nonScannes' as keyof NavCounts, badgeColor: 'bg-red-500' },
+  { href: '/anoir/non-scannes', label: 'Non reçus', icon: ScanLine, countKey: 'nonScannes' as keyof NavCounts, badgeColor: 'bg-red-500' },
+  { href: '/anoir/scan', label: 'Scanner', icon: Camera },
   { href: '/anoir/historique', label: 'Historique', icon: History },
 ]
 
@@ -43,14 +43,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (pathname === '/anoir') return
-    Promise.all([getOrders(), getReturns()]).then(([orders, returns]) => {
+    getRetourOrders().then(({ orders }) => {
       setCounts({
         tousLesColis: orders.length,
-        retoursRecus: returns.filter(r => r.returnStatus === 'recu').length,
-        retoursWH: returns.filter(r => r.returnStatus === 'en_transit_retour').length,
-        nonScannes: returns.filter(r => r.returnStatus === 'en_attente').length,
+        retoursRecus: orders.filter(o => o.received).length,
+        retoursWH: 0,
+        nonScannes: orders.filter(o => !o.received).length,
       })
-      setApiConnected(true)
+      setApiConnected(orders.length > 0)
     })
   }, [pathname])
 

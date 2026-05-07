@@ -1,11 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Search, ScanLine } from 'lucide-react'
-import { getReturns, updateReturnStatus } from '@/lib/riyalto-api'
-import type { Return, ReturnStatus } from '@/types/admin'
+import { getRetourOrders, receiveOrder } from '@/lib/retours-api'
+import type { RiyaltoOrder } from '@/lib/retours-api'
+import { ScanLine, Search } from 'lucide-react'
+import Link from 'next/link'
 
 export default function NonScannesPage() {
-  const [returns, setReturns] = useState<Return[]>([])
+  const [orders, setOrders] = useState<RiyaltoOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [updating, setUpdating] = useState<string | null>(null)
@@ -14,31 +15,43 @@ export default function NonScannesPage() {
 
   async function load() {
     setLoading(true)
-    const data = await getReturns()
-    setReturns(data.filter(r => r.returnStatus === 'en_attente'))
+    const { orders: data } = await getRetourOrders()
+    setOrders(data.filter(o => !o.received))
     setLoading(false)
   }
 
-  async function handleStatusChange(id: string, status: ReturnStatus) {
-    setUpdating(id)
-    await updateReturnStatus(id, status)
-    setReturns(prev => prev.map(r => r.id === id ? { ...r, returnStatus: status } : r))
+  async function handleReceive(riya: string) {
+    setUpdating(riya)
+    await receiveOrder(riya)
+    setOrders(prev => prev.filter(o => o.riya !== riya))
     setUpdating(null)
   }
 
-  const filtered = returns.filter(r => {
+  const filtered = orders.filter(o => {
     const q = search.toLowerCase()
-    return !search || r.trackingNumber.toLowerCase().includes(q) || r.customerName.toLowerCase().includes(q)
+    return !search ||
+      o.riya.toLowerCase().includes(q) ||
+      o.name.toLowerCase().includes(q) ||
+      o.city.toLowerCase().includes(q)
   })
 
   return (
     <div className="space-y-6 font-sans">
-      <div>
-        <h1 className="text-2xl font-semibold text-zinc-900 flex items-center gap-2">
-          <ScanLine size={22} className="text-red-500" />
-          Non scannés
-        </h1>
-        <p className="text-sm text-zinc-500 mt-1">{returns.length} retours en attente de scan</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-zinc-900 flex items-center gap-2">
+            <ScanLine size={22} className="text-red-500" />
+            Non reçus
+          </h1>
+          <p className="text-sm text-zinc-500 mt-1">{orders.length} retours en attente de réception</p>
+        </div>
+        <Link
+          href="/anoir/scan"
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors"
+        >
+          <ScanLine size={16} />
+          Scanner
+        </Link>
       </div>
 
       <div className="relative max-w-md">
@@ -53,7 +66,7 @@ export default function NonScannesPage() {
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
         <div className="px-6 py-3 border-b border-gray-100 bg-red-50">
-          <p className="text-xs font-semibold text-red-500 uppercase tracking-widest">{filtered.length} NON SCANNÉS</p>
+          <p className="text-xs font-semibold text-red-500 uppercase tracking-widest">{filtered.length} EN ATTENTE</p>
         </div>
         {loading ? (
           <div className="flex items-center justify-center h-48">
@@ -62,46 +75,48 @@ export default function NonScannesPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="text-xs text-gray-400 uppercase tracking-widest">
-                <tr className="border-b border-gray-100">
-                  <th className="text-left px-6 py-3">Tracking lié</th>
-                  <th className="text-left px-6 py-3">Code scanné</th>
+              <thead className="text-xs text-gray-400 uppercase tracking-widest border-b border-gray-100">
+                <tr>
+                  <th className="text-left px-6 py-3">Code RIYA</th>
                   <th className="text-left px-6 py-3">Client</th>
                   <th className="text-left px-6 py-3">Ville</th>
-                  <th className="text-left px-6 py-3">Raison</th>
+                  <th className="text-left px-6 py-3">Prix</th>
+                  <th className="text-left px-6 py-3">État</th>
                   <th className="text-left px-6 py-3">Date</th>
                   <th className="text-left px-6 py-3">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filtered.map(ret => (
-                  <tr key={ret.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-3.5 font-mono text-xs text-zinc-500">{ret.trackingNumber}</td>
-                    <td className="px-6 py-3.5 font-mono text-xs text-zinc-400 italic">—</td>
+                {filtered.map(o => (
+                  <tr key={o.riya} className="hover:bg-gray-50">
+                    <td className="px-6 py-3.5 font-mono text-xs font-bold text-blue-600">{o.riya}</td>
                     <td className="px-6 py-3.5">
-                      <div className="font-medium text-zinc-900">{ret.customerName}</div>
-                      <div className="text-zinc-400 text-xs">{ret.customerPhone}</div>
+                      <div className="font-medium text-zinc-900">{o.name || '—'}</div>
+                      <div className="text-zinc-400 text-xs">{o.phone}</div>
                     </td>
-                    <td className="px-6 py-3.5 text-zinc-600">{ret.city}</td>
-                    <td className="px-6 py-3.5 text-zinc-500 text-xs">{ret.reason || '—'}</td>
-                    <td className="px-6 py-3.5 text-zinc-500 text-xs">{new Date(ret.createdAt).toLocaleDateString('fr-MA')}</td>
+                    <td className="px-6 py-3.5 text-zinc-600">{o.city}</td>
+                    <td className="px-6 py-3.5 font-medium text-zinc-900">{o.price} DH</td>
                     <td className="px-6 py-3.5">
-                      <select
-                        value={ret.returnStatus}
-                        onChange={e => handleStatusChange(ret.id, e.target.value as ReturnStatus)}
-                        disabled={updating === ret.id}
-                        className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 outline-none focus:ring-2 focus:ring-zinc-900 disabled:opacity-50 bg-white"
+                      <span className="text-xs bg-orange-50 text-orange-700 px-2 py-1 rounded-full font-medium">{o.state}</span>
+                    </td>
+                    <td className="px-6 py-3.5 text-zinc-500 text-xs">{o.date}</td>
+                    <td className="px-6 py-3.5">
+                      <button
+                        onClick={() => handleReceive(o.riya)}
+                        disabled={updating === o.riya}
+                        className="text-xs bg-blue-600 text-white rounded-lg px-3 py-1.5 font-bold hover:bg-blue-700 disabled:opacity-50 transition-colors"
                       >
-                        <option value="en_attente">En attente</option>
-                        <option value="en_transit_retour">En transit</option>
-                        <option value="recu">Reçu</option>
-                        <option value="non_recu">Non reçu</option>
-                      </select>
+                        {updating === o.riya ? '...' : '✓ Reçu'}
+                      </button>
                     </td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={7} className="px-6 py-12 text-center text-zinc-400">Aucun colis non scanné</td></tr>
+                  <tr>
+                    <td colSpan={7} className="px-6 py-12 text-center text-zinc-400">
+                      Aucun retour en attente
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>
