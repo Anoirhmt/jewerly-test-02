@@ -17,7 +17,8 @@ interface NavCounts {
 
 const navMain = [
   { href: '/anoir/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/anoir/retours', label: 'Retours', icon: Package, countKey: 'tousLesColis' as keyof NavCounts },
+  { href: '/anoir/tous-les-colis', label: 'Tous les colis', icon: Package },
+  { href: '/anoir/retours', label: 'Retours', icon: RotateCcw, countKey: 'tousLesColis' as keyof NavCounts },
   { href: '/anoir/retours-recus', label: 'Retours reçus', icon: RotateCcw, countKey: 'retoursRecus' as keyof NavCounts, badgeColor: 'bg-green-500' },
   { href: '/anoir/non-scannes', label: 'Non reçus', icon: ScanLine, countKey: 'nonScannes' as keyof NavCounts, badgeColor: 'bg-red-500' },
   { href: '/anoir/scan', label: 'Scanner', icon: Camera },

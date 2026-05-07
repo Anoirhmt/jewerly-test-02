@@ -36,3 +36,30 @@ export async function unreceiveOrder(riya: string): Promise<void> {
     body: JSON.stringify({ riya }),
   })
 }
+
+export interface AllOrders {
+  encours: RiyaltoOrderLight[]
+  delivered: RiyaltoOrderLight[]
+  failed: RiyaltoOrderLight[]
+  error: string | null
+}
+
+export interface RiyaltoOrderLight {
+  riya: string
+  name: string
+  phone: string
+  price: string
+  state: string
+  city: string
+  date: string
+}
+
+export async function getAllOrders(): Promise<AllOrders> {
+  try {
+    const res = await fetch('/api/retours/all-orders', { cache: 'no-store' })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    return await res.json()
+  } catch (e) {
+    return { encours: [], delivered: [], failed: [], error: String(e) }
+  }
+}
