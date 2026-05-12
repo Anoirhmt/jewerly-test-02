@@ -163,6 +163,26 @@ export function CheckoutForm() {
         },
       )
 
+      // Send WhatsApp confirmation via Flask VPS
+      fetch("/api/whatsapp-confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name:     formData.fullName,
+          phone:    formData.phone,
+          city:     formData.city,
+          address:  formData.address,
+          items:    items.map((i) => ({
+            name:          i.name,
+            price:         i.price * i.quantity,
+            quantity:      i.quantity,
+            selectedColor: (i as any).selectedColor || "",
+          })),
+          total:    `${total} DH`,
+          delivery: `${effectiveDelivery} DH`,
+        }),
+      }).catch(console.error)
+
       // Show success state instead of alert
       setOrderSuccess(true)
       // Increment promo usage only now (after successful order)
