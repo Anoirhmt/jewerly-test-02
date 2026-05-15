@@ -177,6 +177,7 @@ export function CheckoutForm() {
             price:         i.price * i.quantity,
             quantity:      i.quantity,
             selectedColor: (i as any).selectedColor || "",
+            image:         (i as any).image || "",
           })),
           total:    `${total} DH`,
           delivery: `${effectiveDelivery} DH`,
