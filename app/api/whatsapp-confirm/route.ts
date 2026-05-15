@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-const VPS = 'https://assuming-cas-casting-promise.trycloudflare.com'
+const VPS = 'https://points-gig-operational-coating.trycloudflare.com'
 
 export const maxDuration = 30
 
