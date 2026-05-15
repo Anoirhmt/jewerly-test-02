@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 
-const VPS = 'https://points-gig-operational-coating.trycloudflare.com'
+const VPS    = 'http://178.105.60.185:5000'
+const TOKEN  = 'elarain_5K9XQ7mP3RvBjL2N'
 
 export const maxDuration = 30
 
@@ -9,7 +10,10 @@ export async function POST(req: Request) {
     const body = await req.json()
     const res = await fetch(`${VPS}/api/order-confirm`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type':  'application/json',
+        'X-Order-Token': TOKEN,
+      },
       body: JSON.stringify(body),
     })
     const data = await res.json().catch(() => ({}))
