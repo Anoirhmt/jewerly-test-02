@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 
 // SHA-256 hash of the password — plaintext never stored anywhere in code
-const PASSWORD_HASH = 'da71fbc643b173696fe608a95902017c74e9f191bc5eaa16b01d0409b2ec187a'
+const PASSWORD_HASH = '637b27e339c3dfdf84ff64fd5ad0a1d427eb91efaba72225e6cf78d6f7478e99'
 
 // Server-side rate limiting (per IP)
 const attempts = new Map<string, { count: number; lockedUntil: number }>()
