@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-const VPS    = 'http://178.105.60.185:5000'
+const VPS    = 'http://195.201.96.39:5000'
 const TOKEN  = 'elarain_5K9XQ7mP3RvBjL2N'
 
 export const maxDuration = 30
