@@ -774,6 +774,10 @@
 .cl-icon-btn:hover { background: var(--cl-surface-hover); }
 .cl-icon-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
+/* Spin animation for refresh icon */
+.cl-spin { animation: cl-spin 0.8s linear infinite; }
+@keyframes cl-spin { to { transform: rotate(360deg); } }
+
 /* Toast */
 .cl-toast {
   position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px);

@@ -65,6 +65,7 @@ export default function OrdersView({
   const [autoRefresh, setAutoRefresh] = useState(true)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [toast, setToast] = useState<string | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
 
   const fetchData = useCallback(async () => {
     try {
@@ -73,6 +74,18 @@ export default function OrdersView({
       setData(await r.json())
     } catch {}
   }, [source])
+
+  const manualRefresh = async () => {
+    setRefreshing(true)
+    const before = data?.total ?? 0
+    await fetchData()
+    setRefreshing(false)
+    setTimeout(() => {
+      const after = (data?.total ?? 0)
+      const diff = after - before
+      showToast(diff > 0 ? `+${diff} nouvelle${diff > 1 ? 's' : ''} commande${diff > 1 ? 's' : ''}` : 'Actualisé ✓')
+    }, 200)
+  }
 
   useEffect(() => {
     fetchData()
@@ -259,8 +272,9 @@ export default function OrdersView({
           <option value={100}>100 lignes</option>
           <option value={500}>500 lignes</option>
         </select>
-        <button onClick={fetchData} className="cl-btn-blue">
-          <RefreshCw size={14} /> Actualiser
+        <button onClick={manualRefresh} disabled={refreshing} className="cl-btn-blue">
+          <RefreshCw size={14} className={refreshing ? 'cl-spin' : ''} />
+          {refreshing ? 'Chargement...' : 'Actualiser'}
         </button>
         <button
           onClick={() => { setQ(''); setStatusFilter('all'); setDateFrom(''); setDateTo(''); clearSelection() }}
