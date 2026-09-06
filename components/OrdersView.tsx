@@ -128,13 +128,50 @@ export default function OrdersView({
   }
   const clearSelection = () => setSelected(new Set())
 
-  const printSelected = () => {
+  const printSelected = async () => {
     if (!data) return
-    const targets = data.rows.filter(r => selected.has(r.id) && r.riyalto_status === 'sent' && r.riyalto_id)
-    if (targets.length === 0) { showToast('No printable orders selected (must be sent to Riyalto first)'); return }
-    showToast(`Ouverture de ${targets.length} PDF${targets.length > 1 ? 's' : ''}...`)
-    targets.forEach((r, i) => {
-      setTimeout(() => window.open(`/api/admin/orders/pdf/${r.riyalto_id}?format=${labelSize}`, '_blank'), i * 120)
+    const chosen = data.rows.filter(r => selected.has(r.id))
+    const readyToPrint = chosen.filter(r => r.riyalto_status === 'sent' && r.riyalto_id)
+    const needSend    = chosen.filter(r => r.sara_status === 'confirmed' && r.riyalto_status !== 'sent')
+    const skipped     = chosen.length - readyToPrint.length - needSend.length
+
+    if (readyToPrint.length === 0 && needSend.length === 0) {
+      showToast('Aucune commande imprimable — confirmez-les d\'abord')
+      return
+    }
+
+    // Step 1: send the confirmed-but-not-sent ones to Riyalto sequentially
+    const newlySentIds: string[] = []
+    if (needSend.length > 0) {
+      showToast(`Envoi de ${needSend.length} commande${needSend.length > 1 ? 's' : ''} à Riyalto...`)
+      for (let i = 0; i < needSend.length; i++) {
+        const o = needSend[i]
+        try {
+          const r = await fetch(`/api/admin/orders/send/${encodeURIComponent(o.id)}`, { method: 'POST' })
+          if (r.ok) newlySentIds.push(o.id)
+        } catch {}
+        // small pause between submits to avoid hammering Riyalto
+        if (i < needSend.length - 1) await new Promise(res => setTimeout(res, 400))
+      }
+      // Refetch to get the new riyalto_id values
+      await fetchData()
+    }
+
+    // Step 2: gather all printable IDs (readyToPrint + newly sent)
+    const fresh = await fetch(`/api/admin/orders/data?source=${source}`, { cache: 'no-store' }).then(r => r.json())
+    const printable = fresh.rows.filter((r: OrderRow) => selected.has(r.id) && r.riyalto_status === 'sent' && r.riyalto_id)
+
+    if (printable.length === 0) {
+      showToast('Envoi terminé, mais aucun PDF disponible')
+      return
+    }
+
+    const msg = skipped > 0
+      ? `Ouverture de ${printable.length} PDF${printable.length > 1 ? 's' : ''} (${skipped} ignorée${skipped > 1 ? 's' : ''})`
+      : `Ouverture de ${printable.length} PDF${printable.length > 1 ? 's' : ''}...`
+    showToast(msg)
+    printable.forEach((r: OrderRow, i: number) => {
+      setTimeout(() => window.open(`/api/admin/orders/pdf/${r.riyalto_id}?format=${labelSize}`, '_blank'), i * 150)
     })
   }
 
