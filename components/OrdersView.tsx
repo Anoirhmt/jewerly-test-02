@@ -99,6 +99,13 @@ export default function OrdersView({
     fetchData()
   }
 
+  const markConfirmed = async (id: string) => {
+    if (!confirm('Mark this order as confirmed without customer reply?')) return
+    await fetch(`/api/admin/orders/mark-confirmed/${encodeURIComponent(id)}`, { method: 'POST' })
+    showToast('Marked confirmed')
+    fetchData()
+  }
+
   let rows = data?.rows ?? []
   if (filter === 'confirmed') rows = rows.filter(r => r.sara_status === 'confirmed')
   else if (filter === 'pending') rows = rows.filter(r => r.sara_status === 'pending')
@@ -193,6 +200,8 @@ export default function OrdersView({
                 <div className="cl-card-actions">
                   {r.riyalto_status === 'sent' && r.riyalto_id ? (
                     <a className="cl-act cl-act-accent" href={`/api/admin/orders/pdf/${r.riyalto_id}`} target="_blank" rel="noopener noreferrer">View PDF</a>
+                  ) : r.sara_status === 'pending' ? (
+                    <button className="cl-act cl-act-ok" onClick={() => markConfirmed(r.id)}>Force confirm</button>
                   ) : (
                     <button className="cl-act cl-act-accent" disabled={!canSend} onClick={() => sendToRiyalto(r.id)}>Send to Riyalto</button>
                   )}
