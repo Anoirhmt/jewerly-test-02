@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { Package, TrendingUp, RotateCcw, Truck } from 'lucide-react'
-import { getAllOrders, getRetourOrders } from '@/lib/retours-api'
+import { getRetourOrders } from '@/lib/retours-api'
 import type { RiyaltoOrderLight, RiyaltoOrder } from '@/lib/retours-api'
 
 function formatDateFr(date: Date): string {
@@ -44,27 +44,39 @@ const STATE_COLORS: Record<string, string> = {
 }
 function stateColor(s: string) { return STATE_COLORS[s] ?? 'bg-gray-100 text-gray-600' }
 
+type Summary = {
+  encours_count: number
+  delivered_count: number
+  failed_count: number
+  revenue: number
+  recent_encours: RiyaltoOrderLight[]
+}
+
 export default function DashboardPage() {
-  const [encours, setEncours]     = useState<RiyaltoOrderLight[]>([])
-  const [delivered, setDelivered] = useState<RiyaltoOrderLight[]>([])
-  const [retours, setRetours]     = useState<RiyaltoOrder[]>([])
-  const [loading, setLoading]     = useState(true)
+  const [summary, setSummary] = useState<Summary | null>(null)
+  const [retours, setRetours] = useState<RiyaltoOrder[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([getAllOrders(), getRetourOrders()]).then(([all, ret]) => {
-      setEncours(all.encours)
-      setDelivered(all.delivered)
+    // Fast path: cached summary from VPS backup file (returns in <1s)
+    Promise.all([
+      fetch('/api/retours/dashboard-summary', { cache: 'no-store' }).then(r => r.json()),
+      getRetourOrders(),
+    ]).then(([sum, ret]) => {
+      setSummary(sum)
       setRetours(ret.orders)
       setLoading(false)
     })
   }, [])
 
-  const totalColis   = encours.length + delivered.length
-  const totalRevenue = delivered.reduce((s, o) => s + parseFloat(o.price || '0'), 0)
+  const encoursCount   = summary?.encours_count ?? 0
+  const deliveredCount = summary?.delivered_count ?? 0
+  const totalColis     = encoursCount + deliveredCount
+  const totalRevenue   = summary?.revenue ?? 0
   const pendingRetours = retours.filter(o => !o.received).length
-  const deliveryRate = totalColis > 0 ? Math.round((delivered.length / totalColis) * 100) : 0
+  const deliveryRate   = totalColis > 0 ? Math.round((deliveredCount / totalColis) * 100) : 0
 
-  const recentEncours = encours.slice(0, 6)
+  const recentEncours = summary?.recent_encours?.slice(0, 6) ?? []
 
   return (
     <div className="space-y-6 font-sans">
@@ -80,12 +92,12 @@ export default function DashboardPage() {
         ) : (
           <>
             <div className="bg-white rounded-xl border border-gray-200 p-5 border-l-4 border-l-blue-500">
-              <div className="text-3xl font-bold text-zinc-900">{encours.length}</div>
+              <div className="text-3xl font-bold text-zinc-900">{encoursCount}</div>
               <div className="text-sm font-medium text-zinc-700 mt-1">En cours</div>
               <div className="text-xs text-blue-600 mt-0.5 font-medium">En distribution</div>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-5 border-l-4 border-l-green-500">
-              <div className="text-3xl font-bold text-zinc-900">{delivered.length}</div>
+              <div className="text-3xl font-bold text-zinc-900">{deliveredCount}</div>
               <div className="text-sm font-medium text-zinc-700 mt-1">Livrées</div>
               <div className="text-xs text-green-600 mt-0.5 font-medium">{deliveryRate}% taux</div>
             </div>
@@ -97,7 +109,7 @@ export default function DashboardPage() {
             <div className="bg-white rounded-xl border border-gray-200 p-5 border-l-4 border-l-purple-500">
               <div className="text-3xl font-bold text-zinc-900">{totalRevenue.toLocaleString('fr-MA')}</div>
               <div className="text-sm font-medium text-zinc-700 mt-1">DH livrés</div>
-              <div className="text-xs text-purple-600 mt-0.5 font-medium">{delivered.length} colis</div>
+              <div className="text-xs text-purple-600 mt-0.5 font-medium">{deliveredCount} colis</div>
             </div>
           </>
         )}
@@ -111,7 +123,7 @@ export default function DashboardPage() {
             <h2 className="font-semibold text-zinc-900 text-sm">Colis en cours</h2>
           </div>
           <span className="text-xs text-zinc-400">
-            {loading ? '…' : `${encours.length} total`}
+            {loading ? '…' : `${encoursCount} total`}
           </span>
         </div>
         <div className="overflow-x-auto">
