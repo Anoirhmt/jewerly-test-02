@@ -510,6 +510,62 @@
 .cl-empty-t { font-size: 15px; font-weight: 500; color: var(--cl-text); margin-bottom: 4px; }
 .cl-empty-s { font-size: 13px; color: var(--cl-muted); }
 
+/* Checkbox */
+.cl-check {
+  width: 16px; height: 16px;
+  border: 1px solid var(--cl-border-strong);
+  border-radius: 4px;
+  background: var(--cl-surface);
+  appearance: none; -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease;
+  flex-shrink: 0;
+  position: relative;
+}
+.cl-check:hover { border-color: var(--cl-accent); }
+.cl-check:checked {
+  background: var(--cl-accent);
+  border-color: var(--cl-accent);
+}
+.cl-check:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 5px; height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Date input */
+.cl-date {
+  background: var(--cl-surface);
+  border: 1px solid var(--cl-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--cl-text);
+  outline: none;
+  transition: border-color 140ms ease;
+  font-family: inherit;
+}
+.cl-date:focus { border-color: var(--cl-accent); }
+.cl-date::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
+
+/* Select */
+.cl-select {
+  background: var(--cl-surface);
+  border: 1px solid var(--cl-border);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--cl-text);
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.cl-select:focus { border-color: var(--cl-accent); }
+
 /* Toast */
 .cl-toast {
   position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px);
