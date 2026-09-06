@@ -199,13 +199,19 @@ export default function OrdersView({
                 </div>
                 <div className="cl-card-actions">
                   {r.riyalto_status === 'sent' && r.riyalto_id ? (
-                    <a className="cl-act cl-act-accent" href={`/api/admin/orders/pdf/${r.riyalto_id}`} target="_blank" rel="noopener noreferrer">View PDF</a>
-                  ) : r.sara_status === 'pending' ? (
-                    <button className="cl-act cl-act-ok" onClick={() => markConfirmed(r.id)}>Force confirm</button>
+                    <>
+                      <a className="cl-act cl-act-accent" href={`/api/admin/orders/pdf/${r.riyalto_id}`} target="_blank" rel="noopener noreferrer">View PDF</a>
+                      <button className="cl-act cl-act-muted" onClick={() => deleteOrder(r.id)}>Delete</button>
+                    </>
                   ) : (
-                    <button className="cl-act cl-act-accent" disabled={!canSend} onClick={() => sendToRiyalto(r.id)}>Send to Riyalto</button>
+                    <>
+                      {r.sara_status === 'pending' && (
+                        <button className="cl-act cl-act-ok" onClick={() => markConfirmed(r.id)}>Force confirm</button>
+                      )}
+                      <button className="cl-act cl-act-accent" disabled={!canSend} onClick={() => sendToRiyalto(r.id)}>Send to Riyalto</button>
+                      <button className="cl-act cl-act-muted" onClick={() => deleteOrder(r.id)}>Delete</button>
+                    </>
                   )}
-                  <button className="cl-act cl-act-muted" onClick={() => deleteOrder(r.id)}>Delete</button>
                 </div>
               </div>
             )
