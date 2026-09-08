@@ -15,6 +15,7 @@ type Data = {
   rows: Row[]
   bot_enabled: boolean
   confirmations_enabled: boolean
+  site_editor_enabled: boolean
   total: number
   active: number
   paused: number
@@ -50,6 +51,10 @@ export default function SaraPage() {
   }
   const toggleConf = async () => {
     await fetch('/api/admin/toggle-confirmations', { method: 'POST' })
+    fetchData()
+  }
+  const toggleEditor = async () => {
+    await fetch('/api/admin/toggle-site-editor', { method: 'POST' })
     fetchData()
   }
   const act = async (kind: 'pause' | 'resume', sender: string) => {
@@ -98,6 +103,17 @@ export default function SaraPage() {
           </div>
           <button onClick={toggleConf} className={`cl-btn ${data?.confirmations_enabled ? 'cl-btn-danger' : 'cl-btn-primary'}`}>
             {data?.confirmations_enabled ? 'Turn off' : 'Turn on'}
+          </button>
+        </div>
+        <div className="cl-panel">
+          <div>
+            <div className="cl-panel-lbl">Site Editor · WhatsApp commands</div>
+            <div className="cl-panel-status" style={{ color: data?.site_editor_enabled ? 'var(--cl-ok)' : 'var(--cl-warn)' }}>
+              {data ? (data.site_editor_enabled ? 'Active' : 'Paused') : '—'}
+            </div>
+          </div>
+          <button onClick={toggleEditor} className={`cl-btn ${data?.site_editor_enabled ? 'cl-btn-danger' : 'cl-btn-primary'}`}>
+            {data?.site_editor_enabled ? 'Turn off' : 'Turn on'}
           </button>
         </div>
       </div>
