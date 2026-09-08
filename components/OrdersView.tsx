@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { Eye, Printer, Trash2, RefreshCw, ExternalLink, Check, X } from 'lucide-react'
+import { Eye, Printer, Trash2, RefreshCw, ExternalLink, Check, X, Pencil } from 'lucide-react'
 
 type OrderRow = {
   id: string
@@ -66,6 +66,7 @@ export default function OrdersView({
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [toast, setToast] = useState<string | null>(null)
   const [refreshing, setRefreshing] = useState(false)
+  const [editing, setEditing] = useState<OrderRow | null>(null)
 
   const fetchData = useCallback(async () => {
     try {
@@ -125,6 +126,19 @@ export default function OrdersView({
     if (!confirm('Mark this order as confirmed without customer reply?')) return
     await fetch(`/api/admin/orders/mark-confirmed/${encodeURIComponent(id)}`, { method: 'POST' })
     showToast('Marked confirmed'); fetchData()
+  }
+
+  const saveEdit = async (updates: Partial<OrderRow>) => {
+    if (!editing) return
+    try {
+      const r = await fetch(`/api/admin/orders/edit/${encodeURIComponent(editing.id)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      })
+      if (r.ok) { showToast('Modifié'); setEditing(null); fetchData() }
+      else { const d = await r.json().catch(() => ({})); showToast('Erreur: ' + (d.error || r.status)) }
+    } catch (e) { showToast('Erreur: ' + e) }
   }
 
   const toggleSelected = (id: string) => {
@@ -377,6 +391,9 @@ export default function OrdersView({
                   <td className="text-[12px]" style={{ color: 'var(--cl-muted)' }}>{fmtDate(r.ts)}</td>
                   <td>
                     <div className="flex items-center gap-1 justify-end">
+                      <button onClick={() => setEditing(r)} className="cl-icon-btn" title="Modifier" style={{ color: 'var(--cl-info)' }}>
+                        <Pencil size={15} />
+                      </button>
                       {r.sara_status === 'pending' && (
                         <button onClick={() => markConfirmed(r.id)} className="cl-icon-btn" title="Forcer confirmé" style={{ color: 'var(--cl-ok)' }}>
                           <Check size={15} />
@@ -426,6 +443,100 @@ export default function OrdersView({
       </div>
 
       {toast && <div className="cl-toast cl-toast-show">{toast}</div>}
+      {editing && <EditModal order={editing} onClose={() => setEditing(null)} onSave={saveEdit} />}
     </div>
+  )
+}
+
+// ─── Edit modal ──────────────────────────────────────────
+function EditModal({
+  order,
+  onClose,
+  onSave,
+}: {
+  order: OrderRow
+  onClose: () => void
+  onSave: (updates: Partial<OrderRow>) => void
+}) {
+  const [name, setName]         = useState(order.name || '')
+  const [phone, setPhone]       = useState(order.phone || '')
+  const [city, setCity]         = useState(order.city || '')
+  const [address, setAddress]   = useState(order.address || '')
+  const [total, setTotal]       = useState(cleanNum(order.total))
+  const [delivery, setDelivery] = useState(cleanNum(order.delivery))
+  const [items, setItems]       = useState(order.items || '')
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Only send changed fields
+    const updates: Partial<OrderRow> = {}
+    if (name !== order.name)                       updates.name = name
+    if (phone !== order.phone)                     updates.phone = phone
+    if (city !== order.city)                       updates.city = city
+    if (address !== order.address)                 updates.address = address
+    if (total !== cleanNum(order.total))           updates.total = total
+    if (delivery !== cleanNum(order.delivery))     updates.delivery = delivery
+    // items is a display string ("pack1 x1, pack2 x1"), send only if changed
+    if (items !== order.items)                     updates.items = items as any
+    if (Object.keys(updates).length === 0) { onClose(); return }
+    onSave(updates)
+  }
+
+  return (
+    <div className="cl-modal-backdrop" onClick={onClose}>
+      <div className="cl-modal" onClick={e => e.stopPropagation()}>
+        <div className="cl-modal-header">
+          <div>
+            <div className="text-[11px] uppercase tracking-widest font-semibold" style={{ color: 'var(--cl-accent)' }}>Modifier</div>
+            <div className="font-serif text-lg" style={{ color: 'var(--cl-text)' }}>{order.name || 'Commande'}</div>
+          </div>
+          <button onClick={onClose} className="cl-icon-btn" style={{ color: 'var(--cl-muted)' }} title="Fermer">
+            <X size={18} />
+          </button>
+        </div>
+        <form onSubmit={submit} className="cl-modal-body">
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Nom" value={name} onChange={setName} />
+            <Field label="Téléphone" value={phone} onChange={setPhone} />
+            <Field label="Ville" value={city} onChange={setCity} />
+            <Field label="Prix total (DH)" value={total} onChange={setTotal} type="number" />
+            <Field label="Livraison (DH)" value={delivery} onChange={setDelivery} type="number" />
+            <Field label="Adresse" value={address} onChange={setAddress} className="md:col-span-2" />
+            <Field label="Articles" value={items} onChange={setItems} className="md:col-span-2" />
+          </div>
+          {order.riyalto_status === 'sent' && (
+            <div className="cl-modal-warn">
+              ⚠️ Cette commande est déjà dans Riyalto ({order.riyalto_ref}). Vos modifications ici ne se synchronisent PAS avec Riyalto — pensez à la modifier aussi sur users.riyaltoexpress.com.
+            </div>
+          )}
+          <div className="cl-modal-footer">
+            <button type="button" onClick={onClose} className="cl-btn-ghost">Annuler</button>
+            <button type="submit" className="cl-btn-blue">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+function Field({
+  label, value, onChange, type = 'text', className = '',
+}: {
+  label: string
+  value: string
+  onChange: (v: string) => void
+  type?: string
+  className?: string
+}) {
+  return (
+    <label className={`block ${className}`}>
+      <span className="cl-field-lbl">{label}</span>
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        className="cl-field-input"
+      />
+    </label>
   )
 }

@@ -778,6 +778,84 @@
 .cl-spin { animation: cl-spin 0.8s linear infinite; }
 @keyframes cl-spin { to { transform: rotate(360deg); } }
 
+/* Edit modal */
+.cl-modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(28, 27, 24, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: cl-fade-in 180ms ease;
+}
+@keyframes cl-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.cl-modal {
+  background: var(--cl-bg);
+  border: 1px solid var(--cl-border);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(28,27,24,0.3);
+  animation: cl-modal-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes cl-modal-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.cl-modal-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--cl-border);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--cl-surface);
+}
+.cl-modal-body {
+  padding: 20px 22px;
+  overflow-y: auto;
+}
+.cl-modal-footer {
+  padding: 16px 22px;
+  border-top: 1px solid var(--cl-border);
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+  background: var(--cl-surface);
+  margin-top: 20px;
+  margin-left: -22px; margin-right: -22px; margin-bottom: -20px;
+}
+.cl-modal-warn {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: var(--cl-warn-soft);
+  color: var(--cl-warn);
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.cl-field-lbl {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cl-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+.cl-field-input {
+  width: 100%;
+  background: var(--cl-surface);
+  border: 1px solid var(--cl-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--cl-text);
+  outline: none;
+  font-family: inherit;
+  transition: border-color 140ms ease;
+}
+.cl-field-input:focus { border-color: var(--cl-accent); }
+
 /* Toast */
 .cl-toast {
   position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px);
