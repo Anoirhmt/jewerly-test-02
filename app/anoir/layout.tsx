@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {
   LayoutDashboard, Package, RotateCcw, ScanLine,
   History, Settings, RefreshCw, LogOut, Menu, Wifi, WifiOff, Camera,
-  MessageCircle, ShoppingBag, Bot,
+  MessageCircle, ShoppingBag, Bot, CalendarDays,
 } from 'lucide-react'
 import { getRetourOrders } from '@/lib/retours-api'
 
@@ -27,6 +27,7 @@ const navMain = [
 ]
 
 const navAdmin = [
+  { href: '/anoir/journal', label: 'Journal', icon: CalendarDays },
   { href: '/anoir/sara', label: 'Sara Chat', icon: MessageCircle },
   { href: '/anoir/orders', label: 'Website Orders', icon: ShoppingBag },
   { href: '/anoir/sara-orders', label: 'Sara Orders', icon: Bot },
