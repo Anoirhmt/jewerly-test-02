@@ -10,6 +10,7 @@ type Order = {
   price: string
   state: string
   bucket: 'encours' | 'delivered' | 'failed'
+  archived?: boolean
 }
 type Day = {
   date: string
@@ -198,13 +199,33 @@ export default function JournalPage() {
                 {isOpen && (
                   <div className="cl-day-body">
                     {day.orders.map((o, i) => (
-                      <div key={o.riya + i} className="cl-order-row">
+                      <div
+                        key={o.riya + i}
+                        className="cl-order-row"
+                        style={o.archived ? { background: 'var(--cl-warn-soft)', opacity: 0.85 } : undefined}
+                        title={o.archived ? 'Cette commande a été supprimée de Riyalto — conservée ici comme preuve' : undefined}
+                      >
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-baseline justify-between gap-3">
-                            <div className="font-semibold truncate" style={{ color: 'var(--cl-text)' }}>{o.name || '—'}</div>
+                          <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                            <div className="flex items-center gap-2 min-w-0">
+                              {o.archived && (
+                                <span
+                                  className="cl-badge cl-badge-warn shrink-0"
+                                  style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                                >
+                                  ⚠️ Supprimée de Riyalto
+                                </span>
+                              )}
+                              <div
+                                className="font-semibold truncate"
+                                style={{ color: 'var(--cl-text)', textDecoration: o.archived ? 'line-through' : 'none' }}
+                              >
+                                {o.name || '—'}
+                              </div>
+                            </div>
                             <div className="text-[12px] font-mono" style={{ color: 'var(--cl-subtle)' }}>{o.riya}</div>
                           </div>
-                          <div className="text-xs flex items-center gap-2 mt-0.5" style={{ color: 'var(--cl-muted)' }}>
+                          <div className="text-xs flex items-center gap-2 mt-0.5 flex-wrap" style={{ color: 'var(--cl-muted)' }}>
                             <span>+{o.phone}</span>
                             <span>·</span>
                             <span>{o.city || '—'}</span>
