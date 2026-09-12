@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { Eye, Printer, Trash2, RefreshCw, ExternalLink, Check, X, Pencil } from 'lucide-react'
+import { Eye, Printer, Trash2, RefreshCw, ExternalLink, Check, X, Pencil, Bluetooth } from 'lucide-react'
 
 type OrderRow = {
   id: string
@@ -126,6 +126,41 @@ export default function OrdersView({
     if (!confirm('Mark this order as confirmed without customer reply?')) return
     await fetch(`/api/admin/orders/mark-confirmed/${encodeURIComponent(id)}`, { method: 'POST' })
     showToast('Marked confirmed'); fetchData()
+  }
+
+  // Print via Bluetooth: fetch PNG label + trigger Web Share (opens ZLabel app on phone)
+  const printBluetooth = async (r: OrderRow) => {
+    if (!r.riyalto_id) { showToast('Envoyez d\'abord à Riyalto'); return }
+    showToast('Préparation du label...')
+    try {
+      const res = await fetch(`/api/admin/orders/pdf-as-image/${r.riyalto_id}?format=${labelSize}`)
+      if (!res.ok) { showToast('Erreur chargement label'); return }
+      const blob = await res.blob()
+      const file = new File([blob], `label_${r.riyalto_ref || r.riyalto_id}.png`, { type: 'image/png' })
+      // Try native Web Share (mobile — opens system share sheet, user picks ZLabel)
+      const nav = navigator as any
+      if (nav.canShare && nav.canShare({ files: [file] })) {
+        try {
+          await nav.share({
+            files: [file],
+            title: `Label ${r.riyalto_ref || 'colis'}`,
+            text: `Étiquette ${r.name}`,
+          })
+          showToast('Envoyé vers l\'app 📱')
+        } catch (err: any) {
+          if (err?.name !== 'AbortError') showToast('Partage annulé')
+        }
+      } else {
+        // Fallback (desktop): download the PNG
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url; a.download = file.name; a.click()
+        setTimeout(() => URL.revokeObjectURL(url), 5000)
+        showToast('Label téléchargé — envoyez-le à votre téléphone')
+      }
+    } catch (e) {
+      showToast('Erreur : ' + e)
+    }
   }
 
   const saveEdit = async (updates: Partial<OrderRow>) => {
@@ -400,16 +435,26 @@ export default function OrdersView({
                         </button>
                       )}
                       {r.riyalto_status === 'sent' && r.riyalto_id ? (
-                        <a
-                          href={`/api/admin/orders/pdf/${r.riyalto_id}?format=${labelSize}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="cl-icon-btn"
-                          title="Voir PDF"
-                          style={{ color: 'var(--cl-accent)' }}
-                        >
-                          <Printer size={15} />
-                        </a>
+                        <>
+                          <button
+                            onClick={() => printBluetooth(r)}
+                            className="cl-icon-btn"
+                            title="Imprimer via Bluetooth (ZLabel)"
+                            style={{ color: 'var(--cl-info)' }}
+                          >
+                            <Bluetooth size={15} />
+                          </button>
+                          <a
+                            href={`/api/admin/orders/pdf/${r.riyalto_id}?format=${labelSize}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="cl-icon-btn"
+                            title="Voir PDF"
+                            style={{ color: 'var(--cl-accent)' }}
+                          >
+                            <Printer size={15} />
+                          </a>
+                        </>
                       ) : (
                         <button
                           onClick={() => sendToRiyalto(r.id)}
