@@ -18,7 +18,7 @@ export const packsProducts: Product[] = [
     name: "pack2",
     description: "Pack bijoux exclusif avec boite cadeau",
     price: 100,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_4974.jpeg",
+    image: "https://raw.githubusercontent.com/Anoirhmt/elarain-images/main/pack2_1789272357.jpg",
     category: "pack",
     rating: 4.8,
     reviews: 124,
