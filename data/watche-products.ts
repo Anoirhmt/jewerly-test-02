@@ -2,17 +2,7 @@ import type { Product } from "./products";
 
 // 23 placeholder products. Fill in the fields of any object you want to publish; leave others blank.
 export const managementProducts: Product[] = [
-  {
-    id: 401,
-    name: "Cartier Watch",
-    description: "",
-    price: 150,
-    image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/photo_5895309142153874105_y.jpg",
-    category: "watch",
-    rating: 4.8,
-    reviews: 124,
-    inStock: false,
-  },
+  
   {
     id: 402,
     name: "rolexe femmes 3",
@@ -297,5 +287,5 @@ export const managementProducts: Product[] = [
     rating: 0,
     reviews: 0,
     inStock: false,
-  },
+  }
 ];
