@@ -60,7 +60,7 @@ export const packsProducts: Product[] = [
     id: 205,
     name: "pack5",
     description: "Deluxe jewelry pack collection",
-    price: 150,
+    price: 160,
     image: "https://raw.githubusercontent.com/omarhmt08/my-first-image/main/IMG_3060.jpeg",
     category: "pack",
     rating: 4.8,
