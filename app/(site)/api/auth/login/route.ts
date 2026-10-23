@@ -1,8 +1,18 @@
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
+import { SESSION_COOKIE, SESSION_MAX_AGE, createSessionToken } from '@/lib/admin-session'
 
-// SHA-256 hash of the password — plaintext never stored anywhere in code
-const PASSWORD_HASH = '637b27e339c3dfdf84ff64fd5ad0a1d427eb91efaba72225e6cf78d6f7478e99'
+// The password is never in the code. ADMIN_PASSWORD_HASH (Vercel environment variable) holds
+// "pbkdf2$<iterations>$<salt hex>$<hash hex>" — a salted PBKDF2-SHA256 hash of it.
+async function passwordMatches(password: string): Promise<boolean | null> {
+  const [algo, iter, salt, hash] = (process.env.ADMIN_PASSWORD_HASH || '').split('$')
+  if (algo !== 'pbkdf2' || !Number(iter) || !salt || !hash) return null // not configured
+  const expected = Buffer.from(hash, 'hex')
+  const actual = await new Promise<Buffer>((resolve, reject) =>
+    crypto.pbkdf2(password, Buffer.from(salt, 'hex'), Number(iter), expected.length, 'sha256',
+      (err, key) => (err ? reject(err) : resolve(key))))
+  return crypto.timingSafeEqual(actual, expected)
+}
 
 // Server-side rate limiting (per IP)
 const attempts = new Map<string, { count: number; lockedUntil: number }>()
@@ -30,18 +40,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false }, { status: 400 })
   }
 
-  const hash = crypto.createHash('sha256').update(body.password || '').digest('hex')
+  const matches = await passwordMatches(body.password || '')
+  const token = matches ? await createSessionToken() : null
+  if (matches === null || (matches && !token)) {
+    console.error('[login] ADMIN_PASSWORD_HASH or ADMIN_SESSION_SECRET is missing in the environment')
+    return NextResponse.json({ success: false, error: 'not configured' }, { status: 500 })
+  }
 
-  if (hash === PASSWORD_HASH) {
+  if (matches && token) {
     // Reset attempts on success
     attempts.delete(ip)
 
     const response = NextResponse.json({ success: true })
-    response.cookies.set('__admin_session', 'authenticated', {
+    response.cookies.set(SESSION_COOKIE, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 60 * 60 * 8, // 8 hours
+      maxAge: SESSION_MAX_AGE,
       path: '/',
     })
     return response

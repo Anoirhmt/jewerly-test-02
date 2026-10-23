@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server'
+import { requireAdmin, vpsAuth } from '@/lib/admin-session'
 
 const VPS = 'http://195.201.96.39:5000'
-const AUTH = 'Basic ' + Buffer.from(':elarain123').toString('base64')
 
 export const dynamic = 'force-dynamic'
 
-export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const denied = await requireAdmin(req)
+  if (denied) return denied
   const { id } = await params
   try {
     const res = await fetch(`${VPS}/admin/orders/mark-confirmed/${encodeURIComponent(id)}`, {
       method: 'POST',
-      headers: { Authorization: AUTH },
+      headers: { Authorization: vpsAuth() },
     })
     return NextResponse.json(await res.json(), { status: res.status })
   } catch (e) {
