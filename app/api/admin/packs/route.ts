@@ -2,8 +2,9 @@ import { NextResponse } from "next/server"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { packsProducts } from "@/data/packs-products"
 import { PACKS_TAG, PACKS_VPS, fetchVpsPacks } from "@/lib/packs"
+import { requireAdmin, vpsAuth } from "@/lib/admin-session"
 
-// Dashboard (/anoir/packs) API. The VPS checks the packs password on every save.
+// Dashboard (/anoir/packs) API. Needs the dashboard login; the VPS checks the admin password on every save.
 
 export const dynamic = "force-dynamic"
 
@@ -13,6 +14,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const denied = await requireAdmin(req)
+  if (denied) return denied
   let body: unknown
   try {
     body = await req.json()
@@ -22,7 +25,7 @@ export async function POST(req: Request) {
   try {
     const r = await fetch(`${PACKS_VPS}/api/packs/save`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: vpsAuth() },
       body: JSON.stringify(body),
       cache: "no-store",
       signal: AbortSignal.timeout(15000),

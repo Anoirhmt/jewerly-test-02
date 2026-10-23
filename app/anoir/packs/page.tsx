@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  ArrowDown, ArrowUp, Check, Copy, ExternalLink, ImagePlus, Loader2, Lock, Pencil, Plus, Save, Search, Trash2, X,
+  ArrowDown, ArrowUp, Check, Copy, ExternalLink, ImagePlus, Loader2, Pencil, Plus, Save, Search, Trash2, X,
 } from 'lucide-react'
 import type { Product } from '@/data/products'
 
@@ -9,7 +9,6 @@ import type { Product } from '@/data/products'
 // the product pages and the Facebook ad pages (/offre) pick it up within seconds.
 
 type Pack = Product
-const PW_KEY = 'elarain-packs-pw'
 const DELIVERY_KEY = 'elarain-packs-delivery'
 const COLORS = [
   { v: 'gold', label: 'Doré', hex: '#d4a64a' },
@@ -19,8 +18,7 @@ const COLORS = [
   { v: 'black', label: 'Noir', hex: '#111827' },
 ]
 const ERRORS: Record<string, string> = {
-  password: 'Code incorrect.',
-  locked: 'Trop de codes incorrects. Réessayez dans 10 minutes.',
+  unauthorized: 'Session expirée : reconnectez-vous sur elarain.store/anoir (dans un autre onglet pour garder vos changements), puis Enregistrer.',
   vps: 'Le serveur ne répond pas. Réessayez.',
   'duplicate-id': 'Deux packs ont le même numéro.',
   'too-big': 'Photo trop lourde.',
@@ -39,8 +37,6 @@ function store(key: string, value?: string) {
 }
 
 export default function PacksAdminPage() {
-  const [password, setPassword] = useState('')
-  const [unlocked, setUnlocked] = useState(false)
   const [packs, setPacks] = useState<Pack[] | null>(null)
   const [saved, setSaved] = useState<string>('')
   const [source, setSource] = useState<'vps' | 'file'>('vps')
@@ -75,13 +71,8 @@ export default function PacksAdminPage() {
   }
 
   useEffect(() => {
-    const pw = store(PW_KEY)
     const d = Number(store(DELIVERY_KEY))
     if (d > 0) setDelivery(d)
-    if (pw) {
-      setPassword(pw)
-      setUnlocked(true)
-    }
     load()
   }, [])
 
@@ -95,12 +86,6 @@ export default function PacksAdminPage() {
   function flash(ok: boolean, text: string) {
     setToast({ ok, text })
     setTimeout(() => setToast(null), 3500)
-  }
-
-  function lock() {
-    store(PW_KEY, '')
-    setPassword('')
-    setUnlocked(false)
   }
 
   const update = (id: number, patch: Partial<Pack>) =>
@@ -145,7 +130,7 @@ export default function PacksAdminPage() {
       const r = await fetch('/api/admin/packs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password, packs }),
+        body: JSON.stringify({ packs }),
       })
       const d = (await r.json()) as { ok: boolean; packs?: Pack[]; error?: string }
       if (d.ok && d.packs) {
@@ -154,7 +139,6 @@ export default function PacksAdminPage() {
         setSource('vps')
         flash(true, 'Enregistré — le site est à jour.')
       } else {
-        if (d.error === 'password') lock()
         flash(false, errorText(d.error))
       }
     } catch {
@@ -171,10 +155,6 @@ export default function PacksAdminPage() {
     return !q || `${p.id} ${p.name} ${p.titleAr ?? ''} ${p.description}`.toLowerCase().includes(q)
   })
 
-  if (!unlocked) {
-    return <Unlock onOk={(pw) => { store(PW_KEY, pw); setPassword(pw); setUnlocked(true) }} />
-  }
-
   return (
     <div className="cl-scope max-w-6xl mx-auto pb-28">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -185,9 +165,6 @@ export default function PacksAdminPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={lock} className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-600 hover:bg-gray-50">
-            <Lock size={14} /> Verrouiller
-          </button>
           <button onClick={newPack} className="inline-flex items-center gap-1.5 rounded-lg bg-gray-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-gray-800">
             <Plus size={16} /> Nouveau pack
           </button>
@@ -284,12 +261,10 @@ export default function PacksAdminPage() {
         <EditPack
           pack={editing}
           isNew={!packs?.some((p) => p.id === editing.id)}
-          password={password}
           delivery={delivery}
           onClose={() => setEditing(null)}
           onApply={applyEdit}
           onDelete={() => remove(editing.id)}
-          onAuthError={lock}
         />
       )}
 
@@ -440,51 +415,6 @@ function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boolean) =
   )
 }
 
-function Unlock({ onOk }: { onOk: (pw: string) => void }) {
-  const [pw, setPw] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [err, setErr] = useState('')
-  async function submit(e: React.FormEvent) {
-    e.preventDefault()
-    setBusy(true)
-    setErr('')
-    try {
-      const r = await fetch('/api/admin/packs/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pw }),
-      })
-      const d = (await r.json()) as { ok: boolean; error?: string }
-      if (d.ok) onOk(pw)
-      else setErr(errorText(d.error))
-    } catch {
-      setErr(errorText('vps'))
-    } finally {
-      setBusy(false)
-    }
-  }
-  return (
-    <form onSubmit={submit} className="mx-auto mt-10 max-w-sm rounded-xl border border-gray-200 bg-white p-6">
-      <div className="grid size-11 place-items-center rounded-full bg-gray-100 text-gray-700"><Lock size={20} /></div>
-      <h1 className="mt-4 text-lg font-semibold text-gray-900">Packs & prix</h1>
-      <p className="mt-1 text-sm text-gray-500">Entrez le code des packs pour modifier les prix. Il reste enregistré sur cet appareil.</p>
-      <input
-        type="password"
-        value={pw}
-        onChange={(e) => setPw(e.target.value)}
-        autoFocus
-        autoComplete="current-password"
-        placeholder="Code des packs"
-        className="mt-4 w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-gray-400"
-      />
-      {err && <p className="mt-2 text-sm text-red-600">{err}</p>}
-      <button disabled={busy || !pw} className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gray-900 py-2.5 text-sm font-medium text-white disabled:opacity-50">
-        {busy && <Loader2 size={16} className="animate-spin" />} Déverrouiller
-      </button>
-    </form>
-  )
-}
-
 // Shrinks phone photos (often 4–8 MB) to max 1600 px JPEG before upload.
 async function shrink(file: File): Promise<Blob> {
   const url = URL.createObjectURL(file)
@@ -507,12 +437,10 @@ async function shrink(file: File): Promise<Blob> {
 }
 
 function PhotoPicker({
-  value, onChange, password, onAuthError, label, small,
+  value, onChange, label, small,
 }: {
   value: string | undefined
   onChange: (url: string) => void
-  password: string
-  onAuthError: () => void
   label: string
   small?: boolean
 }) {
@@ -527,15 +455,11 @@ function PhotoPicker({
     setErr('')
     try {
       const body = new FormData()
-      body.append('password', password)
       body.append('file', await shrink(f), 'photo.jpg')
       const r = await fetch('/api/admin/packs/image', { method: 'POST', body })
       const d = (await r.json()) as { ok: boolean; url?: string; error?: string }
       if (d.ok && d.url) onChange(d.url)
-      else {
-        if (d.error === 'password') onAuthError()
-        setErr(errorText(d.error))
-      }
+      else setErr(errorText(d.error))
     } catch {
       setErr("Échec de l'envoi de la photo.")
     } finally {
@@ -562,16 +486,14 @@ function PhotoPicker({
 }
 
 function EditPack({
-  pack, isNew, password, delivery, onClose, onApply, onDelete, onAuthError,
+  pack, isNew, delivery, onClose, onApply, onDelete,
 }: {
   pack: Pack
   isNew: boolean
-  password: string
   delivery: number
   onClose: () => void
   onApply: (p: Pack) => void
   onDelete: () => void
-  onAuthError: () => void
 }) {
   const [p, setP] = useState<Pack>(pack)
   const [contents, setContents] = useState((pack.packContents ?? []).join('\n'))
@@ -604,10 +526,10 @@ function EditPack({
         <div className="grid gap-5 p-5 sm:grid-cols-[180px_1fr]">
           <div className="space-y-3">
             <p className="text-xs font-medium text-gray-500">Photo principale</p>
-            <PhotoPicker value={p.image} onChange={(url) => set({ image: url })} password={password} onAuthError={onAuthError} label="Ajouter" />
+            <PhotoPicker value={p.image} onChange={(url) => set({ image: url })} label="Ajouter" />
             <p className="text-xs font-medium text-gray-500">2ᵉ photo <span className="text-gray-400">(optionnel)</span></p>
             <div className="flex items-start gap-2">
-              <PhotoPicker value={p.hoverImage} onChange={(url) => set({ hoverImage: url })} password={password} onAuthError={onAuthError} label="Ajouter" small />
+              <PhotoPicker value={p.hoverImage} onChange={(url) => set({ hoverImage: url })} label="Ajouter" small />
               {p.hoverImage && (
                 <button onClick={() => set({ hoverImage: undefined })} className="text-xs text-gray-500 underline">Retirer</button>
               )}
@@ -651,8 +573,6 @@ function EditPack({
                     <PhotoPicker
                       value={v.image}
                       onChange={(url) => set({ variants: variants.map((x, j) => (j === i ? { ...x, image: url } : x)) })}
-                      password={password}
-                      onAuthError={onAuthError}
                       label="Photo"
                       small
                     />
