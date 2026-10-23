@@ -1,6 +1,8 @@
 export interface Product {
   id: number
   name: string
+  // Arabic title for the Facebook ad pages (/offre); optional.
+  titleAr?: string
   description: string
   price: number
   originalPrice?: number

@@ -34,6 +34,9 @@ export type PackTitles = { ar: string; fr: string; box: boolean }
 export function packTitles(p: Product): PackTitles {
   const box = /bo[iî]te/i.test(p.name)
   const n = /pack\s*(\d+)/i.exec(p.name)?.[1]
+  if (p.titleAr?.trim()) {
+    return { ar: p.titleAr.trim(), fr: n ? `Pack ${n}${box ? " + boîte cadeau" : ""}` : p.name, box }
+  }
   if (hasArabic(p.description)) {
     return { ar: p.description.replace(/\s*\d+\s*(dh|درهم)\s*$/i, "").trim(), fr: p.name.replace(/\s*\d+\s*dh\s*$/i, ""), box }
   }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { Tajawal } from "next/font/google"
-import { packsProducts } from "@/data/packs-products"
+import { getPacks } from "@/lib/packs"
 import { OffrePage } from "@/components/offre/offre-page"
 import { FbPixelScript } from "@/components/offre/fb-pixel-script"
 
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   alternates: { canonical: null },
 }
 
-export default function Page({ searchParams }: { searchParams: { pack?: string } }) {
-  const packs = packsProducts.filter((p) => p.inStock && p.name)
+export default async function Page({ searchParams }: { searchParams: { pack?: string } }) {
+  const packs = (await getPacks()).filter((p) => p.inStock && p.name)
   const featured = Number(searchParams.pack)
   return (
     <>

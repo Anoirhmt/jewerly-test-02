@@ -3,7 +3,7 @@ import { RelatedProducts } from "@/components/related-products"
 import { products } from "@/data/products"
 import { managementProducts } from "@/data/watche-products"
 import { collectionProducts } from "@/data/collection-products"
-import { packsProducts } from "@/data/packs-products"
+import { getPacks } from "@/lib/packs"
 import { notFound } from "next/navigation"
 import { SpecialPackForm } from "@/components/special-pack-form"
 
@@ -15,6 +15,7 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const idParam = params.id
+  const packsProducts = await getPacks()
 
   const mergedProducts = [
     ...managementProducts,
