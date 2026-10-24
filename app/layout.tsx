@@ -93,10 +93,13 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  // Square icons (Google only shows a square favicon in search results)
   icons: {
-    icon: [{ url: LOGO_URL, type: "image/png" }],
-    shortcut: "/favicon.ico",
-    apple: [{ url: LOGO_URL, sizes: "180x180", type: "image/png" }],
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   verification: {
     // Add your Google Search Console verification code here later

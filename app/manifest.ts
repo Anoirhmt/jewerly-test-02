@@ -11,11 +11,8 @@ export default function manifest(): MetadataRoute.Manifest {
         theme_color: '#C15F3C',
         lang: 'fr-MA',
         icons: [
-            {
-                src: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Whisk_10ef3247e2%20-%20Copy-modified-gLXRu1tXPExbkNdyd4KaSz6Sd1TkhC.png',
-                sizes: 'any',
-                type: 'image/png',
-            },
+            { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+            { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
         ],
     }
 }
