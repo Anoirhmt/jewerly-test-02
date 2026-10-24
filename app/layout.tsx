@@ -51,13 +51,6 @@ export const metadata: Metadata = {
   publisher: SITE_NAME,
   formatDetection: { email: false, address: false, telephone: false },
   metadataBase: new URL(SITE_URL),
-  alternates: {
-    canonical: "/",
-    languages: {
-      "fr-MA": "/",
-      "fr": "/",
-    },
-  },
   openGraph: {
     title: "Elarain Jewelry — Bijoux & Montres de Luxe au Maroc",
     description:
@@ -177,7 +170,6 @@ export default function RootLayout({
   return (
     <html lang="fr-MA">
       <head>
-        <link rel="canonical" href={SITE_URL} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
