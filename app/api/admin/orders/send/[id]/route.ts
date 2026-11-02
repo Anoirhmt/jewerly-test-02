@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { requireAdmin, vpsAuth } from '@/lib/admin-session'
-
-const VPS = 'http://195.201.96.39:5000'
+import { PACKS_VPS as VPS } from '@/lib/packs'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60

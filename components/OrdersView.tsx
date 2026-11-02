@@ -51,7 +51,7 @@ export default function OrdersView({
   title,
   subtitle,
 }: {
-  source: 'website' | 'sara'
+  source: 'website' | 'sara' | 'manual'
   title: string
   subtitle: string
 }) {

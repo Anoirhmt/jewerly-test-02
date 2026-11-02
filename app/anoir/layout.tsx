@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import {
-  LayoutDashboard, Package, RotateCcw, ScanLine,
-  History, Settings, RefreshCw, LogOut, Menu, Wifi, WifiOff, Camera,
+  LayoutDashboard, Package, RotateCcw, ScanLine, ChevronDown, Globe, Inbox, Sparkles, Plus,
+  History, Settings, RefreshCw, LogOut, Menu, Wifi, WifiOff, Camera, PackageCheck,
   MessageCircle, ShoppingBag, Bot, CalendarDays, Tag,
 } from 'lucide-react'
 import { getRetourOrders } from '@/lib/retours-api'
@@ -14,27 +14,55 @@ interface NavCounts {
   retoursRecus: number
   retoursWH: number
   nonScannes: number
+  toSendWebsite: number
+  toSendSara: number
+  toSendManual: number
 }
 
-const navMain = [
+type NavLeaf = { href: string; label: string; icon: any; countKey?: keyof NavCounts; badgeColor?: string }
+type NavBranch = { id: string; label: string; icon: any; children: NavLeaf[]; countKeys: (keyof NavCounts)[]; badgeColor?: string }
+type NavEntry = NavLeaf | NavBranch
+
+const TO_SEND = 'bg-[#C15F3C]'
+
+const navMain: NavEntry[] = [
   { href: '/anoir/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/anoir/tous-les-colis', label: 'Tous les colis', icon: Package },
-  { href: '/anoir/retours', label: 'Retours', icon: RotateCcw, countKey: 'tousLesColis' as keyof NavCounts },
-  { href: '/anoir/retours-recus', label: 'Retours reçus', icon: RotateCcw, countKey: 'retoursRecus' as keyof NavCounts, badgeColor: 'bg-emerald-500/80' },
-  { href: '/anoir/non-scannes', label: 'Non reçus', icon: ScanLine, countKey: 'nonScannes' as keyof NavCounts, badgeColor: 'bg-red-500/80' },
+  {
+    id: 'commandes',
+    label: 'Commandes',
+    icon: ShoppingBag,
+    countKeys: ['toSendManual', 'toSendWebsite', 'toSendSara'],
+    badgeColor: TO_SEND,
+    children: [
+      { href: '/anoir/nouvelle-commande', label: 'Nouvelle commande', icon: Sparkles, countKey: 'toSendManual', badgeColor: TO_SEND },
+      { href: '/anoir/orders', label: 'Site web', icon: Globe, countKey: 'toSendWebsite', badgeColor: TO_SEND },
+      { href: '/anoir/sara-orders', label: 'Sara', icon: Bot, countKey: 'toSendSara', badgeColor: TO_SEND },
+    ],
+  },
+  {
+    id: 'retours',
+    label: 'Retours',
+    icon: RotateCcw,
+    countKeys: ['nonScannes'],
+    badgeColor: 'bg-red-500/80',
+    children: [
+      { href: '/anoir/retours', label: 'Tous les retours', icon: Inbox, countKey: 'tousLesColis' },
+      { href: '/anoir/retours-recus', label: 'Retours reçus', icon: PackageCheck, countKey: 'retoursRecus', badgeColor: 'bg-emerald-500/80' },
+      { href: '/anoir/non-scannes', label: 'Non reçus', icon: ScanLine, countKey: 'nonScannes', badgeColor: 'bg-red-500/80' },
+    ],
+  },
   { href: '/anoir/scan', label: 'Scanner', icon: Camera },
   { href: '/anoir/historique', label: 'Historique', icon: History },
 ]
 
-const navAdmin = [
+const navAdmin: NavEntry[] = [
   { href: '/anoir/journal', label: 'Journal', icon: CalendarDays },
   { href: '/anoir/sara', label: 'Sara Chat', icon: MessageCircle },
-  { href: '/anoir/orders', label: 'Website Orders', icon: ShoppingBag },
   { href: '/anoir/packs', label: 'Packs & prix', icon: Tag },
-  { href: '/anoir/sara-orders', label: 'Sara Orders', icon: Bot },
 ]
 
-const navOutils = [
+const navOutils: NavEntry[] = [
   { href: '/anoir/config', label: 'Config API', icon: Settings },
   { href: '/anoir/sync', label: 'Cloud Sync', icon: RefreshCw },
 ]
@@ -44,7 +72,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [checked, setChecked] = useState(false)
-  const [counts, setCounts] = useState<NavCounts>({ tousLesColis: 0, retoursRecus: 0, retoursWH: 0, nonScannes: 0 })
+  const [counts, setCounts] = useState<NavCounts>({ tousLesColis: 0, retoursRecus: 0, retoursWH: 0, nonScannes: 0, toSendWebsite: 0, toSendSara: 0, toSendManual: 0 })
   const [apiConnected, setApiConnected] = useState(false)
 
   useEffect(() => {
@@ -54,14 +82,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (pathname === '/anoir') return
     getRetourOrders().then(({ orders }) => {
-      setCounts({
+      setCounts(c => ({
+        ...c,
         tousLesColis: orders.length,
         retoursRecus: orders.filter(o => o.received).length,
         retoursWH: 0,
         nonScannes: orders.filter(o => !o.received).length,
-      })
+      }))
       setApiConnected(orders.length > 0)
     })
+    // Confirmed orders still waiting to be sent to Riyalto
+    fetch('/api/admin/orders/data?source=all', { cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : null))
+      .then((d: { rows?: { source: string; sara_status: string; riyalto_status: string }[] } | null) => {
+        if (!d?.rows) return
+        const waiting = d.rows.filter(r => r.sara_status === 'confirmed' && r.riyalto_status !== 'sent')
+        const of = (src: string) => waiting.filter(r => r.source === src).length
+        setCounts(c => ({ ...c, toSendWebsite: of('website'), toSendSara: of('sara'), toSendManual: of('manual') }))
+      })
+      .catch(() => {})
   }, [pathname])
 
   if (!checked) return null
@@ -73,7 +112,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   const allNav = [...navMain, ...navAdmin, ...navOutils]
-  const currentLabel = allNav.find(n => n.href === pathname)?.label || 'Admin'
+  const branch = allNav.find((n): n is NavBranch => 'children' in n && n.children.some(c => c.href === pathname))
+  const leaf = branch
+    ? branch.children.find(c => c.href === pathname)
+    : allNav.find((n): n is NavLeaf => 'href' in n && n.href === pathname)
 
   return (
     <div className="min-h-screen flex font-sans" style={{ background: 'var(--elarain-bg)' }}>
@@ -86,10 +128,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         style={{ background: 'var(--elarain-sidebar)', color: 'var(--elarain-sidebar-text)' }}
       >
         <div className="px-5 py-5" style={{ borderBottom: '1px solid var(--elarain-sidebar-border)' }}>
-          <div className="flex items-center gap-2.5">
-            <div className="w-2 h-2 rounded-full" style={{ background: 'var(--cl-accent)' }} />
+          <div className="flex items-center gap-3">
+            <div className="grid size-9 place-items-center rounded-xl text-[15px] font-semibold text-white shadow-lg" style={{ background: 'linear-gradient(135deg, #E08668, #A84D2E)' }}>E</div>
             <div>
-              <p className="text-sm font-semibold tracking-tight leading-none" style={{ color: 'var(--elarain-sidebar-text)' }}>Elarain</p>
+              <p className="text-[15px] font-semibold tracking-tight leading-none" style={{ color: 'var(--elarain-sidebar-text)' }}>Elarain</p>
               <p className="text-[10px] mt-1 tracking-widest uppercase" style={{ color: 'var(--elarain-sidebar-muted)' }}>Console</p>
             </div>
           </div>
@@ -127,7 +169,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <button onClick={() => setSidebarOpen(true)} className="lg:hidden" style={{ color: 'var(--elarain-muted)' }}>
             <Menu size={20} />
           </button>
-          <span className="text-sm font-medium" style={{ color: 'var(--elarain-muted)' }}>{currentLabel}</span>
+          <span className="flex min-w-0 items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--elarain-muted)' }}>
+            {branch && <span className="opacity-60">{branch.label} /</span>}
+            <span className="truncate">{leaf?.label || 'Admin'}</span>
+          </span>
+          {pathname !== '/anoir/nouvelle-commande' && (
+            <Link href="/anoir/nouvelle-commande" className="el-quick-add ml-auto">
+              <Plus size={15} /> <span className="hidden sm:inline">Nouvelle commande</span>
+            </Link>
+          )}
         </header>
         <main className="p-4 lg:p-8">{children}</main>
       </div>
@@ -160,11 +210,82 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   )
 }
 
+function Badge({ count, color }: { count: number; color?: string }) {
+  if (count <= 0) return null
+  return <span className={`el-nav-badge ${color || 'bg-white/15'}`}>{count}</span>
+}
+
+function NavLink({ item, pathname, counts, onNav }: { item: NavLeaf; pathname: string; counts: NavCounts; onNav: () => void }) {
+  const { href, label, icon: Icon, countKey, badgeColor } = item
+  return (
+    <Link href={href} onClick={onNav} className={`el-nav-item ${pathname === href ? 'el-nav-active' : ''}`}>
+      <span className="flex items-center gap-2.5">
+        <Icon size={16} />
+        {label}
+      </span>
+      {countKey && <Badge count={counts[countKey]} color={badgeColor} />}
+    </Link>
+  )
+}
+
+function NavDropdown({ item, pathname, counts, onNav }: { item: NavBranch; pathname: string; counts: NavCounts; onNav: () => void }) {
+  const { id, label, icon: Icon, children, countKeys, badgeColor } = item
+  const storeKey = `elarain-nav-${id}`
+  const hasActive = children.some(c => c.href === pathname)
+  const [open, setOpen] = useState(hasActive)
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(storeKey) === '1') setOpen(true)
+    } catch {}
+  }, [storeKey])
+
+  useEffect(() => {
+    if (hasActive) setOpen(true)
+  }, [hasActive])
+
+  function toggle() {
+    const next = !open
+    setOpen(next)
+    try {
+      localStorage.setItem(storeKey, next ? '1' : '0')
+    } catch {}
+  }
+
+  const total = countKeys.reduce((s, k) => s + counts[k], 0)
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={toggle}
+        aria-expanded={open}
+        className={`el-nav-item ${open ? 'el-nav-open' : ''} ${hasActive && !open ? 'el-nav-active' : ''}`}
+      >
+        <span className="flex items-center gap-2.5">
+          <Icon size={16} />
+          {label}
+        </span>
+        <span className="flex items-center gap-1.5">
+          {!open && <Badge count={total} color={badgeColor} />}
+          <ChevronDown size={15} className="el-nav-chevron" />
+        </span>
+      </button>
+      <div className="el-nav-panel">
+        <div>
+          <div className="el-nav-tree space-y-0.5">
+            {children.map(c => <NavLink key={c.href} item={c} pathname={pathname} counts={counts} onNav={onNav} />)}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function NavGroup({
   label, items, pathname, counts, onNav,
 }: {
   label: string
-  items: Array<{ href: string; label: string; icon: any; countKey?: keyof NavCounts; badgeColor?: string }>
+  items: NavEntry[]
   pathname: string
   counts: NavCounts
   onNav: () => void
@@ -173,34 +294,11 @@ function NavGroup({
     <div>
       <p className="text-[10px] uppercase tracking-widest px-2 mb-2" style={{ color: 'var(--elarain-sidebar-muted)' }}>{label}</p>
       <div className="space-y-0.5">
-        {items.map(({ href, label, icon: Icon, countKey, badgeColor }) => {
-          const isActive = pathname === href
-          const count = countKey ? counts[countKey] : null
-          return (
-            <Link
-              key={href}
-              href={href}
-              onClick={onNav}
-              className="flex items-center justify-between px-2.5 py-2 rounded-lg text-sm transition-colors"
-              style={{
-                background: isActive ? 'rgba(237, 235, 228, 0.1)' : 'transparent',
-                color: isActive ? 'var(--elarain-sidebar-text)' : 'var(--elarain-sidebar-muted)',
-              }}
-              onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'rgba(237, 235, 228, 0.04)' }}
-              onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent' }}
-            >
-              <span className="flex items-center gap-2.5">
-                <Icon size={16} />
-                {label}
-              </span>
-              {count !== null && count > 0 && (
-                <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded-full text-white min-w-[24px] text-center ${badgeColor || 'bg-white/15'}`}>
-                  {count}
-                </span>
-              )}
-            </Link>
-          )
-        })}
+        {items.map(item =>
+          'children' in item
+            ? <NavDropdown key={item.id} item={item} pathname={pathname} counts={counts} onNav={onNav} />
+            : <NavLink key={item.href} item={item} pathname={pathname} counts={counts} onNav={onNav} />,
+        )}
       </div>
     </div>
   )

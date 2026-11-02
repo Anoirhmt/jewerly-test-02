@@ -4,6 +4,7 @@ import {
   ArrowDown, ArrowUp, Check, Copy, ExternalLink, ImagePlus, Loader2, Pencil, Plus, Save, Search, Trash2, X,
 } from 'lucide-react'
 import type { Product } from '@/data/products'
+import { shrinkImage } from '@/lib/shrink-image'
 
 // Packs & prix: change prices and stock, and add new packs. Saved on the VPS; the shop,
 // the product pages and the Facebook ad pages (/offre) pick it up within seconds.
@@ -415,27 +416,6 @@ function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boolean) =
   )
 }
 
-// Shrinks phone photos (often 4–8 MB) to max 1600 px JPEG before upload.
-async function shrink(file: File): Promise<Blob> {
-  const url = URL.createObjectURL(file)
-  try {
-    const img = await new Promise<HTMLImageElement>((ok, fail) => {
-      const i = new Image()
-      i.onload = () => ok(i)
-      i.onerror = fail
-      i.src = url
-    })
-    const scale = Math.min(1, 1600 / Math.max(img.width, img.height))
-    const c = document.createElement('canvas')
-    c.width = Math.round(img.width * scale)
-    c.height = Math.round(img.height * scale)
-    c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height)
-    return await new Promise<Blob>((ok, fail) => c.toBlob((b) => (b ? ok(b) : fail(new Error('blob'))), 'image/jpeg', 0.86))
-  } finally {
-    URL.revokeObjectURL(url)
-  }
-}
-
 function PhotoPicker({
   value, onChange, label, small,
 }: {
@@ -455,7 +435,7 @@ function PhotoPicker({
     setErr('')
     try {
       const body = new FormData()
-      body.append('file', await shrink(f), 'photo.jpg')
+      body.append('file', await shrinkImage(f), 'photo.jpg')
       const r = await fetch('/api/admin/packs/image', { method: 'POST', body })
       const d = (await r.json()) as { ok: boolean; url?: string; error?: string }
       if (d.ok && d.url) onChange(d.url)
